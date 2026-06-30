@@ -34,6 +34,7 @@ yarn-error.log*
 docs*
 # env files (can opt-in for committing if needed)
 .env*
+.env_back*
 .vite/
 # vercel
 .vercel

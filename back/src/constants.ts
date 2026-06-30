@@ -9,4 +9,7 @@ export const {
   PORT_DB,
   PORT = 3000,
   SECRET_KEY,
+  //
+  FRONTEND_DEV_PORT,
+  FRONTEND_PROD_PORT,
 } = process.env;

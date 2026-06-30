@@ -12,7 +12,7 @@
 
 # testing
 /coverage
-save-codes
+.save-codes
 
 # next.js
 /.next/

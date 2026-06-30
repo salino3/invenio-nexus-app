@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import { PORT } from "./constants";
+import { PORT } from "./src/constants";
 
 const app = express();
 

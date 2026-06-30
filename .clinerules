@@ -1,0 +1,27 @@
+# SECURITY & SCOPE RULES
+
+- You are strictly FORBIDDEN from creating, modifying, or deleting any file or folder outside the current project root directory.
+- Do not execute any terminal command that targets paths outside of the project root.
+- If a task requires accessing external files, you must stop and ask for explicit confirmation for READING ONLY and explaining why it's necessary. Other actions are impossible.
+- Never use absolute paths; always use relative paths starting from the project root.
+
+## GENERAL CODING RULES
+
+- All code, file names, comments, and documentation must be in ENGLISH.
+- We are working on a Windows Operating System.
+
+## SPEC-DRIVEN DEVELOPMENT PROTOCOL
+
+You strictly prohibit "vibe coding" (writing code blindly without an engineering plan). For any complex feature request, major refactoring, or non-trivial bug fix, you MUST execute the following phased workflow before writing or modifying any source code:
+
+1. **Specification Phase**:
+   - Analyze the codebase and create (or update) a `docs/TODO.md` file.
+   - Use rigorous requirements frameworks (like the EARS notation: Easy Approach to Requirements Syntax). Define preconditions, triggers, expected behaviors and edge cases clearly, think always about all sizes view, from mobile to desktop, mediaqueries are not needed always for every device view, add media queries only if needed.
+   - Break down the implementation into atomic, sequential, and checkable micro-tasks.
+   - List every file that will be created, modified, or deleted.
+   - Pause and ask the user for approval on the specification.
+
+2. **Execution Phase (Autopilot)**:
+   - Only after explicit approval, begin implementing the tasks one by one.
+   - Update the `TODO.md` by checking off completed tasks `[x]` in real-time.
+   - Run tests (if there are) or build checks after each task to ensure stability before moving to the next one.

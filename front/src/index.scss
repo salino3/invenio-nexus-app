@@ -1,0 +1,143 @@
+:host,
+:root {
+  // WEB appling colors
+
+  --color-link: #553eb6;
+  --color-error: #d32f2f;
+  --opacified-error: rgb(211, 47, 47, 0.2);
+  --color-correct: rgb(0, 106, 0);
+  --color-shadow-gold: rgb(212, 175, 55, 0.75);
+  --color-evidenced: rgb(63, 189, 235);
+  --color-dark-evidenced: rgb(0, 140, 255);
+  --color-hover: rgba(255, 255, 255, 0.15);
+  --color-border: gray;
+  --color-text-btn: #ffffff;
+  --color-dangerous: #f01919;
+
+  // Global varibles
+
+  // ==========================================================================
+  // Fallback / Initial Values (Dark Theme)
+  // ==========================================================================
+  --global-01: #f5f5f5;
+  --global-02: #1b1b1b;
+  --global-03: #f4a261;
+  --global-04: #1b1b1b;
+  --global-05: #d4af37; /* Stays the same as light */
+  --global-06: #1b1b1b;
+  --global-07: #f5f5f5;
+  --global-08: #4a5568;
+  --global-color-01: rgba(113, 128, 150, 0.5);
+  --global-color-02: #1e40af;
+  --global-lines: rgb(178, 164, 164);
+}
+
+/* ==========================================================================
+   Dark Theme (Default)
+   ========================================================================== */
+[data-theme="dark"] {
+  --global-01: #f5f5f5;
+  --global-02: #1b1b1b;
+  --global-03: #f4a261;
+  --global-04: #1b1b1b;
+  --global-05: #d4af37; /* Stays the same as light */
+  --global-06: #1b1b1b;
+  --global-07: #f5f5f5;
+  --global-08: #4a5568;
+  --global-color-01: rgba(113, 128, 150, 0.5);
+  --global-color-02: #1e40af;
+  --global-lines: rgb(178, 164, 164);
+}
+/* ==========================================================================
+   Light Theme
+   ========================================================================== */
+
+[data-theme="light"] {
+  --global-01: #1b1b1b;
+  --global-02: #f5f5f5;
+  --global-03: #e76f51;
+  --global-04: #f7f7f7;
+  --global-05: #d4af37; /* Stays the same as dark */
+  --global-06: #e2e8f0;
+  --global-07: #1b1b1b;
+  --global-08: #718096;
+  --global-color-01: rgba(74, 85, 104, 0.5);
+  --global-color-02: #3b82f6;
+  --global-lines: rgba(0, 0, 0, 0.1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+#root,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+li,
+a {
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  -ms-overflow-style: none; // IE 10+
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
+}
+
+body {
+  // font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji",
+  //   sans-serif, Arial, Helvetica, sans-serif !important;
+
+  font-family: Arial, Helvetica, sans-serif !important;
+  color: var(--global-01) !important;
+  background-color: var(--global-02);
+
+  button {
+    cursor: pointer;
+  }
+
+  button:active {
+    scale: 0.98;
+    opacity: 0.5;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    transition: background-color 5000s ease-in-out 0s;
+    box-shadow: 0 0 0px 1000px var(--global-02) inset !important;
+    -webkit-text-fill-color: var(--global-07) !important;
+  }
+}

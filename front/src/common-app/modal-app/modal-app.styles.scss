@@ -1,0 +1,101 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.rootModalApp {
+  animation: fadeIn 0.3s ease-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(43, 29, 14, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+
+  .containerModalApp {
+    animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    gap: 16px;
+    padding: 18px 24px 24px;
+    box-shadow: 0px 12px 32px rgba(43, 29, 14, 0.25);
+    border-radius: 16px;
+    border: 2px solid #5c3a21;
+    width: 90%;
+    max-width: 550px;
+    background-color: #f7ede2;
+    color: #3d2314;
+    font-family: inherit;
+
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(92, 58, 33, 0.2);
+      padding-bottom: 10px;
+      gap: 0.5rem;
+      text-align: justify;
+      word-break: break-all;
+      .btnCloseModal {
+        background: transparent;
+        color: #7f5539;
+        border: none;
+        outline: 1px solid #5c3a21;
+        padding: 6px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 0.5);
+        width: fit-content;
+        height: fit-content;
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        &:hover {
+          background-color: #e6ccb2;
+          color: #3d2314;
+          transform: rotate(90deg);
+        }
+      }
+
+      .btnCloseModal,
+      textarea,
+      button {
+        &:focus-visible {
+          outline: 1px dashed #5c3a21;
+          outline-offset: 3px;
+        }
+      }
+    }
+
+    .content {
+      width: 100%;
+    }
+  }
+}

@@ -10,7 +10,7 @@ export class Account {
   public name: string;
   public email: string;
   public password: string;
-  public age?: number;
+  public age: number;
   public role_user: UserRole;
   public is_active: boolean;
   public created_at: Date;
@@ -19,8 +19,8 @@ export class Account {
 
   constructor(data: AccountProps) {
     this.id = data.id;
-    this.name = data.name || "";
-    this.email = data.email || "";
+    this.name = data.name;
+    this.email = data.email;
     this.password = data.password;
     this.age = data.age;
     this.role_user = data.role_user || "user";
@@ -36,8 +36,8 @@ export class Account {
     input: CreateAccountInput,
   ): Promise<Account> {
     const query = `
-      INSERT INTO accounts (name, email, password, age, role_user)
-      VALUES ($1, $2, $3, $4, COALESCE($5, 'user'))
+      INSERT INTO accounts (name, email, password, age)
+      VALUES ($1, $2, $3, $4)
       RETURNING *;
     `;
 

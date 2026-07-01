@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
+import routerAuth from "./src/routes/accounts.route";
 import { FRONTEND_DEV_PORT, FRONTEND_PROD_PORT, PORT } from "./src/constants";
 
 const app = express();
@@ -29,6 +30,8 @@ app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 app.get("/health", (req, res) => {
   res.json({ status: "online", project: "Invenio Nexus Backend" });
 });
+
+app.use("/api", routerAuth);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server up and running at http://localhost:${PORT}`);

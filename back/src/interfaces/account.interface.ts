@@ -5,7 +5,7 @@ export interface AccountProps {
   name: string;
   email: string;
   password: string;
-  age?: number;
+  age: number;
   role_user: UserRole;
   is_active: boolean;
   created_at: Date;
@@ -14,10 +14,13 @@ export interface AccountProps {
 }
 
 // Interface for input data during registration
-export interface CreateAccountInput {
-  name: string;
-  email: string;
+export interface RegistretionAccountInput extends Pick<
+  AccountProps,
+  "name" | "email" | "age" | "password"
+> {
+  confirmPassword: string;
+}
+
+export interface CreateAccountInput extends Partial<AccountProps> {
   passwordHash: string;
-  age?: number;
-  role_user?: UserRole;
 }

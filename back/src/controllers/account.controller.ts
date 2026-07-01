@@ -1,27 +1,25 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-
 import { query } from "../db";
 import { Account } from "../models/account.model";
 import {
-  AccountProps,
-  CreateAccountInput,
+  RegistretionAccountDB,
   RegistretionAccountInput,
 } from "../interfaces/account.interface";
 
 export class AuthController {
-  /**
-   * Route Handler: POST /api/auth/register
-   * Coordinates request validation, security hashing, model invocation, and HTTP response.
-   */
+  //
   public async registerAccount(req: Request, res: Response): Promise<Response> {
     try {
       const account: RegistretionAccountInput = req.body;
 
-      const requiredFields = Object.values(account).reduce(
-        (acc: string[], item: keyof RegistretionAccountInput) => {
-          if (!item) {
-            acc.push(item);
+      const requiredFields = Object.entries(account).reduce(
+        (
+          acc: string[],
+          [key, value]: [key: string, value: keyof RegistretionAccountInput],
+        ) => {
+          if (!value || (typeof value === "string" && !value.trim())) {
+            acc.push(key === "confirmPassword" ? "Confirm password" : key);
           }
 
           return acc;
@@ -32,7 +30,7 @@ export class AuthController {
       if (requiredFields.length > 0) {
         return res.status(400).json({
           error: `Missing fields:${requiredFields.map(
-            (item: RegistretionAccountInput, index: number) =>
+            (item: string, index: number) =>
               ` ${item}${index + 1 === requiredFields.length ? "" : ","}`,
           )} ${requiredFields.length > 1 ? "are" : "is"} required.`,
         });
@@ -46,7 +44,7 @@ export class AuthController {
 
       if (password !== confirmPassword) {
         return res.status(401).json({
-          error: "Password anc Confirmed password does not match",
+          error: "Password and Confirmed password does not match",
         });
       }
 
@@ -58,15 +56,15 @@ export class AuthController {
         });
       }
 
-      // 3. Security: Hash password before database persistence
+      // Security: Hash password before database persistence
       const saltRounds = 10;
       const passwordHash = await bcrypt.hash(password, saltRounds);
 
       // 4. Input preparation
-      const accountInput: CreateAccountInput = {
+      const accountInput: RegistretionAccountDB = {
         name,
         email,
-        passwordHash,
+        password: passwordHash,
         age: age,
       };
 

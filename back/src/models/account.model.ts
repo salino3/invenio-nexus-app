@@ -1,7 +1,7 @@
 import { QueryDB } from "../interfaces/app.interface";
 import {
   AccountProps,
-  CreateAccountInput,
+  RegistretionAccountDB,
   UserRole,
 } from "../interfaces/account.interface";
 
@@ -33,7 +33,7 @@ export class Account {
   //
   static async createAccount(
     dbQuery: QueryDB,
-    input: CreateAccountInput,
+    input: RegistretionAccountDB,
   ): Promise<Account> {
     const query = `
       INSERT INTO accounts (name, email, password, age)
@@ -41,13 +41,7 @@ export class Account {
       RETURNING *;
     `;
 
-    const values = [
-      input.name,
-      input.email,
-      input.passwordHash,
-      input.age ?? null,
-      input.role_user,
-    ];
+    const values = [input.name, input.email, input.password, input.age ?? null];
 
     const { rows } = await dbQuery(query, values);
 

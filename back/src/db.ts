@@ -1,12 +1,12 @@
 import { Pool } from "pg";
-import { USER, HOST, PASSWORD, DATABASE, PORT_DB } from "./constants";
+import { DB_USER, DB_HOST, DB_PASSWORD, DATABASE, DB_PORT } from "./constants";
 
 const pool = new Pool({
-  user: USER,
-  host: HOST,
-  password: PASSWORD,
+  user: DB_USER,
+  host: DB_HOST,
+  password: DB_PASSWORD,
   database: DATABASE,
-  port: parseInt(PORT_DB || "5432", 10),
+  port: parseInt(DB_PORT || "5432", 10),
 });
 
 export function query(text: string, params?: any[]) {

@@ -2,11 +2,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const {
-  USER,
-  HOST,
-  PASSWORD,
+  DB_USER,
+  DB_HOST,
+  DB_PASSWORD,
   DATABASE,
-  PORT_DB,
+  DB_PORT,
   PORT = 3000,
   SECRET_KEY,
   //

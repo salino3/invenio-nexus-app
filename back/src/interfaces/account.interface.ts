@@ -14,13 +14,14 @@ export interface AccountProps {
 }
 
 // Interface for input data during registration
-export interface RegistretionAccountInput extends Pick<
+export interface RegistretionAccountDB extends Pick<
   AccountProps,
   "name" | "email" | "age" | "password"
+> {}
+
+export interface RegistretionAccountInput extends Pick<
+  AccountProps,
+  keyof RegistretionAccountDB
 > {
   confirmPassword: string;
-}
-
-export interface CreateAccountInput extends Partial<AccountProps> {
-  passwordHash: string;
 }

@@ -9,9 +9,6 @@ const pool = new Pool({
   port: parseInt(PORT_DB || "5432", 10),
 });
 
-export default {
-  /**
-   * Execute a SQL query with parameters
-   */
-  query: (text: string, params?: any[]) => pool.query(text, params),
-};
+export function query(text: string, params?: any[]) {
+  return pool.query(text, params);
+}

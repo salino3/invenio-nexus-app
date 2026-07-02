@@ -7,6 +7,10 @@ const pool = new Pool({
   password: DB_PASSWORD,
   database: DATABASE,
   port: Number(DB_PORT),
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: true }
+      : false,
 });
 
 export function query(text: string, params?: any[]): Promise<QueryResult<any>> {

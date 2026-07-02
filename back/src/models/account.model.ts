@@ -1,5 +1,7 @@
+import bcrypt from "bcryptjs";
 import { query } from "../db";
 import {
+  AccountCookie,
   AccountProps,
   AllAccounts,
   RegistretionAccountDB,
@@ -87,5 +89,32 @@ export class Account {
     const { rows } = await query(sql);
 
     return rows[0]?.accounts_list ?? [];
+  }
+
+  // Auth Acoount
+  static async loginAccount(
+    email: string,
+    password_plain: string,
+  ): Promise<AccountCookie> {
+    const sql = `SELECT * FROM accounts WHERE email = $1`;
+    const result = await query(sql, [email]);
+
+    const user = result.rows[0];
+
+    if (!user) {
+      throw new Error("Invalid email or password");
+    }
+
+    const isMatch = await bcrypt.compare(password_plain, user.password);
+    if (!isMatch) {
+      throw new Error("Invalid email or password");
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role_user: user.role_user,
+    };
   }
 }

@@ -1,3 +1,5 @@
+import { Account } from "../models/account.model";
+
 export type UserRole = "admin" | "user" | "manager";
 
 export interface AccountProps {
@@ -37,4 +39,10 @@ export interface OmitedKeysFromAccount {
 export interface AllAccounts extends Omit<
   AccountProps,
   keyof OmitedKeysFromAccount
+> {}
+
+// Interface Auth Accounts
+export interface AccountCookie extends Pick<
+  Account,
+  "id" | "name" | "role_user" | "email"
 > {}

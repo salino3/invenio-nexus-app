@@ -79,7 +79,7 @@ export class AuthController {
           role_user: newAccount.role_user,
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Critical error inside AuthController.register:", error);
       return res.status(500).json({
         error:

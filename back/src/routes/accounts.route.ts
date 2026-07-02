@@ -6,4 +6,6 @@ const authController = new AuthController();
 
 routerAuth.post("/register-account", authController.registerAccount);
 
+routerAuth.get("/accounts", authController.getAllAccounts);
+
 export default routerAuth;

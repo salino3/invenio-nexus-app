@@ -25,3 +25,16 @@ export interface RegistretionAccountInput extends Pick<
 > {
   confirmPassword: string;
 }
+
+// Interface retrieve accounts
+export interface OmitedKeysFromAccount {
+  password: string;
+  created_at: Date;
+  updated_at: Date;
+  deleted_at?: Date | null;
+}
+
+export interface AllAccounts extends Omit<
+  AccountProps,
+  keyof OmitedKeysFromAccount
+> {}

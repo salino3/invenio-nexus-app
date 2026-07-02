@@ -1,6 +1,8 @@
+import { query } from "../db";
 import { QueryDB } from "../interfaces/app.interface";
 import {
   AccountProps,
+  AllAccounts,
   RegistretionAccountDB,
   UserRole,
 } from "../interfaces/account.interface";
@@ -61,5 +63,20 @@ export class Account {
     const { rows } = await dbQuery(query, [email]);
     if (rows.length === 0) return null;
     return new Account(rows[0]);
+  }
+
+  //
+  static async retrieveAllAccounts(): Promise<AllAccounts[] | null> {
+    const sql = `
+      SELECT COALESCE(
+     json_agg(to_jsonb(accounts) - '{password, created_at, updated_at, deleted_at}'::text[]), 
+     '[]'::json
+   ) AS accounts_list 
+    FROM accounts;
+ `;
+
+    const { rows } = await query(sql);
+
+    return rows;
   }
 }

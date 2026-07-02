@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -27,7 +27,7 @@ app.use(
 app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
 
 // General health check endpoint
-app.get("/health", (req, res) => {
+app.get("/health", (req: Request, res: Response) => {
   res.json({ status: "online", project: "Invenio Nexus Backend" });
 });
 

@@ -1,5 +1,4 @@
 import { query } from "../db";
-import { QueryDB } from "../interfaces/app.interface";
 import {
   AccountProps,
   AllAccounts,
@@ -33,11 +32,8 @@ export class Account {
   }
 
   //
-  static async createAccount(
-    dbQuery: QueryDB,
-    input: RegistretionAccountDB,
-  ): Promise<Account> {
-    const query = `
+  static async createAccount(input: RegistretionAccountDB): Promise<Account> {
+    const sql = `
       INSERT INTO accounts (name, email, password, age)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
@@ -45,22 +41,19 @@ export class Account {
 
     const values = [input.name, input.email, input.password, input.age ?? null];
 
-    const { rows } = await dbQuery(query, values);
+    const { rows } = await query(sql, values);
 
     return new Account(rows[0]);
   }
 
   //
-  static async findActiveByEmail(
-    dbQuery: QueryDB,
-    email: string,
-  ): Promise<Account | null> {
-    const query = `
+  static async findActiveByEmail(email: string): Promise<Account | null> {
+    const sql = `
       SELECT * FROM accounts 
       WHERE email = $1 AND is_active = true 
       LIMIT 1;
     `;
-    const { rows } = await dbQuery(query, [email]);
+    const { rows } = await query(sql, [email]);
     if (rows.length === 0) return null;
     return new Account(rows[0]);
   }

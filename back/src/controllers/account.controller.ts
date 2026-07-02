@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import { query } from "../db";
 import { Account } from "../models/account.model";
 import {
   RegistretionAccountDB,
@@ -49,7 +48,7 @@ export class AuthController {
       }
 
       // 2. Business rule validation: Check email duplication via model static method
-      const existingUser = await Account.findActiveByEmail(query, email);
+      const existingUser = await Account.findActiveByEmail(email);
       if (existingUser) {
         return res.status(409).json({
           error: "This email address is already active on another account.",
@@ -68,7 +67,7 @@ export class AuthController {
         age: age,
       };
 
-      const newAccount = await Account.createAccount(query, accountInput);
+      const newAccount = await Account.createAccount(accountInput);
 
       return res.status(201).json({
         message: "Account registered successfully.",
@@ -91,7 +90,7 @@ export class AuthController {
   //
   public async getAllAccounts(req: Request, res: Response): Promise<Response> {
     try {
-      const accounts = Account.retrieveAllAccounts();
+      const accounts = await Account.retrieveAllAccounts();
 
       return res.status(200).json(accounts);
     } catch (error: unknown) {

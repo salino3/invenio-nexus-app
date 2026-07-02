@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Pool, QueryResult } from "pg";
 import { DB_USER, DB_HOST, DB_PASSWORD, DATABASE, DB_PORT } from "./constants";
 
 const pool = new Pool({
@@ -9,6 +9,6 @@ const pool = new Pool({
   port: parseInt(DB_PORT || "5432", 10),
 });
 
-export function query(text: string, params?: any[]) {
+export function query(text: string, params?: any[]): Promise<QueryResult<any>> {
   return pool.query(text, params);
 }

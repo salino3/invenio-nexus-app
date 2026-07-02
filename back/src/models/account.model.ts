@@ -59,7 +59,7 @@ export class Account {
   }
 
   //
-  static async retrieveAllAccounts(): Promise<AllAccounts[] | null> {
+  static async retrieveAllAccounts(): Promise<AllAccounts[]> {
     const sql = `
       SELECT COALESCE(
      json_agg(to_jsonb(accounts) - '{password, created_at, updated_at, deleted_at}'::text[]), 
@@ -70,6 +70,6 @@ export class Account {
 
     const { rows } = await query(sql);
 
-    return rows;
+    return rows[0]?.accounts_list ?? [];
   }
 }

@@ -1,9 +1,13 @@
 import express from "express";
-import { AuthController } from "../controllers/account.controller";
+import { AccountController } from "../controllers/account.controller";
 
-const routerAuth = express.Router();
-const authController = new AuthController();
+const routerAccount = express.Router();
+const accountController = new AccountController();
 
-routerAuth.post("/register-account", authController.registerAccount);
+routerAccount.post("/register-account", accountController.registerAccount);
 
-export default routerAuth;
+routerAccount.get("/accounts", accountController.getAllAccounts);
+
+routerAccount.get("/accounts/actives", accountController.getAllAccountsActives);
+
+export default routerAccount;

@@ -1,5 +1,5 @@
 .env
-save-codes
+.save-codes
 node_modules
 .next
 build

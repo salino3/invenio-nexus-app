@@ -1,6 +1,9 @@
-import { QueryDB } from "../interfaces/app.interface";
+import bcrypt from "bcryptjs";
+import { query } from "../db";
 import {
+  AccountCookie,
   AccountProps,
+  AllAccounts,
   RegistretionAccountDB,
   UserRole,
 } from "../interfaces/account.interface";
@@ -31,11 +34,8 @@ export class Account {
   }
 
   //
-  static async createAccount(
-    dbQuery: QueryDB,
-    input: RegistretionAccountDB,
-  ): Promise<Account> {
-    const query = `
+  static async createAccount(input: RegistretionAccountDB): Promise<Account> {
+    const sql = `
       INSERT INTO accounts (name, email, password, age)
       VALUES ($1, $2, $3, $4)
       RETURNING *;
@@ -43,23 +43,78 @@ export class Account {
 
     const values = [input.name, input.email, input.password, input.age ?? null];
 
-    const { rows } = await dbQuery(query, values);
+    const { rows } = await query(sql, values);
 
     return new Account(rows[0]);
   }
 
   //
-  static async findActiveByEmail(
-    dbQuery: QueryDB,
-    email: string,
-  ): Promise<Account | null> {
-    const query = `
+  static async findActiveByEmail(email: string): Promise<Account | null> {
+    const sql = `
       SELECT * FROM accounts 
       WHERE email = $1 AND is_active = true 
       LIMIT 1;
     `;
-    const { rows } = await dbQuery(query, [email]);
+    const { rows } = await query(sql, [email]);
     if (rows.length === 0) return null;
     return new Account(rows[0]);
+  }
+
+  //
+  static async retrieveAllAccounts(): Promise<AllAccounts[]> {
+    const sql = `
+      SELECT COALESCE(
+     json_agg(to_jsonb(accounts) - '{password, created_at, updated_at, deleted_at}'::text[]), 
+     '[]'::json
+   ) AS accounts_list 
+    FROM accounts;
+ `;
+
+    const { rows } = await query(sql);
+
+    return rows[0]?.accounts_list ?? [];
+  }
+
+  //
+  static async retrieveAllAccountsActives(): Promise<AllAccounts[]> {
+    const sql = `
+    SELECT COALESCE(
+      json_agg(to_jsonb(accounts) - '{password, created_at, updated_at, deleted_at}'::text[]), 
+      '[]'::json
+    ) AS accounts_list 
+    FROM accounts
+    WHERE is_active = true;
+  `;
+
+    const { rows } = await query(sql);
+
+    return rows[0]?.accounts_list ?? [];
+  }
+
+  // Auth Acoount
+  static async loginAccount(
+    email: string,
+    password_plain: string,
+  ): Promise<AccountCookie> {
+    const sql = `SELECT * FROM accounts WHERE email = $1 AND is_active = true`;
+    const result = await query(sql, [email]);
+
+    const user = result.rows[0];
+
+    if (!user) {
+      throw new Error("Invalid email or password");
+    }
+
+    const isMatch = await bcrypt.compare(password_plain, user.password);
+    if (!isMatch) {
+      throw new Error("Invalid email or password");
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role_user: user.role_user,
+    };
   }
 }

@@ -6,9 +6,11 @@ export const {
   DB_HOST,
   DB_PASSWORD,
   DATABASE,
-  DB_PORT,
+  DB_PORT = 5432,
   PORT = 3000,
+  //
   SECRET_KEY,
+  COOKIES_NAME,
   //
   FRONTEND_DEV_PORT,
   FRONTEND_PROD_PORT,

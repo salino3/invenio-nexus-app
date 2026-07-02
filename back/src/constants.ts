@@ -6,7 +6,7 @@ export const {
   DB_HOST,
   DB_PASSWORD,
   DATABASE,
-  DB_PORT,
+  DB_PORT = 5432,
   PORT = 3000,
   SECRET_KEY,
   //

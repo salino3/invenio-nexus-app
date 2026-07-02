@@ -6,7 +6,7 @@ const pool = new Pool({
   host: DB_HOST,
   password: DB_PASSWORD,
   database: DATABASE,
-  port: parseInt(DB_PORT || "5432", 10),
+  port: Number(DB_PORT),
 });
 
 export function query(text: string, params?: any[]): Promise<QueryResult<any>> {

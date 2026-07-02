@@ -6,7 +6,7 @@ import {
   RegistretionAccountInput,
 } from "../interfaces/account.interface";
 
-export class AuthController {
+export class AccountController {
   //
   public async registerAccount(req: Request, res: Response): Promise<Response> {
     try {
@@ -120,4 +120,4 @@ export class AuthController {
   }
 }
 
-export const authController = new AuthController();
+export const authController = new AccountController();

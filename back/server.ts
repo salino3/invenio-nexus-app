@@ -3,7 +3,8 @@ import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
-import routerAuth from "./src/routes/accounts.route";
+import routerAccount from "./src/routes/accounts.route";
+import routerAuth from "./src/routes/auth/auth.accounts.routes";
 import { FRONTEND_DEV_PORT, FRONTEND_PROD_PORT, PORT } from "./src/constants";
 
 const app = express();
@@ -31,6 +32,7 @@ app.get("/health", (req: Request, res: Response) => {
   res.json({ status: "online", project: "Invenio Nexus Backend" });
 });
 
+app.use("/api", routerAccount);
 app.use("/api", routerAuth);
 
 app.listen(PORT, () => {

@@ -96,7 +96,7 @@ export class Account {
     email: string,
     password_plain: string,
   ): Promise<AccountCookie> {
-    const sql = `SELECT * FROM accounts WHERE email = $1`;
+    const sql = `SELECT * FROM accounts WHERE email = $1 AND is_active = true`;
     const result = await query(sql, [email]);
 
     const user = result.rows[0];

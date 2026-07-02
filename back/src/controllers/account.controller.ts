@@ -101,6 +101,23 @@ export class AuthController {
       });
     }
   }
+
+  public async getAllAccountsActives(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    try {
+      const accounts = await Account.retrieveAllAccountsActives();
+
+      return res.status(200).json(accounts);
+    } catch (error: unknown) {
+      console.error("Critical error inside AuthController.register:", error);
+      return res.status(500).json({
+        error:
+          "An internal server error occurred while processing your registration.",
+      });
+    }
+  }
 }
 
 export const authController = new AuthController();

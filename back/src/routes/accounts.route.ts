@@ -8,4 +8,6 @@ routerAuth.post("/register-account", authController.registerAccount);
 
 routerAuth.get("/accounts", authController.getAllAccounts);
 
+routerAuth.get("/accounts/actives", authController.getAllAccountsActives);
+
 export default routerAuth;

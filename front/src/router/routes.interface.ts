@@ -1,15 +1,15 @@
 import React from "react";
 
 export interface RoutePaths {
-  DASHBOARD: string;
-  CHARTS: string;
-  ERROR_PAGE: string;
+  public_dashboard: string;
+  dashboard: string;
+  error_page: string;
 }
 
-export const ROUTE_PATHS: RoutePaths = {
-  DASHBOARD: "/",
-  CHARTS: "/charts",
-  ERROR_PAGE: "*",
+export const routePaths: RoutePaths = {
+  public_dashboard: "/",
+  dashboard: "/dashboard",
+  error_page: "*",
 };
 
 export interface AppRoute {

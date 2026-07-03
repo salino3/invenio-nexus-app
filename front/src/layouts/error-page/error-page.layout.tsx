@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ModalApp } from "../../common-app";
-import { ROUTE_PATHS } from "../../router/routes.interface";
+import { routePaths } from "../../router/routes.interface";
 import "./error-page.styles.scss";
 
 const ErrorPageLayout: React.FC = () => {
@@ -12,7 +12,7 @@ const ErrorPageLayout: React.FC = () => {
         <h1 className="error-code">404</h1>
         <h2>Page Not Found</h2>
         <p>The page you are looking for does not exist or has been moved.</p>
-        <Link to={ROUTE_PATHS.DASHBOARD} className="back-home-btn">
+        <Link to={routePaths.public_dashboard} className="back-home-btn">
           Go Back Home
         </Link>
 

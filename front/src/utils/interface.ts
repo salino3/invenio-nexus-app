@@ -1,17 +1,17 @@
-import type { PropsCurrentAccount } from "@/store/interface";
+import type { AccountProps, PropsCurrentAccount } from "@/store/interface";
 
 export interface StateLoginDataAccount extends PropsCurrentAccount {
   token?: string;
 }
 
-export interface FormErrorLoginProps {
-  email: string;
-  password: string;
-}
+export interface FormLoginProps extends Pick<
+  AccountProps,
+  "email" | "password"
+> {}
 
 export interface StateLoginAccount {
   success: boolean;
   error: string;
   data: StateLoginDataAccount | null;
-  fieldErrors: FormErrorLoginProps | null;
+  fieldErrors: FormLoginProps | null;
 }

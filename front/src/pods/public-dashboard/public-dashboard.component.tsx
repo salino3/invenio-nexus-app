@@ -1,3 +1,4 @@
+import type React from "react";
 import "./public-dashboard.styles.scss";
 
 export const PublicDashboard: React.FC = () => {

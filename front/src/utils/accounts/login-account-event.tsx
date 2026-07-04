@@ -47,10 +47,12 @@ export async function loginAccountEvent(
   const hasErrors: boolean = Object.values(accountErrorData).some(
     (msg) => msg !== "",
   );
-
+  console.log("clog error:", accountErrorData);
+  console.log("clog state:", accountData);
   if (hasErrors) {
     return {
       ...prevState,
+      data: accountData,
       fieldErrors: accountErrorData,
     };
   }

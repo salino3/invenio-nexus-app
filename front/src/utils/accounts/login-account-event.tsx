@@ -5,19 +5,30 @@ export async function loginAccountEvent(
   formData: FormData,
 ): Promise<StateLoginAccount> {
   const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  if (!email.trim() || !password.trim()) {
+    return {
+      ...prevState,
+      error: "Email and Password are required",
+      fieldErrors: {
+        email: !email.trim() ? "" : "Email is required",
+        password: !password.trim() ? "" : "Password is required",
+      },
+    };
+  }
 
   try {
     return {
       success: true,
-      data: { email },
+      data: null,
       error: "",
       fieldErrors: null,
     };
   } catch (err) {
     return {
       ...prevState,
-      success: false,
-      error: "Qualcosa è andato storto con il login.",
+      error: "Error during login.",
     };
   }
 }

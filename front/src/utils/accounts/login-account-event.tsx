@@ -13,7 +13,6 @@ export async function loginAccountEvent(
   if (!email.trim() || !password.trim()) {
     return {
       ...prevState,
-      error: "Email and Password are required",
       fieldErrors: {
         email: !email.trim() ? "" : "Email is required",
         password: !password.trim() ? "" : "Password is required",
@@ -24,7 +23,6 @@ export async function loginAccountEvent(
   if (!regexCorrectEmail.test(email)) {
     return {
       ...prevState,
-      error: "Email and Password are required",
       fieldErrors: {
         email: "Invalid Email address",
         password: "",

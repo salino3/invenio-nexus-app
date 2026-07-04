@@ -1,9 +1,12 @@
 import type { StateLoginAccount } from "../interface";
+import { utilitiesApp } from "../utilities-app";
 
 export async function loginAccountEvent(
   prevState: StateLoginAccount,
   formData: FormData,
 ): Promise<StateLoginAccount> {
+  const { regexCorrectEmail } = utilitiesApp();
+
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -14,6 +17,17 @@ export async function loginAccountEvent(
       fieldErrors: {
         email: !email.trim() ? "" : "Email is required",
         password: !password.trim() ? "" : "Password is required",
+      },
+    };
+  }
+
+  if (!regexCorrectEmail.test(email)) {
+    return {
+      ...prevState,
+      error: "Email and Password are required",
+      fieldErrors: {
+        email: "Invalid Email address",
+        password: "",
       },
     };
   }

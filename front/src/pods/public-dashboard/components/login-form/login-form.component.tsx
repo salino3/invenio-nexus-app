@@ -20,8 +20,15 @@ export const LoginForm: React.FC = () => {
       <fieldset disabled={isPending}>
         <div className="boxInput">
           <label htmlFor="email">Email</label>
-          <input type="text" name="email" />
+          <input type="text" id="email" name="email" />
         </div>
+
+        <div className="boxInput">
+          <label htmlFor="password">Password</label>
+          <input type="password" id="password" name="password" />
+        </div>
+
+        <button disabled={isPending}>Submit</button>
       </fieldset>
     </form>
   );

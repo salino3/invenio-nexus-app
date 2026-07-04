@@ -24,28 +24,31 @@ export async function loginAccountEvent(
           ...accountErrorData,
           [key]: `The ${key} is required`,
         };
-      }
-
-      if (key === "email") {
-        if (!regexCorrectEmail.test(value)) {
-          accountErrorData = {
-            ...accountErrorData,
-            [key]: "Invalid Email address",
-          };
-        }
       } else {
-        if (value.length < 6 || value.length > 20) {
-          accountErrorData = {
-            ...accountErrorData,
-            [key]:
-              "Length Password is not correct, Password must be between 6 and 20 characters",
-          };
+        if (key === "email") {
+          if (!regexCorrectEmail.test(value)) {
+            accountErrorData = {
+              ...accountErrorData,
+              [key]: "Invalid Email address",
+            };
+          }
+        } else if (key === "password") {
+          if (value.length < 6 || value.length > 20) {
+            accountErrorData = {
+              ...accountErrorData,
+              [key]: "Password must be between 6 and 20 characters",
+            };
+          }
         }
       }
     },
   );
 
-  if (Object.values(accountErrorData).length > 0) {
+  const hasErrors: boolean = Object.values(accountErrorData).some(
+    (msg) => msg !== "",
+  );
+
+  if (hasErrors) {
     return {
       ...prevState,
       fieldErrors: accountErrorData,

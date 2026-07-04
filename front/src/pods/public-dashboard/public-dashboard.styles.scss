@@ -1,7 +1,18 @@
 .rootPublicDashboard {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 1rem;
+  width: 100%;
+  flex-grow: 1;
+  padding: 2rem;
+
+  .boxButtonsPage {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
 }

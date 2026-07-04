@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { Account } from "../../models/account.model";
 import { COOKIES_NAME, SECRET_KEY } from "../../constants";
 
-let regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export class AuthController {
   public async loginAccount(req: Request, res: Response): Promise<Response> {

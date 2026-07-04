@@ -1,1 +1,1 @@
-export * from "./pods";
+export * from "./public-dashboard.component";

@@ -1,3 +1,4 @@
+import { PublicDashboard } from "@/pods/public-dashboard";
 import "./public-dashboard.styles.scss";
 
 const PublicDashboardLayout: React.FC = () => {

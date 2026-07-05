@@ -1,10 +1,11 @@
+import { ServicesApp } from "@/store/services";
 import type { FormLoginProps, StateLoginAccount } from "../interface";
 import { utilitiesApp } from "../utilities-app";
 
 export async function loginAccountEvent(
   prevState: StateLoginAccount,
   formData: FormData,
-): Promise<StateLoginAccount> {
+): Promise<StateLoginAccount | undefined> {
   const { regexCorrectEmail } = utilitiesApp();
 
   let accountData: FormLoginProps = {
@@ -47,8 +48,7 @@ export async function loginAccountEvent(
   const hasErrors: boolean = Object.values(accountErrorData).some(
     (msg) => msg !== "",
   );
-  console.log("clog error:", accountErrorData);
-  console.log("clog state:", accountData);
+
   if (hasErrors) {
     return {
       ...prevState,
@@ -58,17 +58,20 @@ export async function loginAccountEvent(
   }
 
   try {
-    // TODO: Call endpoint login
-    return {
-      success: true,
-      data: null,
-      error: "",
-      fieldErrors: null,
-    };
+    const result = await ServicesApp.serviceLoginAccount(accountData);
+    console.log("clog1", result);
+    if (result.token) {
+      return {
+        success: true,
+        data: result,
+        error: "",
+        fieldErrors: null,
+      };
+    }
   } catch (err) {
     return {
       ...prevState,
-      error: "Error during login.",
+      error: err as string,
     };
   }
 }

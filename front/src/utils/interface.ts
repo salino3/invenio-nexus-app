@@ -1,8 +1,4 @@
-import type { AccountProps, PropsCurrentAccount } from "@/store/interface";
-
-export interface StateLoginDataAccount extends PropsCurrentAccount {
-  token?: string;
-}
+import type { AccountProps, StateLoginDataAccount } from "@/store/interface";
 
 export interface FormLoginProps extends Pick<
   AccountProps,

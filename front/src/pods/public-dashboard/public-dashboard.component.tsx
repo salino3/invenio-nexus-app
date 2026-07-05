@@ -5,7 +5,7 @@ import "./public-dashboard.styles.scss";
 
 export const PublicDashboard: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
-  console.log("clog3", import.meta.env.VITE_URL_BACK);
+
   return (
     <div className="rootPublicDashboard">
       <h1>PublicDashboardLayout</h1>

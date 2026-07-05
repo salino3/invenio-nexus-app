@@ -15,6 +15,12 @@ export interface PropsCurrentAccount {
   role_user?: UserRole;
 }
 
+export interface StateLoginDataAccount extends PropsCurrentAccount {
+  token?: string;
+  success?: boolean;
+  message?: string;
+}
+
 //
 export interface AccountProps {
   id: number;

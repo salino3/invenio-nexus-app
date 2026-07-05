@@ -1,15 +1,15 @@
 import { VITE_URL_BACK } from "@/constants";
-import type { PropsCurrentAccount } from "./interface";
+import type { StateLoginDataAccount } from "./interface";
+import type { FormLoginProps } from "@/utils";
 
 export class ServicesApp {
   //
   public static async serviceLoginAccount(
-    email: string,
-    password: string,
-  ): Promise<PropsCurrentAccount> {
-    const response = await fetch(VITE_URL_BACK, {
+    body: FormLoginProps,
+  ): Promise<StateLoginDataAccount> {
+    const response = await fetch(`${VITE_URL_BACK}/login-account`, {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
       },
@@ -22,7 +22,7 @@ export class ServicesApp {
       throw new Error(`Login failed with status: ${response.status}`);
     }
 
-    const data: PropsCurrentAccount = await response.json();
+    const data: StateLoginDataAccount = await response.json();
     return data;
   }
 }

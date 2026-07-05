@@ -39,6 +39,6 @@ export interface AccountProps {
 export interface PropsProvider {
   currentUser: PropsCurrentAccount | null;
   theme: ThemeEnum;
-  getDataUser(data: PropsCurrentAccount): void;
+  setDataUser(data: PropsCurrentAccount | null): void;
   changeGlobalColors(): void;
 }

@@ -12,7 +12,7 @@ export const useProvider = create<PropsProvider>()(
   persist(
     immer((set, get) => ({
       currentUser: null,
-      getDataUser(data: PropsCurrentAccount) {
+      setDataUser(data: PropsCurrentAccount | null) {
         set((state) => {
           state.currentUser = data;
         });

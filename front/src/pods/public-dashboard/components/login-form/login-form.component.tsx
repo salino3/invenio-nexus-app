@@ -10,7 +10,7 @@ export const initialDataState: FormLoginProps = {
 };
 
 export const LoginForm: React.FC = () => {
-  const { getDataUser } = useProviderSelector("getDataUser");
+  const { setDataUser } = useProviderSelector("setDataUser");
 
   const [formData, setFormData] = useState<FormLoginProps>(initialDataState);
   const [formErrorData, setFormErrorData] =
@@ -44,7 +44,7 @@ export const LoginForm: React.FC = () => {
     if (state?.success && state?.data) {
       setFormData(initialDataState);
       setFormErrorData(initialDataState);
-      getDataUser && getDataUser(state.data.user);
+      setDataUser && setDataUser(state.data.user);
     } else if (!state?.success && !state?.data) {
       setFormErrorData(state?.fieldErrors as FormLoginProps);
     }

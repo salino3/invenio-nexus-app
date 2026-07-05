@@ -16,7 +16,6 @@ export interface PropsCurrentAccount {
 }
 
 //
-
 export interface AccountProps {
   id: number;
   name: string;

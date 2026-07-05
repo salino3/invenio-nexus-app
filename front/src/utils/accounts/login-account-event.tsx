@@ -1,11 +1,11 @@
 import { ServicesApp } from "@/store/services";
-import type { FormLoginProps, StateLoginAccount } from "../interface";
 import { utilitiesApp } from "../utilities-app";
+import type { FormLoginProps, StateLoginAccount } from "../interface";
 
 export async function loginAccountEvent(
   prevState: StateLoginAccount,
   formData: FormData,
-): Promise<StateLoginAccount | undefined> {
+): Promise<StateLoginAccount> {
   const { regexCorrectEmail } = utilitiesApp();
 
   let accountData: FormLoginProps = {
@@ -60,7 +60,7 @@ export async function loginAccountEvent(
   try {
     const result = await ServicesApp.serviceLoginAccount(accountData);
     console.log("clog1", result);
-    if (result.token) {
+    if (result && result.token) {
       return {
         ...prevState,
         success: true,
@@ -69,6 +69,13 @@ export async function loginAccountEvent(
         fieldErrors: null,
       };
     }
+
+    return {
+      ...prevState,
+      success: false,
+      error: "Authentication token was not received from the server.",
+      formData: accountData,
+    };
   } catch (err) {
     return {
       ...prevState,

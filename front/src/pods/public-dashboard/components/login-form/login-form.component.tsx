@@ -1,10 +1,6 @@
 import type React from "react";
 import { useActionState, useEffect, useState } from "react";
-import {
-  loginAccountEvent,
-  type FormLoginProps,
-  type StateLoginAccount,
-} from "@/utils";
+import { loginAccountEvent, type FormLoginProps } from "@/utils";
 import "./login-form.styles.scss";
 
 export const initialDataState: FormLoginProps = {
@@ -17,17 +13,14 @@ export const LoginForm: React.FC = () => {
   const [formErrorData, setFormErrorData] =
     useState<FormLoginProps>(initialDataState);
 
-  const [state, formAction, isPending] = useActionState(
-    async (prevState: StateLoginAccount, formData: FormData) =>
-      await loginAccountEvent(prevState, formData),
-    {
-      success: false,
-      data: null,
-      error: "",
-      fieldErrors: null,
-      formData: null,
-    },
-  );
+  // 'useActionState' for loginAccountEvent is automatically asyncronous
+  const [state, formAction, isPending] = useActionState(loginAccountEvent, {
+    success: false,
+    data: null,
+    error: "",
+    fieldErrors: null,
+    formData: null,
+  });
 
   const hanldeChangeFrom =
     (key: keyof FormLoginProps) => (e: React.ChangeEvent<HTMLInputElement>) => {

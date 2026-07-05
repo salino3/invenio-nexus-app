@@ -1,5 +1,6 @@
 import type React from "react";
 import { useActionState, useEffect, useState } from "react";
+import { useProviderSelector } from "@/store/provider";
 import { loginAccountEvent, type FormLoginProps } from "@/utils";
 import "./login-form.styles.scss";
 
@@ -9,6 +10,8 @@ export const initialDataState: FormLoginProps = {
 };
 
 export const LoginForm: React.FC = () => {
+  const { getDataUser } = useProviderSelector("getDataUser");
+
   const [formData, setFormData] = useState<FormLoginProps>(initialDataState);
   const [formErrorData, setFormErrorData] =
     useState<FormLoginProps>(initialDataState);
@@ -41,6 +44,7 @@ export const LoginForm: React.FC = () => {
     if (state?.success && state?.data) {
       setFormData(initialDataState);
       setFormErrorData(initialDataState);
+      getDataUser && getDataUser(state.data.user);
     } else if (!state?.success && !state?.data) {
       setFormErrorData(state?.fieldErrors as FormLoginProps);
     }

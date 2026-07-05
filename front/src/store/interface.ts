@@ -15,7 +15,8 @@ export interface PropsCurrentAccount {
   role_user?: UserRole;
 }
 
-export interface StateLoginDataAccount extends PropsCurrentAccount {
+export interface StateLoginDataAccount {
+  user: PropsCurrentAccount;
   token?: string;
   success?: boolean;
   message?: string;
@@ -38,5 +39,6 @@ export interface AccountProps {
 export interface PropsProvider {
   currentUser: PropsCurrentAccount | null;
   theme: ThemeEnum;
+  getDataUser(data: PropsCurrentAccount): void;
   changeGlobalColors(): void;
 }

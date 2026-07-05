@@ -2,12 +2,21 @@ import { create } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 import { immer } from "zustand/middleware/immer";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { Theme, type PropsProvider } from "./interface";
+import {
+  Theme,
+  type PropsProvider,
+  type PropsCurrentAccount,
+} from "./interface";
 
 export const useProvider = create<PropsProvider>()(
   persist(
     immer((set, get) => ({
       currentUser: null,
+      getDataUser(data: PropsCurrentAccount) {
+        set((state) => {
+          state.currentUser = data;
+        });
+      },
       theme: Theme.dark,
       changeGlobalColors() {
         set((state) => {

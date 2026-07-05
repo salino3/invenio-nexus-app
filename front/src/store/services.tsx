@@ -1,6 +1,6 @@
+import type { FormLoginProps } from "@/utils";
 import { VITE_URL_BACK } from "@/constants";
 import type { StateLoginDataAccount } from "./interface";
-import type { FormLoginProps } from "@/utils";
 
 export class ServicesApp {
   //

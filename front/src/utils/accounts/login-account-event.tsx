@@ -1,5 +1,7 @@
-import type { FormLoginProps, StateLoginAccount } from "../interface";
+import { ServicesApp } from "@/store/services";
 import { utilitiesApp } from "../utilities-app";
+import { VITE_TOKEN } from "@/constants";
+import type { FormLoginProps, StateLoginAccount } from "../interface";
 
 export async function loginAccountEvent(
   prevState: StateLoginAccount,
@@ -47,28 +49,40 @@ export async function loginAccountEvent(
   const hasErrors: boolean = Object.values(accountErrorData).some(
     (msg) => msg !== "",
   );
-  console.log("clog error:", accountErrorData);
-  console.log("clog state:", accountData);
+
   if (hasErrors) {
     return {
       ...prevState,
-      data: accountData,
       fieldErrors: accountErrorData,
+      formData: accountData,
     };
   }
 
   try {
-    // TODO: Call endpoint login
+    const result = await ServicesApp.serviceLoginAccount(accountData);
+    console.log("clog1", result);
+    if (result && result.token) {
+      sessionStorage.setItem(VITE_TOKEN, result.token);
+      return {
+        ...prevState,
+        success: true,
+        data: result,
+        error: "",
+        fieldErrors: null,
+      };
+    }
+
     return {
-      success: true,
-      data: null,
-      error: "",
-      fieldErrors: null,
+      ...prevState,
+      success: false,
+      error: "Authentication token was not received from the server.",
+      formData: accountData,
     };
   } catch (err) {
     return {
       ...prevState,
-      error: "Error during login.",
+      error: err as string,
+      formData: accountData,
     };
   }
 }

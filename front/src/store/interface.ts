@@ -15,8 +15,14 @@ export interface PropsCurrentAccount {
   role_user?: UserRole;
 }
 
-//
+export interface StateLoginDataAccount {
+  user: PropsCurrentAccount;
+  token?: string;
+  success?: boolean;
+  message?: string;
+}
 
+//
 export interface AccountProps {
   id: number;
   name: string;
@@ -33,5 +39,6 @@ export interface AccountProps {
 export interface PropsProvider {
   currentUser: PropsCurrentAccount | null;
   theme: ThemeEnum;
+  setDataUser(data: PropsCurrentAccount | null): void;
   changeGlobalColors(): void;
 }

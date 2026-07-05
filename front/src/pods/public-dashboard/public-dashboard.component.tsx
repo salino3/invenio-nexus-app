@@ -8,7 +8,7 @@ export const PublicDashboard: React.FC = () => {
 
   return (
     <div className="rootPublicDashboard">
-      <h1>PublicDashboardLayout</h1>
+      <h1 className="titlePagePD">Public Dashboard Layout</h1>
 
       <div className="boxButtonsPage">
         <button onClick={() => setIsLogin(true)}>Login</button>

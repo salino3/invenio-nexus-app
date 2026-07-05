@@ -1,10 +1,7 @@
 import type React from "react";
 import { useActionState, useEffect, useState } from "react";
-import {
-  loginAccountEvent,
-  type FormLoginProps,
-  type StateLoginAccount,
-} from "@/utils";
+import { useProviderSelector } from "@/store/provider";
+import { loginAccountEvent, type FormLoginProps } from "@/utils";
 import "./login-form.styles.scss";
 
 export const initialDataState: FormLoginProps = {
@@ -13,20 +10,20 @@ export const initialDataState: FormLoginProps = {
 };
 
 export const LoginForm: React.FC = () => {
+  const { setDataUser } = useProviderSelector("setDataUser");
+
   const [formData, setFormData] = useState<FormLoginProps>(initialDataState);
   const [formErrorData, setFormErrorData] =
     useState<FormLoginProps>(initialDataState);
 
-  const [state, formAction, isPending] = useActionState(
-    async (prevState: StateLoginAccount, formData: FormData) =>
-      await loginAccountEvent(prevState, formData),
-    {
-      success: false,
-      data: null,
-      error: "",
-      fieldErrors: null,
-    },
-  );
+  // 'useActionState' for loginAccountEvent is automatically asyncronous
+  const [state, formAction, isPending] = useActionState(loginAccountEvent, {
+    success: false,
+    data: null,
+    error: "",
+    fieldErrors: null,
+    formData: null,
+  });
 
   const hanldeChangeFrom =
     (key: keyof FormLoginProps) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +44,9 @@ export const LoginForm: React.FC = () => {
     if (state?.success && state?.data) {
       setFormData(initialDataState);
       setFormErrorData(initialDataState);
+      setDataUser && setDataUser(state.data.user);
     } else if (!state?.success && !state?.data) {
-      setFormErrorData(state.fieldErrors as FormLoginProps);
+      setFormErrorData(state?.fieldErrors as FormLoginProps);
     }
   }, [state]);
 
@@ -56,7 +54,7 @@ export const LoginForm: React.FC = () => {
     isPending || !formData.email.trim() || !formData.password.trim();
 
   return (
-    <form action={formAction} className="rootLoginForm">
+    <form action={formAction} id="rootLoginForm">
       <fieldset disabled={isPending}>
         <div className="boxInput">
           <label htmlFor="email">Email</label>
@@ -64,9 +62,15 @@ export const LoginForm: React.FC = () => {
             type="text"
             id="email"
             name="email"
+            defaultValue={state?.formData?.email}
             value={formData.email}
             onChange={hanldeChangeFrom("email")}
           />
+          <div className="errorBox">
+            {formErrorData && formErrorData?.email && (
+              <span className="errorMsg">{formErrorData.email}</span>
+            )}
+          </div>
         </div>
 
         <div className="boxInput">
@@ -75,9 +79,15 @@ export const LoginForm: React.FC = () => {
             type="password"
             id="password"
             name="password"
+            defaultValue={state?.formData?.password}
             value={formData.password}
             onChange={hanldeChangeFrom("password")}
           />
+          <div className="errorBox">
+            {formErrorData && formErrorData?.password && (
+              <span className="errorMsg">{formErrorData.password}</span>
+            )}
+          </div>
         </div>
 
         <button disabled={isButtonDisabled}>Submit</button>

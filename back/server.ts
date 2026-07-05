@@ -18,8 +18,8 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === "production"
-        ? FRONTEND_DEV_PORT
-        : FRONTEND_PROD_PORT,
+        ? FRONTEND_PROD_PORT
+        : FRONTEND_DEV_PORT,
     credentials: true,
   }),
 );

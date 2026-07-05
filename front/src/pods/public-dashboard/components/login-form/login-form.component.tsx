@@ -50,7 +50,7 @@ export const LoginForm: React.FC = () => {
     isPending || !formData.email.trim() || !formData.password.trim();
 
   return (
-    <form action={formAction} className="rootLoginForm">
+    <form action={formAction} id="rootLoginForm">
       <fieldset disabled={isPending}>
         <div className="boxInput">
           <label htmlFor="email">Email</label>
@@ -62,7 +62,11 @@ export const LoginForm: React.FC = () => {
             value={formData.email}
             onChange={hanldeChangeFrom("email")}
           />
-          {/* TODO: show off error mesasage */}
+          <div className="errorBox">
+            {formErrorData && formErrorData?.email && (
+              <span className="errorMsg">{formErrorData.email}</span>
+            )}
+          </div>
         </div>
 
         <div className="boxInput">
@@ -75,6 +79,11 @@ export const LoginForm: React.FC = () => {
             value={formData.password}
             onChange={hanldeChangeFrom("password")}
           />
+          <div className="errorBox">
+            {formErrorData && formErrorData?.password && (
+              <span className="errorMsg">{formErrorData.password}</span>
+            )}
+          </div>
         </div>
 
         <button disabled={isButtonDisabled}>Submit</button>

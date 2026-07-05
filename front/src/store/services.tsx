@@ -23,6 +23,7 @@ export class ServicesApp {
     }
 
     const data: StateLoginDataAccount = await response.json();
+
     return data;
   }
 }

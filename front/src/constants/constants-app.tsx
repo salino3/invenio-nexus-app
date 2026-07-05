@@ -1,1 +1,1 @@
-export const { VITE_URL_BACK } = import.meta.env;
+export const { VITE_URL_BACK, VITE_TOKEN } = import.meta.env;

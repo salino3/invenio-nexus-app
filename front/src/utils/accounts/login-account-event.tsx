@@ -1,5 +1,6 @@
 import { ServicesApp } from "@/store/services";
 import { utilitiesApp } from "../utilities-app";
+import { VITE_TOKEN } from "@/constants";
 import type { FormLoginProps, StateLoginAccount } from "../interface";
 
 export async function loginAccountEvent(
@@ -61,6 +62,7 @@ export async function loginAccountEvent(
     const result = await ServicesApp.serviceLoginAccount(accountData);
     console.log("clog1", result);
     if (result && result.token) {
+      sessionStorage.setItem(VITE_TOKEN, result.token);
       return {
         ...prevState,
         success: true,

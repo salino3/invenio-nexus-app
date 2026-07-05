@@ -52,8 +52,8 @@ export async function loginAccountEvent(
   if (hasErrors) {
     return {
       ...prevState,
-      data: accountData,
       fieldErrors: accountErrorData,
+      formData: accountData,
     };
   }
 
@@ -62,6 +62,7 @@ export async function loginAccountEvent(
     console.log("clog1", result);
     if (result.token) {
       return {
+        ...prevState,
         success: true,
         data: result,
         error: "",
@@ -72,6 +73,7 @@ export async function loginAccountEvent(
     return {
       ...prevState,
       error: err as string,
+      formData: accountData,
     };
   }
 }

@@ -10,4 +10,5 @@ export interface StateLoginAccount {
   error: string;
   data: StateLoginDataAccount | null;
   fieldErrors: FormLoginProps | null;
+  formData: FormLoginProps | null;
 }

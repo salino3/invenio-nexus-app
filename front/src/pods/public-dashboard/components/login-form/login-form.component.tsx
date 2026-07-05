@@ -25,6 +25,7 @@ export const LoginForm: React.FC = () => {
       data: null,
       error: "",
       fieldErrors: null,
+      formData: null,
     },
   );
 
@@ -48,7 +49,7 @@ export const LoginForm: React.FC = () => {
       setFormData(initialDataState);
       setFormErrorData(initialDataState);
     } else if (!state?.success && !state?.data) {
-      setFormErrorData(state.fieldErrors as FormLoginProps);
+      setFormErrorData(state?.fieldErrors as FormLoginProps);
     }
   }, [state]);
 
@@ -64,6 +65,7 @@ export const LoginForm: React.FC = () => {
             type="text"
             id="email"
             name="email"
+            defaultValue={state?.formData?.email}
             value={formData.email}
             onChange={hanldeChangeFrom("email")}
           />
@@ -76,6 +78,7 @@ export const LoginForm: React.FC = () => {
             type="password"
             id="password"
             name="password"
+            defaultValue={state?.formData?.password}
             value={formData.password}
             onChange={hanldeChangeFrom("password")}
           />

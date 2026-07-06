@@ -3,6 +3,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useProviderSelector } from "@/store/provider";
 import { loginAccountEvent, type FormLoginProps } from "@/utils";
 import "./login-form.styles.scss";
+import { BasicInput } from "@/common";
 
 export const initialDataState: FormLoginProps = {
   email: "",
@@ -56,39 +57,25 @@ export const LoginForm: React.FC = () => {
   return (
     <form action={formAction} id="rootLoginForm">
       <fieldset disabled={isPending}>
-        <div className="boxInput">
-          <label htmlFor="email">Email</label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            defaultValue={state?.formData?.email}
-            value={formData.email}
-            onChange={hanldeChangeFrom("email")}
-          />
-          <div className="errorBox">
-            {formErrorData && formErrorData?.email && (
-              <span className="errorMsg">{formErrorData.email}</span>
-            )}
-          </div>
-        </div>
+        <BasicInput
+          name="email"
+          type="email"
+          change={hanldeChangeFrom("email")}
+          lbl="Email"
+          stateValue={state?.formData?.email}
+          value={formData.email}
+          errorMsg={formErrorData?.email}
+        />
 
-        <div className="boxInput">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            defaultValue={state?.formData?.password}
-            value={formData.password}
-            onChange={hanldeChangeFrom("password")}
-          />
-          <div className="errorBox">
-            {formErrorData && formErrorData?.password && (
-              <span className="errorMsg">{formErrorData.password}</span>
-            )}
-          </div>
-        </div>
+        <BasicInput
+          name="password"
+          type="password"
+          change={hanldeChangeFrom("password")}
+          lbl="Password"
+          stateValue={state?.formData?.password}
+          value={formData.password}
+          errorMsg={formErrorData?.password}
+        />
 
         <button disabled={isButtonDisabled}>Submit</button>
       </fieldset>

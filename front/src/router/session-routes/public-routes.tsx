@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, Navigate } from "react-router-dom";
 import { utilitiesApp } from "@/utils";
 import { routePaths } from "../routes.interface";
 import { useProviderSelector } from "@/store/provider";
@@ -21,6 +21,10 @@ export const PublicRoutes: React.FC = () => {
       }
     }
   }, []);
+
+  if (token && token?.id) {
+    return <Navigate to={routePaths.public_dashboard} replace />;
+  }
 
   return <Outlet />;
 };

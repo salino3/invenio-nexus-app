@@ -1,0 +1,36 @@
+.rootBasicInput {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 0.2rem;
+
+  label {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  .errorBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 20px;
+    .errorMsg {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      width: 100%;
+      color: var(--color-error);
+      word-break: break-all;
+    }
+  }
+}

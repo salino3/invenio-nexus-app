@@ -1,0 +1,12 @@
+.rootButtonForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .btnSubmitButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}

@@ -1,8 +1,10 @@
 import type React from "react";
 import { useActionState, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
 import { BasicInput, ButtonForm } from "@/common";
 import { loginAccountEvent, type FormLoginProps } from "@/utils";
+import { routePaths } from "@/router/routes.interface";
 import "./login-form.styles.scss";
 
 export const initialDataState: FormLoginProps = {
@@ -11,6 +13,8 @@ export const initialDataState: FormLoginProps = {
 };
 
 export const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
+
   const { setDataUser } = useProviderSelector("setDataUser");
 
   const [formData, setFormData] = useState<FormLoginProps>(initialDataState);
@@ -50,6 +54,12 @@ export const LoginForm: React.FC = () => {
       setFormErrorData(state?.fieldErrors as FormLoginProps);
     }
   }, [state]);
+
+  useEffect(() => {
+    if (state?.success && state?.data?.token) {
+      navigate(routePaths.dashboard);
+    }
+  }, [isPending]);
 
   const isButtonDisabled: boolean =
     !formData.email.trim() || !formData.password.trim();

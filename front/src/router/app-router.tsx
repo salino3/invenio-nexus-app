@@ -28,6 +28,7 @@ const routes: AppRoute[] = [
   },
 ];
 
+//
 const reducedRoutes: Record<string, JSX.Element[]> = routes.reduce(
   (acc, route) => {
     if (!acc[route.visibility]) {

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "react";
-import AppRouter from "./router/AppRouter";
+import AppRouter from "./router/app-router";
 import { useProvider } from "./store/provider";
 
 function App() {

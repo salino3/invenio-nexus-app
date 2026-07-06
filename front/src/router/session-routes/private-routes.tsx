@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
+import type { PropsCurrentAccount } from "@/store/interface";
 import { utilitiesApp } from "@/utils";
 import { routePaths } from "../routes.interface";
 
@@ -9,10 +10,10 @@ export const PrivateRoutes: React.FC = () => {
 
   const { getAuthToken } = utilitiesApp();
 
-  const token = getAuthToken();
+  const token: PropsCurrentAccount | null = getAuthToken();
   React.useEffect(() => {
-    if (token) {
-      setDataUser && setDataUser(token);
+    if (token && setDataUser) {
+      setDataUser(token);
     }
   }, []);
 

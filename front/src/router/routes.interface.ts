@@ -1,5 +1,7 @@
 import React from "react";
 
+type EnumVisibility = "public" | "private" | "restricted" | "admin";
+
 export interface RoutePaths {
   public_dashboard: string;
   dashboard: string;
@@ -15,4 +17,5 @@ export const routePaths: RoutePaths = {
 export interface AppRoute {
   path: string;
   element: React.ReactNode;
+  visibility: EnumVisibility;
 }

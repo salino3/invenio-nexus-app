@@ -1,9 +1,9 @@
 import type React from "react";
 import { useActionState, useEffect, useState } from "react";
 import { useProviderSelector } from "@/store/provider";
+import { BasicInput, ButtonForm } from "@/common";
 import { loginAccountEvent, type FormLoginProps } from "@/utils";
 import "./login-form.styles.scss";
-import { BasicInput } from "@/common";
 
 export const initialDataState: FormLoginProps = {
   email: "",
@@ -52,7 +52,7 @@ export const LoginForm: React.FC = () => {
   }, [state]);
 
   const isButtonDisabled: boolean =
-    isPending || !formData.email.trim() || !formData.password.trim();
+    !formData.email.trim() || !formData.password.trim();
 
   return (
     <form action={formAction} id="rootLoginForm">
@@ -77,7 +77,12 @@ export const LoginForm: React.FC = () => {
           errorMsg={formErrorData?.password}
         />
 
-        <button disabled={isButtonDisabled}>Submit</button>
+        <ButtonForm
+          text="Submit"
+          type="submit"
+          disabled={isButtonDisabled}
+          pendingForm={isPending}
+        />
       </fieldset>
     </form>
   );

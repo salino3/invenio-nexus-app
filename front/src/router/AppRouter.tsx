@@ -13,6 +13,12 @@ const ErrorPageLayout = lazy(
   () => import("../layouts/error-page/error-page.layout"),
 );
 
+//
+const routes: AppRoute[] = [
+  { path: routePaths.public_dashboard, element: <PublicDashboardLayout /> },
+  { path: routePaths.dashboard, element: <DashboardLayout /> },
+];
+
 const LoadingFallback: React.FC = () => (
   <div
     className="loading-fallback"
@@ -21,11 +27,6 @@ const LoadingFallback: React.FC = () => (
     <h2>Loading...</h2>
   </div>
 );
-
-const routes: AppRoute[] = [
-  { path: routePaths.public_dashboard, element: <PublicDashboardLayout /> },
-  { path: routePaths.dashboard, element: <DashboardLayout /> },
-];
 
 const AppRouter: React.FC = () => {
   return (

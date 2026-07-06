@@ -1,14 +1,12 @@
 import { ServicesApp } from "@/store/services";
-import { utilitiesApp } from "../utilities-app";
 import { VITE_TOKEN } from "@/constants";
+import { regexCorrectEmail } from "../utilities-app";
 import type { FormLoginProps, StateLoginAccount } from "../interface";
 
 export async function loginAccountEvent(
   prevState: StateLoginAccount,
   formData: FormData,
 ): Promise<StateLoginAccount> {
-  const { regexCorrectEmail } = utilitiesApp();
-
   let accountData: FormLoginProps = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,

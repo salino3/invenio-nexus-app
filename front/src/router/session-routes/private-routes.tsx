@@ -1,12 +1,13 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-// import { useProviderSelector } from "../../store";
+import { useProviderSelector } from "@/store/provider";
 import { utilitiesApp } from "@/utils/utilities-app";
 import { routePaths } from "../routes.interface";
 
 export const PrivateRoutes: React.FC = () => {
   const navigate = useNavigate();
-  //   const { loginAccount } = useProviderSelector("loginAccount");
+  const { setDataUser } = useProviderSelector("setDataUser");
+
   const { getAuthToken } = utilitiesApp();
 
   React.useEffect(() => {
@@ -14,7 +15,7 @@ export const PrivateRoutes: React.FC = () => {
     if (!token) {
       navigate(routePaths.public_dashboard);
     } else {
-      //   loginAccount && loginAccount(token);
+      setDataUser && setDataUser(token);
     }
   }, []);
 

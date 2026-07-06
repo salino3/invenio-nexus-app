@@ -16,7 +16,7 @@ export const AdminRoutes: React.FC = () => {
     if (isAdmin && setDataUser) {
       setDataUser(token);
     }
-  }, []);
+  }, [isAdmin, token, setDataUser]);
 
   if (!isAdmin) {
     return <Navigate to={routePaths.public_dashboard} replace />;

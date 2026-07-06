@@ -15,7 +15,7 @@ export const PrivateRoutes: React.FC = () => {
     if (token && setDataUser) {
       setDataUser(token);
     }
-  }, []);
+  }, [token, setDataUser]);
 
   if (!token) {
     return <Navigate to={routePaths.public_dashboard} replace />;

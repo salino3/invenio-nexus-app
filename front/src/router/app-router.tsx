@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, type JSX } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { PublicRoutes, PrivateRoutes, AdminRoutes } from "./session-routes";
 import { routePaths, type AppRoute } from "./routes.interface";
 
 // Lazy load the layout components
@@ -55,17 +56,14 @@ const AppRouter: React.FC = () => {
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {/* Grupo Public */}
-          {/* <Route element={<PublicRoutes />}>{reducedRoutes["public"]}</Route> */}
+          <Route element={<PublicRoutes />}>{reducedRoutes["public"]}</Route>
 
           {/* Grupo Private */}
-          {/* <Route element={<PrivateRoutes />}>{reducedRoutes["private"]}</Route> */}
+          <Route element={<PrivateRoutes />}>{reducedRoutes["private"]}</Route>
 
           {/* Grupo Admin */}
-          {/* <Route element={<AdminRoutes />}>{reducedRoutes["admin"]}</Route> */}
+          <Route element={<AdminRoutes />}>{reducedRoutes["admin"]}</Route>
 
-          {routes.map((route: AppRoute) => (
-            <Route key={route.path} path={route.path} element={route.element} />
-          ))}
           <Route path={routePaths.error_page} element={<ErrorPageLayout />} />
         </Routes>
       </Suspense>

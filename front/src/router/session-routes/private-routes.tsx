@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
-import { utilitiesApp } from "@/utils/utilities-app";
+import { utilitiesApp } from "@/utils";
 import { routePaths } from "../routes.interface";
 
 export const PrivateRoutes: React.FC = () => {

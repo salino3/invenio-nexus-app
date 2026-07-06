@@ -1,22 +1,22 @@
-import type { PropsCurrentAccount } from "@/store/interface";
 import { jwtDecode } from "jwt-decode";
+import { useProviderSelector } from "@/store/provider";
+import type { PropsCurrentAccount } from "@/store/interface";
+import { VITE_TOKEN } from "@/constants";
+import { routePaths } from "@/router/routes.interface";
 
 export const utilitiesApp = () => {
+  const { setDataUser } = useProviderSelector("setDataUser");
+
   //*
   const getAuthToken = (): PropsCurrentAccount | null => {
-    const cookies = document.cookie.split("; ");
-    const authCookie = cookies.find((cookie) =>
-      cookie.startsWith(import.meta.env.VITE_APP_COOKIE_AUTH),
-    );
+    const token = sessionStorage.getItem(VITE_TOKEN);
 
-    if (!authCookie) return null;
-
-    const authCookieSplitted = authCookie.split("=")[1];
+    if (!token) return null;
 
     // Verifiying it is divided in 3 parts - header, payload and signature
-    if (authCookieSplitted && authCookieSplitted.split(".").length === 3) {
+    if (token && token.split(".").length === 3) {
       try {
-        const decoded: any = jwtDecode(authCookieSplitted);
+        const decoded: any = jwtDecode<PropsCurrentAccount>(token);
 
         return decoded || null;
       } catch (error) {
@@ -30,8 +30,17 @@ export const utilitiesApp = () => {
   };
 
   //*
+  const closeSession = (): void => {
+    sessionStorage.removeItem(VITE_TOKEN);
+    setDataUser && setDataUser(null);
+
+    window.location.href = routePaths?.public_dashboard;
+    return;
+  };
+
+  //*
   const regexCorrectEmail: RegExp =
     /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  return { getAuthToken, regexCorrectEmail };
+  return { getAuthToken, closeSession, regexCorrectEmail };
 };

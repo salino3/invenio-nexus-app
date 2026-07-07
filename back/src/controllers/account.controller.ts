@@ -54,7 +54,7 @@ export class AccountController {
         name,
         email,
         password: passwordHash,
-        age: age,
+        age,
       };
 
       const newAccount = await Account.createAccount(accountInput);

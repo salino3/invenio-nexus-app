@@ -86,7 +86,7 @@ export class Company {
         $10, $11, 
         $12, $13, $14, $15
       )
-      RETURNING *;
+      RETURNING id;
     `;
 
     const values = [

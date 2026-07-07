@@ -33,3 +33,8 @@ export interface RegistretionCompanyDB extends Omit<
   CompanyProps,
   "id" | "created_at" | "updated_at"
 > {}
+
+export interface RegistretionCompanyInput extends Pick<
+  CompanyProps,
+  keyof RegistretionCompanyDB
+> {}

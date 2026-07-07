@@ -1,6 +1,6 @@
 export const utilitiesApp = () => {
   //
-  const requiredFields = <T extends Record<string, any>>(data: T) =>
+  const checkRequiredFields = <T extends Record<string, any>>(data: T) =>
     Object.entries(data).reduce<string[]>((acc, [key, value]) => {
       if (
         value === null ||
@@ -8,13 +8,13 @@ export const utilitiesApp = () => {
         (typeof value === "string" && !value.trim())
       ) {
         const formattedKey =
-          key === "confirmPassword" ? "Confirm password" : key;
+          key === "confirmPassword" ? "confirm password" : key;
         acc.push(formattedKey);
       }
       return acc;
     }, []);
 
   return {
-    requiredFields,
+    checkRequiredFields,
   };
 };

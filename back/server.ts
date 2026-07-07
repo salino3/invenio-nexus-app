@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import routerAccount from "./src/routes/accounts.route";
 import routerAuth from "./src/routes/auth/auth.accounts.routes";
+import routerCompanies from "./src/routes/companies.route";
 import { FRONTEND_DEV_PORT, FRONTEND_PROD_PORT, PORT } from "./src/constants";
 
 const app = express();
@@ -34,6 +35,7 @@ app.get("/health", (req: Request, res: Response) => {
 
 app.use("/api", routerAccount);
 app.use("/api", routerAuth);
+app.use("/api", routerCompanies);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server up and running at http://localhost:${PORT}`);

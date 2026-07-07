@@ -120,4 +120,4 @@ export class AccountController {
   }
 }
 
-export const authController = new AccountController();
+export const accountController = new AccountController();

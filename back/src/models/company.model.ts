@@ -1,7 +1,9 @@
+import { query } from "../db";
 import {
   CompanyProps,
   ContactsCompany,
   MultimediaCompany,
+  RegistretionCompanyDB,
 } from "../interfaces/company.interface";
 
 //
@@ -67,5 +69,46 @@ export class Company {
 
     this.created_at = new Date(data.created_at);
     this.updated_at = new Date(data.updated_at);
+  }
+
+  //
+  static async createCompany(input: RegistretionCompanyDB): Promise<Company> {
+    const sql = `
+      INSERT INTO companies (
+        name, tax_id, description, hashtags, sector, location, country_code,
+        funding_required_min, funding_required_max, 
+        ticket_investor_min, ticket_investor_max,
+        connection_objectives, contacts, logo, multimedia
+      )
+      VALUES (
+        $1, $2, $3, $4, $5, $6, $7, 
+        $8, $9, 
+        $10, $11, 
+        $12, $13, $14, $15
+      )
+      RETURNING *;
+    `;
+
+    const values = [
+      input.name,
+      input.tax_id ?? null,
+      input.description,
+      JSON.stringify(input.hashtags ?? []), // JSONB fields require stringification or structured passing depending on driver config
+      input.sector,
+      input.location,
+      input.country_code ?? null,
+      input.funding_required_min ?? null,
+      input.funding_required_max ?? null,
+      input.ticket_investor_min ?? null,
+      input.ticket_investor_max ?? null,
+      input.connection_objectives ?? [],
+      JSON.stringify(input.contacts ?? []),
+      input.logo ?? null,
+      JSON.stringify(input.multimedia ?? []),
+    ];
+
+    const { rows } = await query(sql, values);
+
+    return new Company(rows[0]);
   }
 }

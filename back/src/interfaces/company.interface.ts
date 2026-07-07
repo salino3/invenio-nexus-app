@@ -37,4 +37,6 @@ export interface RegistretionCompanyDB extends Omit<
 export interface RegistretionCompanyInput extends Pick<
   CompanyProps,
   keyof RegistretionCompanyDB
-> {}
+> {
+  role: string;
+}

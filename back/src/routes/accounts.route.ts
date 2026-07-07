@@ -1,8 +1,7 @@
 import express from "express";
-import { AccountController } from "../controllers/account.controller";
+import { accountController } from "../controllers/account.controller";
 
 const routerAccount = express.Router();
-const accountController = new AccountController();
 
 routerAccount.post("/register-account", accountController.registerAccount);
 

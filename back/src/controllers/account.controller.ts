@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { Account } from "../models/account.model";
+import { utilitiesApp } from "../utils/utilities-app";
 import {
   RegistretionAccountDB,
   RegistretionAccountInput,
 } from "../interfaces/account.interface";
+
+const { checkRequiredFields } = utilitiesApp();
 
 export class AccountController {
   //
@@ -12,25 +15,12 @@ export class AccountController {
     try {
       const account: RegistretionAccountInput = req.body;
 
-      const requiredFields = Object.entries(account).reduce(
-        (
-          acc: string[],
-          [key, value]: [key: string, value: keyof RegistretionAccountInput],
-        ) => {
-          if (!value || (typeof value === "string" && !value.trim())) {
-            acc.push(key === "confirmPassword" ? "Confirm password" : key);
-          }
-
-          return acc;
-        },
-        [],
-      );
+      const requiredFields = checkRequiredFields(account);
 
       if (requiredFields.length > 0) {
         return res.status(400).json({
           error: `Missing fields:${requiredFields.map(
-            (item: string, index: number) =>
-              ` ${item}${index + 1 === requiredFields.length ? "" : ","}`,
+            (item: string) => ` ${item}`,
           )} ${requiredFields.length > 1 ? "are" : "is"} required.`,
         });
       }
@@ -64,7 +54,7 @@ export class AccountController {
         name,
         email,
         password: passwordHash,
-        age: age,
+        age,
       };
 
       const newAccount = await Account.createAccount(accountInput);
@@ -120,4 +110,4 @@ export class AccountController {
   }
 }
 
-export const authController = new AccountController();
+export const accountController = new AccountController();

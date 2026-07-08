@@ -58,7 +58,7 @@ export async function loginAccountEvent(
 
   try {
     const result = await ServicesApp.serviceLoginAccount(accountData);
-    console.log("clog1", result);
+
     if (result && result.token) {
       sessionStorage.setItem(VITE_TOKEN, result.token);
       return {

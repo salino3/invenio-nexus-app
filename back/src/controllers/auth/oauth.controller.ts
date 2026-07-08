@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import jwt from "jsonwebtoken";
 import {
   COOKIES_NAME,
@@ -6,12 +6,12 @@ import {
   FRONTEND_DEV_PORT,
   FRONTEND_PROD_PORT,
 } from "../../constants";
-import { AccountCookie } from "../../interfaces/account.interface";
+import { AuthRequest } from "../../middlewares/auth-middleware";
 
 export class OAuthController {
-  public async googleCallback(req: Request, res: Response): Promise<void> {
+  public async googleCallback(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const user = req.user as AccountCookie;
+      const user = req.user;
 
       if (!user) {
         res.redirect(

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { utilitiesApp } from "../utils/utilities-app";
 import { RegistretionCompanyInput } from "../interfaces/company.interface";
 import { Company } from "../models/company.model";

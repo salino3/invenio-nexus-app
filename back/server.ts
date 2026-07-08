@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
+import passport from "./src/config/passport";
 import routerAccount from "./src/routes/accounts.route";
 import routerAuth from "./src/routes/auth/auth.accounts.routes";
 import routerCompanies from "./src/routes/companies.route";
@@ -11,6 +12,7 @@ import { FRONTEND_DEV_PORT, FRONTEND_PROD_PORT, PORT } from "./src/constants";
 const app = express();
 
 app.use(morgan("dev"));
+app.use(passport.initialize());
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));

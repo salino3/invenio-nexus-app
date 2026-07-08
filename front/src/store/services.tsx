@@ -26,4 +26,25 @@ export class ServicesApp {
 
     return data;
   }
+
+  //
+  public static async checkGoogleSession(): Promise<
+    StateLoginDataAccount | undefined
+  > {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/auth/get-me`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      return data;
+    } catch (error) {
+      console.log("There is not active Google session:", error);
+    }
+  }
 }

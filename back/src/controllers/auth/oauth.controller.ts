@@ -41,7 +41,7 @@ export class OAuthController {
       res.redirect(
         process.env.NODE_ENV === "production"
           ? (FRONTEND_PROD_PORT as string)
-          : (FRONTEND_DEV_PORT as string),
+          : (`${FRONTEND_DEV_PORT}/dashboard` as string),
       );
     } catch (error) {
       console.error("OAuth Callback Error:", error);

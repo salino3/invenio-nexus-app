@@ -7,7 +7,7 @@ export const PublicDashboard: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
 
   const loginWithGoogle = () => {
-    window.location.href = ` ${VITE_URL_BACK}/auth/google`;
+    window.location.href = `${VITE_URL_BACK}/auth/google`;
   };
 
   return (

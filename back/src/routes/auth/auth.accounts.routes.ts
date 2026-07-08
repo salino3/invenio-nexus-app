@@ -7,6 +7,8 @@ const routerAuth = express.Router();
 
 routerAuth.post("/login-account", authController.loginAccount);
 
+routerAuth.get("/auth/get-me", authController.getMe);
+
 // Google OAuth Routes
 routerAuth.get(
   "/auth/google",

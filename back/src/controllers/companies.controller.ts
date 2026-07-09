@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { utilitiesApp } from "../utils/utilities-app";
 import { RegistretionCompanyInput } from "../interfaces/company.interface";
 import { Company } from "../models/company.model";
@@ -8,10 +8,7 @@ const { checkRequiredFields } = utilitiesApp();
 
 export class CompaniesController {
   //
-  public async registerCompany(
-    req: AuthRequest,
-    res: Response,
-  ): Promise<Response> {
+  public async registerCompany(req: Request, res: Response): Promise<Response> {
     try {
       const company: RegistretionCompanyInput = req.body;
 
@@ -31,7 +28,8 @@ export class CompaniesController {
         });
       }
 
-      const authenticatedUserId: number | null = req.user ? req.user.id : null;
+      const authenticatedUserId: number | null =
+        (req as AuthRequest).user?.id ?? null;
 
       if (!authenticatedUserId) {
         return res.status(401).json({

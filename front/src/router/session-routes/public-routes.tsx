@@ -2,8 +2,10 @@ import React from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import { utilitiesApp } from "@/utils";
 import type { PropsCurrentAccount } from "@/store/interface";
-import { routePaths } from "../routes.interface";
 import { useProviderSelector } from "@/store/provider";
+import { Aside } from "@/common-app";
+import { routePaths } from "../routes.interface";
+import "../../App.scss";
 
 export const PublicRoutes: React.FC = () => {
   const { currentUser } = useProviderSelector("currentUser");
@@ -22,5 +24,10 @@ export const PublicRoutes: React.FC = () => {
     return <Navigate to={routePaths.dashboard} replace />;
   }
 
-  return <Outlet />;
+  return (
+    <div className="rootRouter">
+      <Aside />
+      <Outlet />
+    </div>
+  );
 };

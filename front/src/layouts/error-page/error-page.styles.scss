@@ -1,15 +1,16 @@
-.error-page-layout {
+.errorPageLayout {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100cqw;
+  width: 100%;
   background-color: #121214;
   color: #e1e1e6;
   font-family: sans-serif;
   padding: 2rem;
   z-index: 0;
-
-  .error-card {
+  flex-grow: 1;
+  .errorCard {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -80,10 +81,10 @@
   @media (max-width: 576px) {
     padding: 1rem;
 
-    .error-card {
+    .errorCard {
       padding: 2rem 1.5rem;
 
-      .error-code {
+      .errorCode {
         font-size: 4.5rem;
       }
 

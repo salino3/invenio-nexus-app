@@ -3,7 +3,9 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
 import type { PropsCurrentAccount } from "@/store/interface";
 import { utilitiesApp } from "@/utils";
+import { Aside } from "@/common-app";
 import { routePaths } from "../routes.interface";
+import "../../App.scss";
 
 export const AdminRoutes: React.FC = () => {
   const { setDataUser } = useProviderSelector("setDataUser");
@@ -22,5 +24,10 @@ export const AdminRoutes: React.FC = () => {
     return <Navigate to={routePaths.public_dashboard} replace />;
   }
 
-  return <Outlet />;
+  return (
+    <div className="rootRouter">
+      <Aside />
+      <Outlet />
+    </div>
+  );
 };

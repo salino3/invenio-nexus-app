@@ -1,0 +1,141 @@
+.rootMainHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  padding-bottom: 1.6rem;
+  border: solid;
+  width: 100%;
+  z-index: 0;
+
+  background-image:
+    radial-gradient(
+      circle at 50% 0%,
+      color-mix(in srgb, var(--color-neutral-400), #fff 15%) 0%,
+      transparent 60%
+    ),
+    linear-gradient(
+      to bottom,
+      var(--color-neutral-400),
+      color-mix(in srgb, var(--color-neutral-500), #000 10%)
+    );
+
+  .containerMainHeader {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+
+    .boxLogo {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+      font-size: x-small;
+      width: 200px;
+      max-width: 200px;
+
+      .boxImage {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        object-fit: cover;
+        object-fit: contain;
+        height: 100%;
+        width: 100%;
+
+        max-height: 50px;
+        border: solid;
+        overflow: hidden;
+        border-radius: 0.25rem;
+        img {
+          width: 100%;
+          height: 100%;
+          max-height: 50px;
+        }
+      }
+
+      @media screen and (max-width: 724px) {
+        width: unset;
+      }
+    }
+
+    nav {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      width: 350px;
+      ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+
+        padding: 0;
+        margin: 0;
+        li {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          font-weight: 600;
+
+          a {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            flex-grow: 1;
+            color: var(--color-primary);
+            width: 100%;
+            max-width: 100px;
+            text-decoration: var(--link-selected, none);
+            padding: 0.25rem;
+            transition:
+              background-color 0.5s,
+              color 0.25s;
+            border-radius: 0.35rem;
+            &:hover {
+              color: var(--color-secondary-050);
+              background-color: var(--color-tertiary);
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (max-width: 724px) {
+      display: grid;
+      grid-template-areas:
+        "A . B"
+        "C C C";
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+
+      .boxLogo {
+        grid-area: A;
+      }
+
+      h3 {
+        grid-area: B;
+        text-align: center;
+      }
+      nav {
+        grid-area: C;
+        width: 300px;
+      }
+    }
+  }
+}

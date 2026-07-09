@@ -2,13 +2,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100cqw;
+  width: 100%;
   background-color: #121214;
   color: #e1e1e6;
   font-family: sans-serif;
   padding: 2rem;
   z-index: 0;
-
+  flex-grow: 1;
   .errorCard {
     display: flex;
     flex-direction: column;

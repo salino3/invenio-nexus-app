@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import {
   COOKIES_NAME,
@@ -9,9 +9,9 @@ import {
 import { AuthRequest } from "../../middlewares/auth-middleware";
 
 export class OAuthController {
-  public async googleCallback(req: AuthRequest, res: Response): Promise<void> {
+  public async googleCallback(req: Request, res: Response): Promise<void> {
     try {
-      const user = req.user;
+      const user = (req as AuthRequest).user;
 
       if (!user) {
         res.redirect(

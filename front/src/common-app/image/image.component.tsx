@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactEventHandler } from "react";
+import React, { type CSSProperties, type ReactEventHandler } from "react";
 import { utilitiesApp } from "@/utils";
 
 type LazyProps = "lazy" | "eager" | undefined;
@@ -13,7 +13,7 @@ interface Props {
   style?: CSSProperties | undefined;
 }
 
-export const ImageComponent = (props: Props) => {
+export const ImageComponent: React.FC<Props> = (props) => {
   const {
     customStyle,
     src,

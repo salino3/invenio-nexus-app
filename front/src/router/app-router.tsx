@@ -2,6 +2,7 @@ import React, { lazy, Suspense, type JSX } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PublicRoutes, PrivateRoutes, AdminRoutes } from "./session-routes";
 import { routePaths, type AppRoute } from "./routes.interface";
+import { MainHeader } from "@/common-app";
 
 // Lazy load the layout components
 const PublicDashboardLayout = lazy(
@@ -54,6 +55,9 @@ const LoadingFallback: React.FC = () => (
 const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
+      {/* <div>X</div> */}
+
+      <MainHeader />
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           {/* Grupo Public */}

@@ -1,4 +1,4 @@
-.error-page-layout {
+.errorPageLayout {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,7 +9,7 @@
   padding: 2rem;
   z-index: 0;
 
-  .error-card {
+  .errorCard {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -80,10 +80,10 @@
   @media (max-width: 576px) {
     padding: 1rem;
 
-    .error-card {
+    .errorCard {
       padding: 2rem 1.5rem;
 
-      .error-code {
+      .errorCode {
         font-size: 4.5rem;
       }
 

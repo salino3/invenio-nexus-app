@@ -7,9 +7,9 @@ import "./error-page.styles.scss";
 const ErrorPageLayout: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   return (
-    <div className="error-page-layout">
-      <div className="error-card">
-        <h1 className="error-code">404</h1>
+    <div className="errorPageLayout">
+      <div className="errorCard">
+        <h1 className="errorCode">404</h1>
         <h2>Page Not Found</h2>
         <p>The page you are looking for does not exist or has been moved.</p>
         <Link to={routePaths.public_dashboard} className="back-home-btn">

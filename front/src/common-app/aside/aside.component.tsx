@@ -2,10 +2,12 @@ import { useMediaQuery } from "react-responsive";
 import { ImageComponent } from "../image";
 import "./aside.styles.scss";
 
+const asideValue: boolean = true;
+
 export const Aside = () => {
   const isMobile: boolean = useMediaQuery({ maxWidth: "724px" });
 
-  const aside: boolean = true;
+  const aside: string = asideValue ? "open" : "close";
   return (
     <aside className={`rootAsideComponent aside_${aside}`}>
       <div className="containerAside">

@@ -9,7 +9,7 @@ export interface AuthRequest extends Request {
 }
 
 export const authMiddleware = (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {

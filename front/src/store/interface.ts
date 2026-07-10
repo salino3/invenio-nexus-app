@@ -13,6 +13,9 @@ export interface PropsCurrentAccount {
   email: string;
   name?: string;
   role_user?: UserRole;
+  hasAdFreeAccess: boolean;
+  exp: number | null;
+  iat: number | null;
 }
 
 export interface StateLoginDataAccount {

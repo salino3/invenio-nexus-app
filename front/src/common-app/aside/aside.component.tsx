@@ -1,14 +1,20 @@
-import type React from "react";
+import React, { useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import { ImageComponent } from "../image";
 import "./aside.styles.scss";
 
 const asideValue: boolean = true;
 
+const aside: string = asideValue ? "open" : "close";
+
 export const Aside: React.FC = () => {
   const isMobile: boolean = useMediaQuery({ maxWidth: "724px" });
 
-  const aside: string = asideValue ? "open" : "close";
+  useEffect(() => {
+    // api call
+    // ... value aside boolean...
+  }, []);
+
   return (
     <aside className={`rootAsideComponent aside_${aside}`}>
       <div className="containerAside">

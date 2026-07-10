@@ -59,7 +59,7 @@ export async function loginAccountEvent(
   try {
     const result = await ServicesApp.serviceLoginAccount(accountData);
 
-    if (result && result.token) {
+    if (result && result.token && result.user) {
       sessionStorage.setItem(VITE_TOKEN, result.token);
       return {
         ...prevState,

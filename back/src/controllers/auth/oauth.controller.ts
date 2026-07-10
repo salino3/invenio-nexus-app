@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { Account } from "../../models/account.model";
 import {
   COOKIES_NAME,
   SECRET_KEY,
@@ -12,7 +13,7 @@ export class OAuthController {
   public async googleCallback(req: Request, res: Response): Promise<void> {
     try {
       const user = (req as AuthRequest).user;
-
+      console.log("clog8", user);
       if (!user) {
         res.redirect(
           `${
@@ -24,9 +25,19 @@ export class OAuthController {
         return;
       }
 
-      const token = jwt.sign(user, SECRET_KEY as string, {
-        expiresIn: "1h",
-      });
+      const hasAdFreeAccess: boolean =
+        await Account.checkSubscriptionStatusByUser(user.id);
+
+      const token = jwt.sign(
+        {
+          ...user,
+          hasAdFreeAccess,
+        },
+        SECRET_KEY as string,
+        {
+          expiresIn: "1h",
+        },
+      );
 
       const cookieOptions = {
         httpOnly: true,

@@ -34,7 +34,9 @@ export class Account {
   }
 
   //
-  static async createAccount(input: RegistretionAccountDB): Promise<Account> {
+  static async createAccount(
+    input: RegistretionAccountDB,
+  ): Promise<Account | null> {
     const sql = `
       INSERT INTO accounts (name, email, password, age)
       VALUES ($1, $2, $3, $4)
@@ -43,9 +45,20 @@ export class Account {
 
     const values = [input.name, input.email, input.password, input.age ?? null];
 
-    const { rows } = await query(sql, values);
-
-    return new Account(rows[0]);
+    //
+    try {
+      const { rows } = await query(sql, values);
+      return new Account(rows[0]);
+    } catch (error: any) {
+      // Check for PostgreSQL unique violation error code (23505)
+      if (error.code === "23505") {
+        return null;
+      }
+      // Re-throw any other unpredictable database errors (e.g., connection issues)
+      throw {
+        error: "This email address is already active on another account.",
+      };
+    }
   }
 
   //
@@ -110,11 +123,32 @@ export class Account {
       throw new Error("Invalid email or password");
     }
 
+    const hasAdFreeAccess: boolean =
+      await Account.checkSubscriptionStatusByUser(user.id);
+
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       role_user: user.role_user,
+      hasAdFreeAccess,
     };
+  }
+
+  //
+  static async checkSubscriptionStatusByUser(userId: number): Promise<boolean> {
+    // Check active subscription status in database
+    const subscriptionQuery = `
+      SELECT id 
+      FROM subscriptions 
+      WHERE account_id = $1 
+        AND current_period_end > now()
+        AND status = 'active'
+      LIMIT 1
+    `;
+
+    const subResult = await query(subscriptionQuery, [userId]);
+
+    return subResult.rows.length > 0;
   }
 }

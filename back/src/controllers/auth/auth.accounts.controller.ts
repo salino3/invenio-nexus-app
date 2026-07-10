@@ -21,7 +21,8 @@ export class AuthController {
 
       const user = await Account.loginAccount(email, password);
 
-      const token = jwt.sign(user, SECRET_KEY as string, {
+      // Shallow copy for avoid problems with JSON serialization in 'return'
+      const token = jwt.sign({ ...user }, SECRET_KEY as string, {
         expiresIn: "1h",
       });
 
@@ -62,6 +63,7 @@ export class AuthController {
         });
       }
 
+      // const decodedUser = jwt.decode(token) as AccountCookie;
       const decodedUser = jwt.verify(
         token,
         SECRET_KEY as string,

@@ -37,14 +37,6 @@ export class AccountController {
         });
       }
 
-      // 2. Business rule validation: Check email duplication via model static method
-      const existingUser = await Account.findActiveByEmail(email);
-      if (existingUser) {
-        return res.status(409).json({
-          error: "This email address is already active on another account.",
-        });
-      }
-
       // Security: Hash password before database persistence
       const saltRounds = 10;
       const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -57,7 +49,14 @@ export class AccountController {
         age,
       };
 
-      const newAccount = await Account.createAccount(accountInput);
+      const newAccount: Account | null =
+        await Account.createAccount(accountInput);
+
+      if (!newAccount) {
+        return res.status(409).json({
+          error: "This email address is already active on another account.",
+        });
+      }
 
       return res.status(201).json({
         message: "Account registered successfully.",

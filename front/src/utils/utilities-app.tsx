@@ -21,7 +21,6 @@ export const utilitiesApp = () => {
     if (token && token.split(".").length === 3) {
       try {
         const decoded: any = jwtDecode<PropsCurrentAccount>(token);
-
         return decoded || null;
       } catch (error) {
         console.error("Error decoding JWT:", error);

@@ -25,7 +25,7 @@ export const useProvider = create<PropsProvider>()(
       },
     })),
     {
-      name: "companies-storage",
+      name: "app-invenio-nexus-storage",
       //* Storage in localStorage for default, also without include the parameter.
       storage: createJSONStorage(() => sessionStorage),
       //* For default 'persist' saves all object and arrays

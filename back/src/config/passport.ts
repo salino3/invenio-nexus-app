@@ -40,6 +40,18 @@ passport.use(
           };
 
           user = await Account.createAccount(accountInput);
+
+          // For avoid error with concurrence
+          if (!user) {
+            user = await Account.findActiveByEmail(email);
+          }
+        }
+
+        if (!user) {
+          return done(
+            new Error("Failed to process or retrieve Google account context"),
+            undefined,
+          );
         }
 
         // Return the user object (AccountCookie compatible)

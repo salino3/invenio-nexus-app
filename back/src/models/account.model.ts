@@ -110,11 +110,32 @@ export class Account {
       throw new Error("Invalid email or password");
     }
 
+    const hasAdFreeAccess: boolean =
+      await Account.checkSubscriptionStatusByUser(user.id);
+
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       role_user: user.role_user,
+      hasAdFreeAccess,
     };
+  }
+
+  //
+  static async checkSubscriptionStatusByUser(userId: number): Promise<boolean> {
+    // Check active subscription status in database
+    const subscriptionQuery = `
+      SELECT id 
+      FROM subscriptions 
+      WHERE account_id = $1 
+        AND current_period_end > now()
+        AND status = 'active'
+      LIMIT 1
+    `;
+
+    const subResult = await query(subscriptionQuery, [userId]);
+
+    return subResult.rows.length > 0;
   }
 }

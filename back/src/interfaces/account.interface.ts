@@ -45,4 +45,6 @@ export interface AllAccounts extends Omit<
 export interface AccountCookie extends Pick<
   Account,
   "id" | "name" | "role_user" | "email"
-> {}
+> {
+  hasAdFreeAccess: boolean;
+}

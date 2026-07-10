@@ -1,6 +1,5 @@
 import { type Request, type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { Account } from "../models/account.model.js";
 import { COOKIES_NAME, SECRET_KEY } from "../constants.js";
 import { AccountCookie, UserRole } from "../interfaces/account.interface.js";
 
@@ -26,15 +25,15 @@ export const authMiddleware = (
 
   try {
     // Verify the token
-    const decoded: Account = jwt.verify(token, SECRET_KEY as string) as any;
+    const decoded: AccountCookie = jwt.verify(
+      token,
+      SECRET_KEY as string,
+    ) as any;
+
+    const { id, name, email, role_user, hasAdFreeAccess } = decoded;
 
     // Attach user data to the request object
-    req.user = {
-      id: decoded.id,
-      role_user: decoded.role_user,
-      email: decoded.email,
-      name: decoded.name,
-    };
+    req.user = { id, name, email, role_user, hasAdFreeAccess };
 
     next();
   } catch (error) {

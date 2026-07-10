@@ -34,7 +34,9 @@ export class Account {
   }
 
   //
-  static async createAccount(input: RegistretionAccountDB): Promise<Account> {
+  static async createAccount(
+    input: RegistretionAccountDB,
+  ): Promise<Account | null> {
     const sql = `
       INSERT INTO accounts (name, email, password, age)
       VALUES ($1, $2, $3, $4)
@@ -43,9 +45,20 @@ export class Account {
 
     const values = [input.name, input.email, input.password, input.age ?? null];
 
-    const { rows } = await query(sql, values);
-
-    return new Account(rows[0]);
+    //
+    try {
+      const { rows } = await query(sql, values);
+      return new Account(rows[0]);
+    } catch (error: any) {
+      // Check for PostgreSQL unique violation error code (23505)
+      if (error.code === "23505") {
+        return null;
+      }
+      // Re-throw any other unpredictable database errors (e.g., connection issues)
+      throw {
+        error: "This email address is already active on another account.",
+      };
+    }
   }
 
   //

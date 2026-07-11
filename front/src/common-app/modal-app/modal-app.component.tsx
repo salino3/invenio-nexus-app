@@ -33,7 +33,7 @@ export const ModalApp: React.FC<Props> = ({
 
     // 🎯 1. Auto-focus the inner close button or first input when modal mounts
     const focusableElements = modalRef.current?.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), iframe',
     ) as NodeListOf<HTMLElement>;
 
     if (focusableElements && focusableElements.length > 0) {

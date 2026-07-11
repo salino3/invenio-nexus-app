@@ -5,14 +5,19 @@ import { Elements } from "@stripe/react-stripe-js";
 import { ModalApp } from "../modal-app";
 import { ImageComponent } from "../image";
 import { CheckoutForm } from "@/components";
+import { VITE_APP_API_URL_PAYMENT, VITE_URL_BACK } from "@/constants";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
 
 /**
  * Start Stirpe staff
  */
-// Loading Stripe cwith your public Vite key (.env)
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISH_KEY);
+
+if (!VITE_APP_API_URL_PAYMENT) {
+  console.error("⚠️ Stripe Publishable Key is missing! Check your .env file.");
+}
+
+const stripePromise = loadStripe(VITE_APP_API_URL_PAYMENT);
 
 const options = {
   locale: "en" as StripeElementLocale,
@@ -98,11 +103,10 @@ export const MainHeader: React.FC = () => {
         setShowModal={setShowModal}
         showModal={showModal}
       >
-        {showModal && (
-          <Elements stripe={stripePromise} options={options}>
-            <CheckoutForm />
-          </Elements>
-        )}
+        {" "}
+        <Elements stripe={stripePromise} options={options}>
+          <CheckoutForm />
+        </Elements>
       </ModalApp>
     </div>
   );

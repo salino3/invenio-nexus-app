@@ -52,16 +52,22 @@
     gap: 0.5rem; // Reduced gap for label-to-input
     min-width: 300px;
     width: 100%;
-    max-width: 475px;
 
     .stylesCardElement {
       display: block;
       width: 100%;
       padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      background-color: #f9f9f9;
-      min-height: 40px;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      background-color: #ffffff;
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+
+      &:focus-within {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+      }
 
       /* Important: Target the Stripe internal div */
       & > div {

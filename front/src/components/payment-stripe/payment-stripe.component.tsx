@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { VITE_APP_API_URL_PAYMENT, VITE_URL_BACK } from "@/constants";
 import "./checkout-form.styles.scss";
 
 export const CheckoutForm = () => {
@@ -14,6 +15,21 @@ export const CheckoutForm = () => {
 
   const [currency] = useState("eur");
 
+  const cardOptions = useMemo(
+    () => ({
+      hidePostalCode: false,
+      style: {
+        base: {
+          fontSize: "16px",
+          color: "#424770",
+          "::placeholder": { color: "#aab7c4" },
+        },
+        invalid: { color: "#9e2146" },
+      },
+    }),
+    [],
+  );
+
   const handleChange = (event: any) => {
     setCardError(event.error ? event.error.message : "");
     setIsCardComplete(event.complete);
@@ -27,7 +43,7 @@ export const CheckoutForm = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_URL_BACK}${import.meta.env.VITE_APP_API_URL_PAYMENT}`,
+        `${VITE_URL_BACK}${VITE_APP_API_URL_PAYMENT}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -101,20 +117,7 @@ export const CheckoutForm = () => {
       <div className="boxCardData">
         <label>Card data</label>
         <div className="stylesCardElement">
-          <CardElement
-            onChange={handleChange}
-            options={{
-              hidePostalCode: false,
-              style: {
-                base: {
-                  fontSize: "16px",
-                  color: "#424770",
-                  "::placeholder": { color: "#aab7c4" },
-                },
-                invalid: { color: "#9e2146" },
-              },
-            }}
-          />
+          <CardElement onChange={handleChange} options={cardOptions} />
         </div>
 
         <div className="errorContainer">

@@ -1,8 +1,9 @@
-import type React from "react";
+import React, { useState } from "react";
 import { ImageComponent } from "../image";
 import { routePaths } from "@/router/routes.interface";
 import { Link, useLocation } from "react-router-dom";
 import "./main-header.styles.scss";
+import { ModalApp } from "../modal-app";
 
 interface LinkApp {
   pathName: string;
@@ -28,11 +29,13 @@ const linksApp: LinkApp[] = [
 export const MainHeader: React.FC = () => {
   const location = useLocation();
 
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   return (
     <div className="rootMainHeader">
       <div className="containerMainHeader">
         <div className="boxLogo">
-          <h5>Next.js Direct DB Connection Status:</h5>
+          <h5>Image</h5>
           <ImageComponent
             vertical={false}
             src={`/images/.png`}
@@ -41,7 +44,7 @@ export const MainHeader: React.FC = () => {
             customStyle="boxImage"
           />
         </div>
-        <h3 className="title">Next App Library</h3>
+        <h3 className="title">Invenio Nexus</h3>
         <nav>
           <ul>
             {linksApp.map((link) => (
@@ -63,7 +66,15 @@ export const MainHeader: React.FC = () => {
             ))}
           </ul>
         </nav>
+        <button onClick={() => setShowModal(true)}>Modal</button>
       </div>
+      <ModalApp
+        title="Payment Subscription"
+        setShowModal={setShowModal}
+        showModal={showModal}
+      >
+        X
+      </ModalApp>
     </div>
   );
 };

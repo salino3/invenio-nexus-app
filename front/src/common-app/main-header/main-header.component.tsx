@@ -1,8 +1,39 @@
-import type React from "react";
-import { ImageComponent } from "../image";
-import { routePaths } from "@/router/routes.interface";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { loadStripe, type StripeElementLocale } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { ModalApp } from "../modal-app";
+import { ImageComponent } from "../image";
+import { CheckoutForm } from "@/components";
+import { VITE_APP_API_URL_PAYMENT, VITE_URL_BACK } from "@/constants";
+import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
+
+/**
+ * Start Stirpe staff
+ */
+
+if (!VITE_APP_API_URL_PAYMENT) {
+  console.error("⚠️ Stripe Publishable Key is missing! Check your .env file.");
+}
+
+const stripePromise = loadStripe(VITE_APP_API_URL_PAYMENT);
+
+const options = {
+  locale: "en" as StripeElementLocale,
+  // appearance: {
+  //   theme: "stripe", // Options: 'stripe', 'night', 'flat', 'none'
+  //   variables: {
+  //     colorPrimary: "#4f46e5", // Matches your indigo button
+  //     colorBackground: "#f9f9f9",
+  //     borderRadius: "4px",
+  //   },
+  // },
+};
+
+/**
+ * End Stirpe staff
+ */
 
 interface LinkApp {
   pathName: string;
@@ -28,11 +59,13 @@ const linksApp: LinkApp[] = [
 export const MainHeader: React.FC = () => {
   const location = useLocation();
 
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   return (
     <div className="rootMainHeader">
       <div className="containerMainHeader">
         <div className="boxLogo">
-          <h5>Next.js Direct DB Connection Status:</h5>
+          <h5>Image</h5>
           <ImageComponent
             vertical={false}
             src={`/images/.png`}
@@ -41,7 +74,7 @@ export const MainHeader: React.FC = () => {
             customStyle="boxImage"
           />
         </div>
-        <h3 className="title">Next App Library</h3>
+        <h3 className="title">Invenio Nexus</h3>
         <nav>
           <ul>
             {linksApp.map((link) => (
@@ -63,7 +96,18 @@ export const MainHeader: React.FC = () => {
             ))}
           </ul>
         </nav>
+        <button onClick={() => setShowModal(true)}>Modal</button>
       </div>
+      <ModalApp
+        title="Payment Subscription"
+        setShowModal={setShowModal}
+        showModal={showModal}
+      >
+        {" "}
+        <Elements stripe={stripePromise} options={options}>
+          <CheckoutForm />
+        </Elements>
+      </ModalApp>
     </div>
   );
 };

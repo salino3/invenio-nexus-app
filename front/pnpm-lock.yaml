@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@stripe/react-stripe-js':
+        specifier: ^5.6.0
+        version: 5.6.1(@stripe/stripe-js@8.11.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@stripe/stripe-js':
+        specifier: ^8.7.0
+        version: 8.11.0
       dompurify:
         specifier: ^3.2.6
         version: 3.4.10
@@ -426,6 +432,17 @@ packages:
 
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
+
+  '@stripe/react-stripe-js@5.6.1':
+    resolution: {integrity: sha512-5xBrjkGmFvKvpMod6VvpOaFaa67eRbmieKeFTePZyOr/sUXzm7A3YY91l330pS0usUst5PxTZDUZHWfOc0v1GA==}
+    peerDependencies:
+      '@stripe/stripe-js': '>=8.0.0 <9.0.0'
+      react: '>=16.8.0 <20.0.0'
+      react-dom: '>=16.8.0 <20.0.0'
+
+  '@stripe/stripe-js@8.11.0':
+    resolution: {integrity: sha512-3fVF4z3efsgwgyj64nFK+6F4/vMw0mUXD2TBbOfftJtKVNx4JNv3CSfe1fY4DCtCk0JFp8/YPNcRkzgV0HJ8cg==}
+    engines: {node: '>=12.16'}
 
   '@tybys/wasm-util@0.10.2':
     resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
@@ -1461,6 +1478,15 @@ snapshots:
     optional: true
 
   '@rolldown/pluginutils@1.0.1': {}
+
+  '@stripe/react-stripe-js@5.6.1(@stripe/stripe-js@8.11.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@stripe/stripe-js': 8.11.0
+      prop-types: 15.8.1
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+
+  '@stripe/stripe-js@8.11.0': {}
 
   '@tybys/wasm-util@0.10.2':
     dependencies:

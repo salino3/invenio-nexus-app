@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 import Stripe from "stripe";
+import { STRIPE_SECRET_KEY } from "../constants";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
+export const stripe = new Stripe(STRIPE_SECRET_KEY, {
+  apiVersion: "2026-06-24.dahlia",
+  typescript: true,
 });
+
 export class StripeServices {
   public async createPaymentIntent(req: Request, res: Response) {
     const { amount, currency, accountId, email } = req.body;
@@ -28,3 +31,5 @@ export class StripeServices {
     }
   }
 }
+
+export const stripeServices = new StripeServices();

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useProviderSelector } from "@/store/provider";
-import { VITE_APP_API_URL_PAYMENT, VITE_URL_BACK } from "@/constants";
+import { VITE_API_URL_PAYMENT, VITE_URL_BACK } from "@/constants";
 import "./checkout-form.styles.scss";
 
 export const CheckoutForm = () => {
@@ -45,18 +45,15 @@ export const CheckoutForm = () => {
     setProcessing(true);
 
     try {
-      const response = await fetch(
-        `${VITE_URL_BACK}${VITE_APP_API_URL_PAYMENT}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: 1000,
-            currency: currency,
-            accountId: currentUser?.id,
-          }),
-        },
-      );
+      const response = await fetch(`${VITE_URL_BACK}${VITE_API_URL_PAYMENT}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: 1000,
+          currency: currency,
+          accountId: currentUser?.id,
+        }),
+      });
 
       const { clientSecret } = await response.json();
       const cardElement = elements.getElement(CardElement);

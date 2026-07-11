@@ -27,7 +27,7 @@ export const CheckoutForm = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_APP_BASE_URL}${import.meta.env.VITE_APP_API_URL_PAYMENT}`,
+        `${import.meta.env.VITE_URL_BACK}${import.meta.env.VITE_APP_API_URL_PAYMENT}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

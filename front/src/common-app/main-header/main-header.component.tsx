@@ -98,9 +98,11 @@ export const MainHeader: React.FC = () => {
         setShowModal={setShowModal}
         showModal={showModal}
       >
-        <Elements stripe={stripePromise} options={options}>
-          <CheckoutForm />
-        </Elements>
+        {showModal && (
+          <Elements stripe={stripePromise} options={options}>
+            <CheckoutForm />
+          </Elements>
+        )}
       </ModalApp>
     </div>
   );

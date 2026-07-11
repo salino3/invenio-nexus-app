@@ -1,0 +1,30 @@
+import { Request, Response } from "express";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2023-10-16",
+});
+export class StripeServices {
+  public async createPaymentIntent(req: Request, res: Response) {
+    const { amount, currency, accountId, email } = req.body;
+
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency,
+        receipt_email: email,
+        // Metadata allows passing custom application data to Stripe Webhook
+        metadata: {
+          accountId: accountId,
+        },
+      });
+
+      return res
+        .status(200)
+        .json({ clientSecret: paymentIntent.client_secret });
+    } catch (error) {
+      console.error("Error creating PaymentIntent:", error);
+      return res.status(500).json({ error: "Failed to create payment intent" });
+    }
+  }
+}

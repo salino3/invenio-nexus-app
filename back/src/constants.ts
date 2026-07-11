@@ -20,4 +20,5 @@ export const {
   GOOGLE_CALLBACK_URL,
   // Stripe
   STRIPE_SECRET_KEY = "",
+  STRIPE_WEBHOOK_SECRET = "",
 } = process.env;

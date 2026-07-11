@@ -1,9 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { useProviderSelector } from "@/store/provider";
 import { VITE_APP_API_URL_PAYMENT, VITE_URL_BACK } from "@/constants";
 import "./checkout-form.styles.scss";
 
 export const CheckoutForm = () => {
+  const { currentUser } = useProviderSelector("currentUser");
+
   const stripe = useStripe();
   const elements = useElements();
 
@@ -50,6 +53,7 @@ export const CheckoutForm = () => {
           body: JSON.stringify({
             amount: 1000,
             currency: currency,
+            accountId: currentUser?.id,
           }),
         },
       );

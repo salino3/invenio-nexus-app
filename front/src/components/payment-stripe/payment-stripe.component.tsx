@@ -49,7 +49,7 @@ export const CheckoutForm = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: 1000,
+          amount: 100,
           currency: currency,
           accountId: currentUser?.id,
         }),
@@ -127,7 +127,7 @@ export const CheckoutForm = () => {
       </div>
 
       <button disabled={!stripe || processing || !isCardComplete}>
-        {processing ? "Processing..." : `Pay 10.00 ${currency.toUpperCase()}`}
+        {processing ? "Processing..." : `Pay 1.00 ${currency.toUpperCase()}`}
       </button>
     </form>
   );

@@ -1,9 +1,34 @@
 import React, { useState } from "react";
-import { ImageComponent } from "../image";
-import { routePaths } from "@/router/routes.interface";
 import { Link, useLocation } from "react-router-dom";
-import "./main-header.styles.scss";
+import { loadStripe, type StripeElementLocale } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { ModalApp } from "../modal-app";
+import { ImageComponent } from "../image";
+import { CheckoutForm } from "@/components";
+import { routePaths } from "@/router/routes.interface";
+import "./main-header.styles.scss";
+
+/**
+ * Start Stirpe staff
+ */
+// Loading Stripe cwith your public Vite key (.env)
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISH_KEY);
+
+const options = {
+  locale: "en" as StripeElementLocale,
+  // appearance: {
+  //   theme: "stripe", // Options: 'stripe', 'night', 'flat', 'none'
+  //   variables: {
+  //     colorPrimary: "#4f46e5", // Matches your indigo button
+  //     colorBackground: "#f9f9f9",
+  //     borderRadius: "4px",
+  //   },
+  // },
+};
+
+/**
+ * End Stirpe staff
+ */
 
 interface LinkApp {
   pathName: string;
@@ -73,7 +98,9 @@ export const MainHeader: React.FC = () => {
         setShowModal={setShowModal}
         showModal={showModal}
       >
-        X
+        <Elements stripe={stripePromise} options={options}>
+          <CheckoutForm />
+        </Elements>
       </ModalApp>
     </div>
   );

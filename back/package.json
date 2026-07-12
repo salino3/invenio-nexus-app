@@ -25,7 +25,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.14.0",
-    "redis": "^5.11.0"
+    "redis": "^5.11.0",
+    "stripe": "^22.3.1"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",

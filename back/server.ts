@@ -9,6 +9,7 @@ import routerAccount from "./src/routes/accounts.route";
 import routerAuth from "./src/routes/auth/auth.accounts.routes";
 import routerCompanies from "./src/routes/companies.route";
 import routerSubscriptions from "./src/routes/subscriptions.router";
+import { stripeServices } from "./src/services/stripe-services";
 //
 import { FRONTEND_DEV_PORT, FRONTEND_PROD_PORT, PORT } from "./src/constants";
 
@@ -17,6 +18,14 @@ const app = express();
 app.use(morgan("dev"));
 app.use(passport.initialize());
 app.use(cookieParser());
+
+// Stripe webhook FIRST
+app.post(
+  "/api/stripe/webhook",
+  express.raw({ type: "application/json" }),
+  stripeServices.handleStripeWebhook,
+);
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 

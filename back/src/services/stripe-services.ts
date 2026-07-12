@@ -19,13 +19,13 @@ export class StripeServices {
     try {
       // 1. Check if the account already has an active subscription in database
       const checkSubscriptionSql = `
-        SELECT id, plan_type, current_period_end 
-        FROM subscriptions 
-        WHERE account_id = $1 
-          AND status = 'active' 
-          AND current_period_end > NOW() 
-        LIMIT 1;
-      `;
+      SELECT id, plan_type, current_period_end 
+      FROM subscriptions 
+      WHERE account_id = $1 
+        AND status = 'active' 
+        AND current_period_end > NOW() 
+      LIMIT 1;
+    `;
 
       const existingSubscription = await query(checkSubscriptionSql, [
         accountId,
@@ -38,10 +38,19 @@ export class StripeServices {
         });
       }
 
-      // 2. Create Stripe Payment Intent with metadata for the Webhook
+      // 2. Create Stripe Customer
+      const customer = await stripe.customers.create({
+        email,
+        metadata: {
+          accountId: String(accountId),
+        },
+      });
+
+      // 3. Create PaymentIntent attached to Customer
       const paymentIntent = await stripe.paymentIntents.create({
         amount,
         currency,
+        customer: customer.id,
         receipt_email: email,
         metadata: {
           accountId: String(accountId),
@@ -67,7 +76,6 @@ export class StripeServices {
     }
 
     let event: Stripe.Event;
-
     try {
       // req.body must be the RAW buffer, not JSON parsed
       event = stripe.webhooks.constructEvent(

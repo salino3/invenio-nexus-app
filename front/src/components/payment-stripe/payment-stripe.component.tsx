@@ -52,10 +52,18 @@ export const CheckoutForm = () => {
           amount: 100,
           currency: currency,
           accountId: String(currentUser?.id),
+          email,
         }),
       });
 
-      const { clientSecret } = await response.json();
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error);
+        return;
+      }
+
+      const { clientSecret } = data;
       const cardElement = elements.getElement(CardElement);
 
       if (!cardElement) return;
@@ -64,8 +72,8 @@ export const CheckoutForm = () => {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name: name,
-            email: email,
+            name,
+            email,
           },
         },
       });

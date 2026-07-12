@@ -51,7 +51,7 @@ export const CheckoutForm = () => {
         body: JSON.stringify({
           amount: 100,
           currency: currency,
-          accountId: currentUser?.id,
+          accountId: String(currentUser?.id),
         }),
       });
 

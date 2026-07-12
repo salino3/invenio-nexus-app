@@ -67,7 +67,6 @@ export class StripeServices {
     }
 
     let event: Stripe.Event;
-
     try {
       // req.body must be the RAW buffer, not JSON parsed
       event = stripe.webhooks.constructEvent(

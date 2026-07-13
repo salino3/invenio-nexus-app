@@ -9,6 +9,8 @@ routerAuth.post("/login-account", authController.loginAccount);
 
 routerAuth.get("/auth/get-me", authController.getMe);
 
+routerAuth.post("/refresh-token", authController.refreshToken);
+
 // Google OAuth Routes
 routerAuth.get(
   "/auth/google",

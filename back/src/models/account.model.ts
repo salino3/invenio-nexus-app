@@ -7,6 +7,7 @@ import {
   RegistretionAccountDB,
   UserRole,
 } from "../interfaces/account.interface";
+import { QueryResult } from "pg";
 
 export class Account {
   public id: number;
@@ -150,5 +151,34 @@ export class Account {
     const subResult = await query(subscriptionQuery, [userId]);
 
     return subResult.rows.length > 0;
+  }
+
+  //
+  static async checkEmailActiveInUse(
+    email: string,
+    id: number,
+  ): Promise<boolean> {
+    const { rows: duplicateEmail } = await query(
+      `SELECT id FROM accounts WHERE email = $1 AND id != $2 AND is_active = true`,
+      [email, id],
+    );
+
+    return duplicateEmail.length > 0;
+  }
+
+  //
+  static async updateAccount(
+    setClauses: string[] = [],
+    paramCount: number,
+    valuesToUpdate: Partial<Account>[] = [],
+  ): Promise<QueryResult<Account>> {
+    const sql = `
+        UPDATE accounts
+        SET ${setClauses.join(", ")}, updated_at = NOW()
+        WHERE id = $${paramCount} AND is_active = true
+        RETURNING id, name, email, age, role_user, updated_at
+      `;
+
+    return await query(sql, valuesToUpdate);
   }
 }

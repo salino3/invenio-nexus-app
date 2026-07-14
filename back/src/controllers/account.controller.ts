@@ -111,44 +111,33 @@ export class AccountController {
   }
 
   public async updateAccount(req: Request, res: Response): Promise<Response> {
-    // 1. Retrieve account ID directly from authenticated user session
     const { id } = (req.user || {}) as AccountCookie;
     const { name, email, age } = req.body;
 
     if (!id) {
       return res
         .status(401)
-        .send({ message: "Unauthorized: Missing account ID" });
+        .json({ message: "Unauthorized: Missing account ID" });
     }
 
     try {
-      // 2. Fetch current user data from database to compare changes
-      const { rows: existingUser } = await query(
-        `SELECT id, name, email, age FROM accounts WHERE id = $1 AND is_active = true`,
-        [id],
-      );
+      // 1. Single combined query: retrieves current data and validates email collision
+      const { currentUser, isEmailTaken } =
+        await Account.checkAccountAndEmailAvailability(id, email);
 
-      if (!existingUser || existingUser.length === 0) {
-        return res.status(404).send({ message: "Account not found" });
+      if (!currentUser) {
+        return res
+          .status(404)
+          .json({ message: "Account not found or inactive" });
       }
 
-      const currentUser = existingUser[0];
-
-      // 3. If email is being updated, check if it's already used by ANOTHER active user
-      if (email && email !== currentUser.email) {
-        const isDuplicateEmail: boolean = await Account.checkEmailActiveInUse(
-          email,
-          id,
-        );
-
-        if (isDuplicateEmail) {
-          return res
-            .status(400)
-            .send({ message: "Email is already in use by another account" });
-        }
+      if (email && email !== currentUser.email && isEmailTaken) {
+        return res
+          .status(400)
+          .json({ message: "Email is already in use by another account" });
       }
 
-      // 4. Dynamically build the UPDATE SET clause
+      // 2. Dynamically build UPDATE clause
       const setClauses: string[] = [];
       const valuesToUpdate: Partial<Account>[] = [];
       let paramCount = 1;
@@ -171,9 +160,8 @@ export class AccountController {
         paramCount++;
       }
 
-      // 5. Return early if no fields were modified
       if (setClauses.length === 0) {
-        return res.status(400).send({
+        return res.status(400).json({
           message: "No changes detected or no valid fields provided for update",
         });
       }
@@ -181,6 +169,7 @@ export class AccountController {
       // Append ID parameter for the WHERE clause
       valuesToUpdate.push(id as Partial<Account>);
 
+      // 3. Execute update
       const result = await Account.updateAccount(
         setClauses,
         paramCount,
@@ -188,16 +177,16 @@ export class AccountController {
       );
 
       if (result.rows && result.rows.length > 0) {
-        return res.status(200).send({
+        return res.status(200).json({
           message: "Account updated successfully",
           user: result.rows[0],
         });
-      } else {
-        return res.status(404).send({ message: "Account update failed" });
       }
+
+      return res.status(404).json({ message: "Account update failed" });
     } catch (error) {
       console.error("Error updating account:", error);
-      return res.status(500).send({ message: "Error updating account" });
+      return res.status(500).json({ message: "Error updating account" });
     }
   }
 }

@@ -154,16 +154,31 @@ export class Account {
   }
 
   //
-  static async checkEmailActiveInUse(
-    email: string,
+  static async checkAccountAndEmailAvailability(
     id: number,
-  ): Promise<boolean> {
-    const { rows: duplicateEmail } = await query(
-      `SELECT id FROM accounts WHERE email = $1 AND id != $2 AND is_active = true`,
-      [email, id],
-    );
+    newEmail?: string,
+  ): Promise<{ currentUser: AccountProps | null; isEmailTaken: boolean }> {
+    const sql = `
+      SELECT 
+        id, name, email, age,
+        EXISTS(
+          SELECT 1 FROM accounts 
+          WHERE email = $2 AND id != $1 AND is_active = true
+        ) AS is_email_taken
+      FROM accounts 
+      WHERE id = $1 AND is_active = true
+    `;
 
-    return duplicateEmail.length > 0;
+    const { rows } = await query(sql, [id, newEmail || null]);
+
+    if (rows.length === 0) {
+      return { currentUser: null, isEmailTaken: false };
+    }
+
+    return {
+      currentUser: rows[0],
+      isEmailTaken: Boolean(rows[0].is_email_taken),
+    };
   }
 
   //

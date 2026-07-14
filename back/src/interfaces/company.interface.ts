@@ -31,7 +31,7 @@ export interface CompanyProps {
 // Interface for input data during registration
 export interface RegistretionCompanyDB extends Omit<
   CompanyProps,
-  "id" | "created_at" | "updated_at"
+  "id" | "created_at" | "updated_at" | "uuid"
 > {}
 
 export interface RegistretionCompanyInput extends Pick<

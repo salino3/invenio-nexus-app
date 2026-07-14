@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { Account } from "../models/account.model";
 import { utilitiesApp } from "../utils/utilities-app";
+import { query } from "../db";
 import {
+  AccountCookie,
   RegistretionAccountDB,
   RegistretionAccountInput,
 } from "../interfaces/account.interface";
@@ -105,6 +107,86 @@ export class AccountController {
         error:
           "An internal server error occurred while processing your registration.",
       });
+    }
+  }
+
+  public async updateAccount(req: Request, res: Response): Promise<Response> {
+    const { id } = (req.user || {}) as AccountCookie;
+    const { name, email, age } = req.body;
+
+    if (!id) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: Missing account ID" });
+    }
+
+    try {
+      // 1. Single combined query: retrieves current data and validates email collision
+      const { currentUser, isEmailTaken } =
+        await Account.checkAccountAndEmailAvailability(id, email);
+
+      if (!currentUser) {
+        return res
+          .status(404)
+          .json({ message: "Account not found or inactive" });
+      }
+
+      if (email && email !== currentUser.email && isEmailTaken) {
+        return res
+          .status(400)
+          .json({ message: "Email is already in use by another account" });
+      }
+
+      // 2. Dynamically build UPDATE clause
+      const setClauses: string[] = [];
+      const valuesToUpdate: Partial<Account>[] = [];
+      let paramCount = 1;
+
+      if (name !== undefined && name !== currentUser.name) {
+        setClauses.push(`name = $${paramCount}`);
+        valuesToUpdate.push(name);
+        paramCount++;
+      }
+
+      if (email !== undefined && email !== currentUser.email) {
+        setClauses.push(`email = $${paramCount}`);
+        valuesToUpdate.push(email);
+        paramCount++;
+      }
+
+      if (age !== undefined && age !== currentUser.age) {
+        setClauses.push(`age = $${paramCount}`);
+        valuesToUpdate.push(age);
+        paramCount++;
+      }
+
+      if (setClauses.length === 0) {
+        return res.status(400).json({
+          message: "No changes detected or no valid fields provided for update",
+        });
+      }
+
+      // Append ID parameter for the WHERE clause
+      valuesToUpdate.push(id as Partial<Account>);
+
+      // 3. Execute update
+      const result = await Account.updateAccount(
+        setClauses,
+        paramCount,
+        valuesToUpdate,
+      );
+
+      if (result.rows && result.rows.length > 0) {
+        return res.status(200).json({
+          message: "Account updated successfully",
+          user: result.rows[0],
+        });
+      }
+
+      return res.status(404).json({ message: "Account update failed" });
+    } catch (error) {
+      console.error("Error updating account:", error);
+      return res.status(500).json({ message: "Error updating account" });
     }
   }
 }

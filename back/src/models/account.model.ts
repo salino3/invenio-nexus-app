@@ -7,6 +7,7 @@ import {
   RegistretionAccountDB,
   UserRole,
 } from "../interfaces/account.interface";
+import { QueryResult } from "pg";
 
 export class Account {
   public id: number;
@@ -150,5 +151,49 @@ export class Account {
     const subResult = await query(subscriptionQuery, [userId]);
 
     return subResult.rows.length > 0;
+  }
+
+  //
+  static async checkAccountAndEmailAvailability(
+    id: number,
+    newEmail?: string,
+  ): Promise<{ currentUser: AccountProps | null; isEmailTaken: boolean }> {
+    const sql = `
+      SELECT 
+        id, name, email, age,
+        EXISTS(
+          SELECT 1 FROM accounts 
+          WHERE email = $2 AND id != $1 AND is_active = true
+        ) AS is_email_taken
+      FROM accounts 
+      WHERE id = $1 AND is_active = true
+    `;
+
+    const { rows } = await query(sql, [id, newEmail || null]);
+
+    if (rows.length === 0) {
+      return { currentUser: null, isEmailTaken: false };
+    }
+
+    return {
+      currentUser: rows[0],
+      isEmailTaken: Boolean(rows[0].is_email_taken),
+    };
+  }
+
+  //
+  static async updateAccount(
+    setClauses: string[] = [],
+    paramCount: number,
+    valuesToUpdate: Partial<Account>[] = [],
+  ): Promise<QueryResult<Account>> {
+    const sql = `
+        UPDATE accounts
+        SET ${setClauses.join(", ")}, updated_at = NOW()
+        WHERE id = $${paramCount} AND is_active = true
+        RETURNING id, name, email, age, role_user, updated_at
+      `;
+
+    return await query(sql, valuesToUpdate);
   }
 }

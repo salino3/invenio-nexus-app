@@ -227,6 +227,7 @@ export class CompaniesController {
         success: true,
         data: companies,
         offset: parsedOffset,
+        total: companies.length ?? 0,
         limit,
       });
     } catch (error) {

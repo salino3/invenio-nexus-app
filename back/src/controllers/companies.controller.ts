@@ -6,6 +6,7 @@ import {
 } from "../interfaces/company.interface";
 import { Company } from "../models/company.model";
 import { AuthRequest } from "../middlewares/auth-middleware";
+import { query } from "../db";
 
 const { checkRequiredFields } = utilitiesApp();
 
@@ -106,6 +107,133 @@ export class CompaniesController {
         error:
           "An internal server error occurred while processing your registration.",
       });
+    }
+  }
+
+  /**
+   * Search companies using key-term weight scoring and optimized indexing.
+   * Relevancy Weighting: Name (High) > Sector (Medium) > Hashtags (Low)
+   * Standard industry Dis_Max (Greatest field + 10% tie-breaker) to avoid false positives.
+   */
+  public async getSearchingCompanies(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const { searching, offset = 0 } = req.body;
+
+    // 1. Basic validation
+    if (!searching || typeof searching !== "string") {
+      return res
+        .status(400)
+        .json({ error: "Missing or invalid searching query" });
+    }
+
+    const parsedOffset = parseInt(offset, 10);
+    if (isNaN(parsedOffset) || parsedOffset < 0) {
+      return res.status(400).json({ error: "Invalid offset value" });
+    }
+
+    try {
+      // 2. Clean up search terms and split by whitespace/commas
+      const keywords = searching
+        .split(/[\s,]+/)
+        .map((term) => term.trim().toLowerCase())
+        .filter((term) => term.length > 0);
+
+      if (keywords.length === 0) {
+        return res
+          .status(400)
+          .json({ error: "Search query contains no valid terms" });
+      }
+
+      const queryParams: any[] = [];
+      const whereClauses: string[] = [];
+      const scoreClauses: string[] = [];
+
+      /**
+       * 3. Dynamically build the SQL Query components
+       */
+      keywords.forEach((keyword) => {
+        // Registrar '%keyword%' para la búsqueda general (dispara tus nuevos índices GIN trigram)
+        const containsPlaceholderIndex = queryParams.length + 1; // p.ej. $1
+        queryParams.push(`%${keyword}%`);
+
+        // Registrar 'keyword%' para validar el bonus de relevancia si empieza por ahí
+        const prefixPlaceholderIndex = queryParams.length + 1; // p.ej. $2
+        queryParams.push(`${keyword}%`);
+
+        // WHERE: Buscamos en cualquier parte usando los índices GIN de trigramas
+        whereClauses.push(`
+        (LOWER(name) LIKE $${containsPlaceholderIndex} OR 
+         LOWER(sector) LIKE $${containsPlaceholderIndex} OR 
+         (hashtags::text) ILIKE $${containsPlaceholderIndex})
+      `);
+
+        // SCORE: Dis_Max (Greatest + 10% Tie Breaker) envuelto en COALESCE por seguridad
+        scoreClauses.push(`
+        COALESCE(
+          (
+            GREATEST(
+              CASE WHEN LOWER(name) LIKE $${prefixPlaceholderIndex} THEN 100 
+                   WHEN LOWER(name) LIKE $${containsPlaceholderIndex} THEN 60 ELSE 0 END,
+              CASE WHEN LOWER(sector) LIKE $${prefixPlaceholderIndex} THEN 50 
+                   WHEN LOWER(sector) LIKE $${containsPlaceholderIndex} THEN 30 ELSE 0 END,
+              CASE WHEN (hashtags::text) ILIKE $${containsPlaceholderIndex} THEN 10 ELSE 0 END
+            ) 
+            + 
+            (0.1 * (
+              CASE WHEN LOWER(name) LIKE $${prefixPlaceholderIndex} THEN 100 
+                   WHEN LOWER(name) LIKE $${containsPlaceholderIndex} THEN 60 ELSE 0 END +
+              CASE WHEN LOWER(sector) LIKE $${prefixPlaceholderIndex} THEN 50 
+                   WHEN LOWER(sector) LIKE $${containsPlaceholderIndex} THEN 30 ELSE 0 END +
+              CASE WHEN (hashtags::text) ILIKE $${containsPlaceholderIndex} THEN 10 ELSE 0 END
+            ))
+          ), 0
+        )
+      `);
+      });
+
+      // Configuración de Paginación
+      const limit = 30;
+      const offsetPlaceholderIndex = queryParams.length + 1;
+      queryParams.push(parsedOffset);
+
+      // Unir múltiples palabras clave con AND (fuerza a que coincidan todos los términos ingresados)
+      const sqlWhereClause = whereClauses.join(" AND ");
+      const sqlScoreFormula = scoreClauses.join(" + ");
+
+      // 4. Assemble the complete optimized SQL query
+      const sqlQuery = `
+      SELECT 
+        id, 
+        uuid, 
+        name, 
+        sector, 
+        location, 
+        logo, 
+        hashtags, 
+        connection_objectives,
+        (${sqlScoreFormula}) AS relevance_score
+      FROM companies
+      WHERE ${sqlWhereClause}
+      ORDER BY relevance_score DESC, name ASC
+      LIMIT ${limit} OFFSET $${offsetPlaceholderIndex};
+    `;
+
+      // 5. Execute query
+      const { rows: companies } = await query(sqlQuery, queryParams);
+
+      return res.status(200).json({
+        success: true,
+        data: companies,
+        offset: parsedOffset,
+        limit,
+      });
+    } catch (error) {
+      console.error("Error executing getSearchingCompanies query:", error);
+      return res
+        .status(500)
+        .json({ error: "Internal server error during search" });
     }
   }
 }

@@ -12,4 +12,9 @@ routerCompanies.post(
   companiesController.registerCompany,
 );
 
+routerCompanies.post(
+  "/search-companies",
+  companiesController.getSearchingCompanies,
+);
+
 export default routerCompanies;

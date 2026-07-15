@@ -146,7 +146,7 @@ export class CompaniesController {
           .json({ error: "Search query contains no valid terms" });
       }
 
-      const queryParams: any[] = [];
+      const queryParams: string[] = [];
       const whereClauses: string[] = [];
       const scoreClauses: string[] = [];
 
@@ -154,22 +154,19 @@ export class CompaniesController {
        * 3. Dynamically build the SQL Query components
        */
       keywords.forEach((keyword) => {
-        // Registrar '%keyword%' para la búsqueda general (dispara tus nuevos índices GIN trigram)
         const containsPlaceholderIndex = queryParams.length + 1; // p.ej. $1
         queryParams.push(`%${keyword}%`);
 
-        // Registrar 'keyword%' para validar el bonus de relevancia si empieza por ahí
         const prefixPlaceholderIndex = queryParams.length + 1; // p.ej. $2
         queryParams.push(`${keyword}%`);
 
-        // WHERE: Buscamos en cualquier parte usando los índices GIN de trigramas
         whereClauses.push(`
         (LOWER(name) LIKE $${containsPlaceholderIndex} OR 
          LOWER(sector) LIKE $${containsPlaceholderIndex} OR 
          (hashtags::text) ILIKE $${containsPlaceholderIndex})
       `);
 
-        // SCORE: Dis_Max (Greatest + 10% Tie Breaker) envuelto en COALESCE por seguridad
+        // SCORE: Dis_Max (Greatest + 10% Tie Breaker) COALESCE for security
         scoreClauses.push(`
         COALESCE(
           (
@@ -196,7 +193,7 @@ export class CompaniesController {
       // Configuración de Paginación
       const limit = 30;
       const offsetPlaceholderIndex = queryParams.length + 1;
-      queryParams.push(parsedOffset);
+      queryParams.push(String(parsedOffset));
 
       // Unir múltiples palabras clave con AND (fuerza a que coincidan todos los términos ingresados)
       const sqlWhereClause = whereClauses.join(" AND ");

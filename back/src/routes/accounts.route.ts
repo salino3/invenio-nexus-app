@@ -14,4 +14,10 @@ routerAccount.get(
   accountController.getAllAccountsActives,
 );
 
+routerAccount.put(
+  "/accounts/profile",
+  authMiddleware,
+  accountController?.updateAccount,
+);
+
 export default routerAccount;

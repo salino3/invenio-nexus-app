@@ -40,7 +40,7 @@ app.use(
 );
 
 // Serve assets folder physically stored on server locally
-app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "./public/uploads")));
 
 // General health check endpoint
 app.get("/health", (req: Request, res: Response) => {

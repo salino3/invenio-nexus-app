@@ -110,7 +110,7 @@ export class CompaniesController {
     }
   }
 
-  /**
+  /** TODO: Refactoring endpoint
    * Search companies using key-term weight scoring and optimized indexing.
    * Relevancy Weighting: Name (High) > Sector (Medium) > Hashtags (Low)
    * Standard industry Dis_Max (Greatest field + 10% tie-breaker) to avoid false positives.
@@ -120,12 +120,26 @@ export class CompaniesController {
     res: Response,
   ): Promise<Response> {
     const { searching, offset = 0 } = req.body;
-
+    const limit: number = 30;
     // 1. Basic validation
-    if (!searching || typeof searching !== "string") {
-      return res
-        .status(400)
-        .json({ error: "Missing or invalid searching query" });
+    if (!searching) {
+      if (searching || typeof searching !== "string") {
+        return res
+          .status(400)
+          .json({ error: "Missing or invalid searching query" });
+      } else if (!searching && typeof searching === "string") {
+        const { rows: companies } = await query(
+          `SELECT * FROM companies LIMIT 30;`,
+        );
+
+        return res.status(200).json({
+          success: true,
+          data: companies,
+          offset: parseInt(offset, 10),
+          total: companies.length ?? 0,
+          limit,
+        });
+      }
     }
 
     const parsedOffset = parseInt(offset, 10);
@@ -137,8 +151,8 @@ export class CompaniesController {
       // 2. Clean up search terms and split by whitespace/commas
       const keywords = searching
         .split(/[\s,]+/)
-        .map((term) => term.trim().toLowerCase())
-        .filter((term) => term.length > 0);
+        .map((term: string) => term.trim().toLowerCase())
+        .filter((term: string) => term.length > 0);
 
       if (keywords.length === 0) {
         return res
@@ -153,7 +167,7 @@ export class CompaniesController {
       /**
        * 3. Dynamically build the SQL Query components
        */
-      keywords.forEach((keyword) => {
+      keywords.forEach((keyword: string) => {
         const containsPlaceholderIndex = queryParams.length + 1; // p.ej. $1
         queryParams.push(`%${keyword}%`);
 

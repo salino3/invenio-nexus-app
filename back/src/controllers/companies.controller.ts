@@ -121,24 +121,25 @@ export class CompaniesController {
     const { searching, offset = 0 } = req.body;
     const limit: number = 30;
     // 1. Basic validation
-    if (!searching) {
-      if (searching || typeof searching !== "string") {
-        return res
-          .status(400)
-          .json({ error: "Missing or invalid searching query" });
-      } else if (!searching && typeof searching === "string") {
-        const { rows: companies } = await query(
-          `SELECT * FROM companies LIMIT ${limit};`,
-        );
 
-        return res.status(200).json({
-          success: true,
-          data: companies,
-          offset: parseInt(offset, 10),
-          total: companies.length ?? 0,
-          limit,
-        });
-      }
+    if (searching && typeof searching !== "string") {
+      return res
+        .status(400)
+        .json({ error: "Missing or invalid searching query" });
+    }
+
+    if (!searching && typeof searching === "string") {
+      const { rows: companies } = await query(
+        `SELECT * FROM companies LIMIT ${limit};`,
+      );
+
+      return res.status(200).json({
+        success: true,
+        data: companies,
+        offset: parseInt(offset, 10),
+        total: companies.length ?? 0,
+        limit,
+      });
     }
 
     const parsedOffset = parseInt(offset, 10);
@@ -148,7 +149,7 @@ export class CompaniesController {
 
     try {
       // 2. Clean up search terms and split by whitespace/commas
-      const keywords = searching
+      const keywords: string[] = searching
         .split(/[\s,]+/)
         .map((term: string) => term.trim().toLowerCase())
         .filter((term: string) => term.length > 0);

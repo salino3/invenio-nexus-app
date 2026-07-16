@@ -8,7 +8,10 @@ import { routePaths } from "../routes.interface";
 import "../../App.scss";
 
 export const PrivateRoutes: React.FC = () => {
-  const { setDataUser } = useProviderSelector("setDataUser");
+  const { setDataUser, currentUser } = useProviderSelector(
+    "setDataUser",
+    "currentUser",
+  );
 
   const { getAuthToken } = utilitiesApp();
 
@@ -25,7 +28,7 @@ export const PrivateRoutes: React.FC = () => {
 
   return (
     <div className="rootRouter">
-      <Aside />
+      {!currentUser?.hasAdFreeAccess && <Aside />}
       <Outlet />
     </div>
   );

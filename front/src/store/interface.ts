@@ -42,6 +42,8 @@ export interface AccountProps {
 export interface PropsProvider {
   currentUser: PropsCurrentAccount | null;
   theme: ThemeEnum;
+  configuration: boolean;
+  setConfiguration(): void;
   setDataUser(data: PropsCurrentAccount | null): void;
   changeGlobalColors(): void;
 }

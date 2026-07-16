@@ -4,6 +4,7 @@ import { utilitiesApp } from "@/utils";
 import type { PropsCurrentAccount } from "@/store/interface";
 import { useProviderSelector } from "@/store/provider";
 import { Aside } from "@/common-app";
+import { Configurations } from "@/components";
 import { routePaths } from "../routes.interface";
 import "../../App.scss";
 
@@ -28,6 +29,7 @@ export const PublicRoutes: React.FC = () => {
     <div className="rootRouter">
       <Aside />
       <Outlet />
+      <Configurations />
     </div>
   );
 };

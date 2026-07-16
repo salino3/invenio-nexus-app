@@ -18,6 +18,14 @@ export const useProvider = create<PropsProvider>()(
         });
       },
       theme: Theme.dark,
+      configuration: false,
+      setConfiguration() {
+        const currentConfiguration: boolean = get().configuration;
+
+        set((state) => {
+          state.configuration = !currentConfiguration;
+        });
+      },
       changeGlobalColors() {
         set((state) => {
           state.theme = state.theme === Theme.dark ? Theme.light : Theme.dark;

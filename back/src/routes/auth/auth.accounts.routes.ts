@@ -17,6 +17,8 @@ routerAuth.get(
   passport.authenticate("google", {
     scope: ["profile", "email"],
     session: false,
+    // To show always screen for choose email
+    prompt: "select_account",
   }),
 );
 

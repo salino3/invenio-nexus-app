@@ -1,12 +1,9 @@
 import { Request, Response } from "express";
 import { utilitiesApp } from "../utils/utilities-app";
-import {
-  RegistretionCompanyDB,
-  RegistretionCompanyInput,
-} from "../interfaces/company.interface";
+import { query } from "../db";
+import { RegistretionCompanyDB } from "../interfaces/company.interface";
 import { Company } from "../models/company.model";
 import { AuthRequest } from "../middlewares/auth-middleware";
-import { query } from "../db";
 
 const { checkRequiredFields } = utilitiesApp();
 
@@ -22,7 +19,9 @@ const safeJsonParse = <T>(value: any, defaultValue: T): T => {
 };
 
 // Helper to parse numeric values from string body
-const parseNumber = (value: any): number | null => {
+const parseNumber = (
+  value: string | number | null | undefined,
+): number | null => {
   if (value === null || value === undefined || value === "") return null;
   const parsed = Number(value);
   return isNaN(parsed) ? null : parsed;
@@ -110,7 +109,7 @@ export class CompaniesController {
     }
   }
 
-  /** TODO: Refactoring endpoint
+  /**
    * Search companies using key-term weight scoring and optimized indexing.
    * Relevancy Weighting: Name (High) > Sector (Medium) > Hashtags (Low)
    * Standard industry Dis_Max (Greatest field + 10% tie-breaker) to avoid false positives.
@@ -122,24 +121,25 @@ export class CompaniesController {
     const { searching, offset = 0 } = req.body;
     const limit: number = 30;
     // 1. Basic validation
-    if (!searching) {
-      if (searching || typeof searching !== "string") {
-        return res
-          .status(400)
-          .json({ error: "Missing or invalid searching query" });
-      } else if (!searching && typeof searching === "string") {
-        const { rows: companies } = await query(
-          `SELECT * FROM companies LIMIT 30;`,
-        );
 
-        return res.status(200).json({
-          success: true,
-          data: companies,
-          offset: parseInt(offset, 10),
-          total: companies.length ?? 0,
-          limit,
-        });
-      }
+    if (searching && typeof searching !== "string") {
+      return res
+        .status(400)
+        .json({ error: "Missing or invalid searching query" });
+    }
+
+    if (!searching && typeof searching === "string") {
+      const { rows: companies } = await query(
+        `SELECT * FROM companies LIMIT ${limit};`,
+      );
+
+      return res.status(200).json({
+        success: true,
+        data: companies,
+        offset: parseInt(offset, 10),
+        total: companies.length ?? 0,
+        limit,
+      });
     }
 
     const parsedOffset = parseInt(offset, 10);
@@ -149,7 +149,7 @@ export class CompaniesController {
 
     try {
       // 2. Clean up search terms and split by whitespace/commas
-      const keywords = searching
+      const keywords: string[] = searching
         .split(/[\s,]+/)
         .map((term: string) => term.trim().toLowerCase())
         .filter((term: string) => term.length > 0);
@@ -215,15 +215,22 @@ export class CompaniesController {
 
       // 4. Assemble the complete optimized SQL query
       const sqlQuery = `
-      SELECT 
-        id, 
+      SELECT        
         uuid, 
         name, 
         sector, 
         location, 
+        description,
         logo, 
         hashtags, 
-        connection_objectives,
+        connection_objectives, 
+        contacts,
+        multimedia,
+        country_code,
+        funding_required_min,
+        funding_required_max,
+        ticket_investor_min,
+        ticket_investor_max,
         (${sqlScoreFormula}) AS relevance_score
       FROM companies
       WHERE ${sqlWhereClause}

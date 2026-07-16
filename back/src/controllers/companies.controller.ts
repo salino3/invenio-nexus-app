@@ -216,14 +216,22 @@ export class CompaniesController {
       // 4. Assemble the complete optimized SQL query
       const sqlQuery = `
       SELECT 
-        id, 
+       
         uuid, 
         name, 
         sector, 
         location, 
+        description,
         logo, 
         hashtags, 
-        connection_objectives,
+        connection_objectives, 
+        contacts,
+        multimedia,
+        country_code,
+        funding_required_min,
+        funding_required_max,
+        ticket_investor_min,
+        ticket_investor_max,
         (${sqlScoreFormula}) AS relevance_score
       FROM companies
       WHERE ${sqlWhereClause}

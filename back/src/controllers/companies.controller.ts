@@ -19,7 +19,9 @@ const safeJsonParse = <T>(value: any, defaultValue: T): T => {
 };
 
 // Helper to parse numeric values from string body
-const parseNumber = (value: any): number | null => {
+const parseNumber = (
+  value: string | number | null | undefined,
+): number | null => {
   if (value === null || value === undefined || value === "") return null;
   const parsed = Number(value);
   return isNaN(parsed) ? null : parsed;
@@ -107,7 +109,7 @@ export class CompaniesController {
     }
   }
 
-  /** TODO: Refactoring endpoint
+  /**
    * Search companies using key-term weight scoring and optimized indexing.
    * Relevancy Weighting: Name (High) > Sector (Medium) > Hashtags (Low)
    * Standard industry Dis_Max (Greatest field + 10% tie-breaker) to avoid false positives.
@@ -126,7 +128,7 @@ export class CompaniesController {
           .json({ error: "Missing or invalid searching query" });
       } else if (!searching && typeof searching === "string") {
         const { rows: companies } = await query(
-          `SELECT * FROM companies LIMIT 30;`,
+          `SELECT * FROM companies LIMIT ${limit};`,
         );
 
         return res.status(200).json({

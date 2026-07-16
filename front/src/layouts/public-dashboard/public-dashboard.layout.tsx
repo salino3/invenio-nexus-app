@@ -6,10 +6,7 @@ import { VITE_TOKEN } from "@/constants";
 import "./public-dashboard.styles.scss";
 
 const PublicDashboardLayout: React.FC = () => {
-  const { setDataUser, currentUser } = useProviderSelector(
-    "setDataUser",
-    "currentUser",
-  );
+  const { setDataUser } = useProviderSelector("setDataUser");
 
   const checkGoogleSession = async () => {
     ServicesApp.checkGoogleSession().then((data) => {
@@ -25,9 +22,7 @@ const PublicDashboardLayout: React.FC = () => {
   };
 
   useLayoutEffect(() => {
-    if (currentUser?.email) {
-      checkGoogleSession();
-    }
+    checkGoogleSession();
   }, [setDataUser]);
 
   return (

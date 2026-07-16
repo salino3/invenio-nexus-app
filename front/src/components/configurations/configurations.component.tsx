@@ -1,5 +1,6 @@
 import type React from "react";
 import { useProviderSelector } from "@/store/provider";
+import { ListLanguages } from "@/common";
 import "./configurations.styles.scss";
 
 export const Configurations: React.FC = () => {
@@ -19,6 +20,7 @@ export const Configurations: React.FC = () => {
       <button onClick={() => setConfiguration && setConfiguration()}>
         Close
       </button>
+      <ListLanguages />
     </div>
   );
 };

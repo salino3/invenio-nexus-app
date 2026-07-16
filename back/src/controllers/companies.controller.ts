@@ -1,12 +1,9 @@
 import { Request, Response } from "express";
 import { utilitiesApp } from "../utils/utilities-app";
-import {
-  RegistretionCompanyDB,
-  RegistretionCompanyInput,
-} from "../interfaces/company.interface";
+import { query } from "../db";
+import { RegistretionCompanyDB } from "../interfaces/company.interface";
 import { Company } from "../models/company.model";
 import { AuthRequest } from "../middlewares/auth-middleware";
-import { query } from "../db";
 
 const { checkRequiredFields } = utilitiesApp();
 
@@ -215,8 +212,7 @@ export class CompaniesController {
 
       // 4. Assemble the complete optimized SQL query
       const sqlQuery = `
-      SELECT 
-       
+      SELECT        
         uuid, 
         name, 
         sector, 

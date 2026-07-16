@@ -7,20 +7,22 @@ import { en as enWCAG } from "./wcag/en";
 import { es as esWCAG } from "./wcag/es";
 
 // Use the language detector
+export const resources = {
+  en: {
+    main: enMain,
+    wcag: enWCAG,
+  },
+  es: {
+    main: esMain,
+    wcag: esWCAG,
+  },
+};
+
 i18n
   .use(LanguageDetector) // Add the language detector
   .use(initReactI18next) // Use React i18next
   .init({
-    resources: {
-      en: {
-        main: enMain,
-        wcag: enWCAG,
-      },
-      es: {
-        main: esMain,
-        wcag: esWCAG,
-      },
-    },
+    resources: resources,
     lng: localStorage.getItem("lng") || undefined, // use detector to decide the language (use localStorage value if available)
     fallbackLng: "en", // Default language if the user's language is not supported
     detection: {

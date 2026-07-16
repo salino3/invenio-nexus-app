@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { loadStripe, type StripeElementLocale } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -57,6 +58,9 @@ const linksApp: LinkApp[] = [
 ];
 
 export const MainHeader: React.FC = () => {
+  const { t } = useTranslation("main");
+  const { t: tw } = useTranslation("wcag");
+
   const location = useLocation();
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -65,7 +69,7 @@ export const MainHeader: React.FC = () => {
     <div className="rootMainHeader">
       <div className="containerMainHeader">
         <div className="boxLogo">
-          <h5>Image</h5>
+          <h5>{t("image")}</h5>
           <ImageComponent
             vertical={false}
             src={`/images/.png`}

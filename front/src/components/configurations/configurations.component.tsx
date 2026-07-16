@@ -8,6 +8,10 @@ export const Configurations: React.FC = () => {
     "setConfiguration",
   );
 
+  if (!configuration) {
+    return;
+  }
+
   console.log(configuration);
 
   return (

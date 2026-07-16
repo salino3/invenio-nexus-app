@@ -5,7 +5,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { ModalApp } from "../modal-app";
 import { ImageComponent } from "../image";
 import { CheckoutForm } from "@/components";
-import { VITE_APP_API_URL_PAYMENT, VITE_URL_BACK } from "@/constants";
+import { VITE_APP_API_URL_PAYMENT } from "@/constants";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
 

@@ -7,9 +7,11 @@ const routerAuth = express.Router();
 
 routerAuth.post("/login-account", authController.loginAccount);
 
-routerAuth.get("/auth/get-me", authController.getMe);
+routerAuth.post("/logout-account", authController.logoutAccount);
 
 routerAuth.post("/refresh-token", authController.refreshToken);
+
+routerAuth.get("/auth/get-me", authController.getMe);
 
 // Google OAuth Routes
 routerAuth.get(

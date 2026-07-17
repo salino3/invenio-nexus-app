@@ -32,20 +32,23 @@ export class ServicesApp {
   public static async closeSession(
     setDataUser: ((data: PropsCurrentAccount | null) => void) | undefined,
   ): Promise<void> {
-    sessionStorage.removeItem(VITE_TOKEN);
-    setDataUser && setDataUser(null);
-
     try {
-      fetch(`${VITE_URL_BACK}/auth/logout`, {
+      const result = await fetch(`${VITE_URL_BACK}/logout-account`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
+
+      if (!result.ok) {
+        return;
+      } else {
+        sessionStorage.removeItem(VITE_TOKEN);
+        setDataUser && setDataUser(null);
+        window.location.href = routePaths?.public_dashboard;
+      }
     } catch (error) {
       console.error("Errore durante il logout lato server", error);
     }
-
-    window.location.href = routePaths?.public_dashboard;
   }
 
   //

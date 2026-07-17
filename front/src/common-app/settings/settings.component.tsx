@@ -1,11 +1,44 @@
 import React, {
   useEffect,
   useRef,
+  useState,
   type Dispatch,
   type SetStateAction,
 } from "react";
 import { createPortal } from "react-dom";
+import { loadStripe, type StripeElementLocale } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { useProviderSelector } from "@/store/provider";
+import { ModalApp } from "../modal-app";
+import { CheckoutForm } from "@/components";
+import { VITE_APP_API_URL_PAYMENT } from "@/constants";
 import "./settings.styles.scss";
+
+/**
+ * Start Stirpe staff
+ */
+
+if (!VITE_APP_API_URL_PAYMENT) {
+  console.error("⚠️ Stripe Publishable Key is missing! Check your .env file.");
+}
+
+const stripePromise = loadStripe(VITE_APP_API_URL_PAYMENT);
+
+const options = {
+  locale: "en" as StripeElementLocale,
+  // appearance: {
+  //   theme: "stripe", // Options: 'stripe', 'night', 'flat', 'none'
+  //   variables: {
+  //     colorPrimary: "#4f46e5", // Matches your indigo button
+  //     colorBackground: "#f9f9f9",
+  //     borderRadius: "4px",
+  //   },
+  // },
+};
+
+/**
+ * End Stirpe staff
+ */
 
 interface Props {
   showSettings: boolean | null;
@@ -17,6 +50,9 @@ export const Settings: React.FC<Props> = ({
   setShowSettings,
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
+  const { currentUser } = useProviderSelector("currentUser");
+
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (!showSettings) return;
@@ -117,6 +153,20 @@ export const Settings: React.FC<Props> = ({
 
           <section className="settingSection">
             <h3>Abbonamento</h3>
+            {currentUser?.email && (
+              <>
+                <button onClick={() => setShowModal(true)}>Modal</button>
+                <ModalApp
+                  title="Payment Subscription"
+                  setShowModal={setShowModal}
+                  showModal={showModal}
+                >
+                  <Elements stripe={stripePromise} options={options}>
+                    <CheckoutForm />
+                  </Elements>
+                </ModalApp>
+              </>
+            )}
           </section>
         </div>
       </div>

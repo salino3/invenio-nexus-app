@@ -75,59 +75,63 @@ export const MainHeader: React.FC = () => {
   return (
     <div className="rootMainHeader">
       <div className="containerMainHeader">
-        <div className="leftBox">
-          <div className="boxLogo">
-            <ImageComponent
-              vertical={false}
-              src={`/web-icon.svg`}
-              lazy={"lazy"}
-              alt="Advertising 1"
-              customStyle="boxImage"
-            />
+        <div className="boxUp">
+          <div className="leftBox">
+            <div className="boxLogo">
+              <ImageComponent
+                vertical={false}
+                src={`/web-icon.svg`}
+                lazy={"lazy"}
+                alt="Advertising 1"
+                customStyle="boxImage"
+              />
+            </div>
+            {currentUser?.email && (
+              <button onClick={() => ServicesApp.closeSession(setDataUser)}>
+                Logout
+              </button>
+            )}
           </div>
+          <h3 className="title">Invenio Nexus</h3>
+          <nav>
+            <ul>
+              {linksApp.map((link) => (
+                <li key={link.pathName}>
+                  <Link
+                    style={
+                      {
+                        "--link-selected":
+                          location.pathname === link.pathName
+                            ? "underline"
+                            : "none",
+                      } as React.CSSProperties
+                    }
+                    to={link.pathName}
+                  >
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
           {currentUser?.email && (
-            <button onClick={() => ServicesApp.closeSession(setDataUser)}>
-              Logout
-            </button>
+            <>
+              <button onClick={() => setShowModal(true)}>Modal</button>
+              <ModalApp
+                title="Payment Subscription"
+                setShowModal={setShowModal}
+                showModal={showModal}
+              >
+                <Elements stripe={stripePromise} options={options}>
+                  <CheckoutForm />
+                </Elements>
+              </ModalApp>
+            </>
           )}
         </div>
-        <h3 className="title">Invenio Nexus</h3>
-        <nav>
-          <ul>
-            {linksApp.map((link) => (
-              <li key={link.pathName}>
-                <Link
-                  style={
-                    {
-                      "--link-selected":
-                        location.pathname === link.pathName
-                          ? "underline"
-                          : "none",
-                    } as React.CSSProperties
-                  }
-                  to={link.pathName}
-                >
-                  {link.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        {currentUser?.email && (
-          <>
-            <button onClick={() => setShowModal(true)}>Modal</button>
-            <ModalApp
-              title="Payment Subscription"
-              setShowModal={setShowModal}
-              showModal={showModal}
-            >
-              <Elements stripe={stripePromise} options={options}>
-                <CheckoutForm />
-              </Elements>
-            </ModalApp>
-          </>
-        )}
       </div>
+
+      <div className="boxDown"></div>
     </div>
   );
 };

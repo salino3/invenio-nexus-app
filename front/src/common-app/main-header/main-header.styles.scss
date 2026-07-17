@@ -31,121 +31,144 @@
     gap: 1rem;
     width: 100%;
 
-    .leftBox {
+    .boxUp {
+      flex-grow: 2;
+      flex-basis: 2;
       display: flex;
       flex-direction: row;
-      justify-content: center;
+      justify-content: space-between;
+      padding: 0 1rem;
       align-items: center;
-      width: fit-content;
-      .boxLogo {
+      width: 100%;
+      max-width: 1200px;
+      .leftBox {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: center;
-        align-items: start;
-        font-size: x-small;
-        width: 200px;
-        max-width: 200px;
+        align-items: center;
+        width: fit-content;
+        gap: 1rem;
 
-        .boxImage {
+        .boxLogo {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          align-items: center;
+          align-items: start;
+          font-size: x-small;
+          width: 200px;
+          max-width: 200px;
 
-          object-fit: contain;
-          height: 100%;
-          width: fit-content;
+          .boxImage {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
 
-          max-height: 50px;
-          max-width: 60px;
-
-          border: solid 1px;
-          overflow: hidden;
-          border-radius: 0.25rem;
-          img {
-            width: 100%;
+            object-fit: contain;
             height: 100%;
+            width: fit-content;
+
             max-height: 50px;
             max-width: 60px;
+
+            border: solid 1px;
+            overflow: hidden;
+            border-radius: 0.25rem;
+            img {
+              width: 100%;
+              height: 100%;
+              max-height: 50px;
+              max-width: 60px;
+            }
+          }
+
+          @media screen and (max-width: 724px) {
+            width: unset;
           }
         }
-
-        @media screen and (max-width: 724px) {
-          width: unset;
-        }
       }
-    }
 
-    nav {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      width: 350px;
-      ul {
+      nav {
         display: flex;
         flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        width: 350px;
+        ul {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          width: 100%;
+
+          padding: 0;
+          margin: 0;
+          li {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            font-weight: 600;
+
+            a {
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              flex-grow: 1;
+              color: var(--color-primary);
+              width: 100%;
+              max-width: 100px;
+              text-decoration: var(--link-selected, none);
+              padding: 0.25rem;
+              transition:
+                background-color 0.5s,
+                color 0.25s;
+              border-radius: 0.35rem;
+              &:hover {
+                color: var(--color-secondary-050);
+                background-color: var(--color-tertiary);
+              }
+            }
+          }
+        }
+      }
+
+      @media screen and (max-width: 724px) {
+        display: grid;
+        grid-template-areas:
+          "A . B"
+          "C C C";
         justify-content: center;
         align-items: center;
         gap: 1rem;
         width: 100%;
 
-        padding: 0;
-        margin: 0;
-        li {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          font-weight: 600;
+        .leftBox {
+          grid-area: A;
+        }
 
-          a {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            flex-grow: 1;
-            color: var(--color-primary);
-            width: 100%;
-            max-width: 100px;
-            text-decoration: var(--link-selected, none);
-            padding: 0.25rem;
-            transition:
-              background-color 0.5s,
-              color 0.25s;
-            border-radius: 0.35rem;
-            &:hover {
-              color: var(--color-secondary-050);
-              background-color: var(--color-tertiary);
-            }
-          }
+        h3 {
+          grid-area: B;
+          text-align: center;
+        }
+        nav {
+          grid-area: C;
+          width: 300px;
         }
       }
     }
 
-    @media screen and (max-width: 724px) {
-      display: grid;
-      grid-template-areas:
-        "A . B"
-        "C C C";
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
+    .boxDown {
+      flex-grow: 1;
+      flex-basis: 1;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
       width: 100%;
-
-      .boxLogo {
-        grid-area: A;
-      }
-
-      h3 {
-        grid-area: B;
-        text-align: center;
-      }
-      nav {
-        grid-area: C;
-        width: 300px;
-      }
     }
   }
 }

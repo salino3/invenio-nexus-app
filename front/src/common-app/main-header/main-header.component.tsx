@@ -147,6 +147,8 @@ export const MainHeader: React.FC = () => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
+                e.preventDefault();
+
                 setShowSettings(true);
               }
             }}
@@ -156,13 +158,13 @@ export const MainHeader: React.FC = () => {
             <span>
               {t("settings")} <SettingIcon />
             </span>
-            {showSettings && (
-              <Settings
-                showSettings={showSettings}
-                setShowSettings={setShowSettings}
-              />
-            )}
           </div>
+          {showSettings && (
+            <Settings
+              showSettings={showSettings}
+              setShowSettings={setShowSettings}
+            />
+          )}
         </div>
       </div>
     </div>

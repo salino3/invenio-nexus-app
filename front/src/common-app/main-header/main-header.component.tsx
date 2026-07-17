@@ -79,7 +79,7 @@ export const MainHeader: React.FC = () => {
           <div className="boxLogo">
             <ImageComponent
               vertical={false}
-              src={`/images/.png`}
+              src={`/web-icon.svg`}
               lazy={"lazy"}
               alt="Advertising 1"
               customStyle="boxImage"

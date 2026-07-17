@@ -70,12 +70,14 @@ export const Settings: React.FC<Props> = ({
   // Gestione dello stato null iniziale per evitare animazioni indesiderate al boot
   if (!showSettings) return null;
 
+  //
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowSettings(false);
+  };
+
   return createPortal(
-    <div
-      className="rootSettingsPanel"
-      onClick={() => setShowSettings(false)}
-      id="settingsPanel"
-    >
+    <div className="rootSettingsPanel" onClick={handleClose} id="settingsPanel">
       <div
         ref={panelRef}
         className="containerSettingsPanel"

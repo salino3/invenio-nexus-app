@@ -47,40 +47,15 @@ export class AuthController {
     }
   }
 
-  //
-  public async getMe(req: Request, res: Response): Promise<Response> {
-    try {
-      let token = req.cookies[COOKIES_NAME as string];
+  public async logoutAccount(req: Request, res: Response): Promise<Response> {
+    res.clearCookie(COOKIES_NAME as string, {
+      path: "/",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax", //  'lax' the same configuration
+    });
 
-      if (!token && req.headers.authorization?.startsWith("Bearer ")) {
-        token = req.headers.authorization.split(" ")[1]; // Get the string after "Bearer ", for mobile usually
-      }
-
-      if (!token) {
-        return res.status(401).json({
-          success: false,
-          message: "No token provided",
-        });
-      }
-
-      // const decodedUser = jwt.decode(token) as AccountCookie;
-      const decodedUser = jwt.verify(
-        token,
-        SECRET_KEY as string,
-      ) as AccountCookie;
-
-      return res.status(200).json({
-        success: true,
-        message: "Login successful",
-        user: decodedUser,
-        token,
-      });
-    } catch (error) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid or expired token",
-      });
-    }
+    return res.status(200).json({ message: "Logout effettuato con successo" });
   }
 
   //
@@ -118,6 +93,42 @@ export class AuthController {
       return res
         .status(403)
         .json({ error: "Refresh token expired or invalid" });
+    }
+  }
+
+  //
+  public async getMe(req: Request, res: Response): Promise<Response> {
+    try {
+      let token = req.cookies[COOKIES_NAME as string];
+
+      if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+        token = req.headers.authorization.split(" ")[1]; // Get the string after "Bearer ", for mobile usually
+      }
+
+      if (!token) {
+        return res.status(401).json({
+          success: false,
+          message: "No token provided",
+        });
+      }
+
+      // const decodedUser = jwt.decode(token) as AccountCookie;
+      const decodedUser = jwt.verify(
+        token,
+        SECRET_KEY as string,
+      ) as AccountCookie;
+
+      return res.status(200).json({
+        success: true,
+        message: "Login successful",
+        user: decodedUser,
+        token,
+      });
+    } catch (error) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid or expired token",
+      });
     }
   }
 }

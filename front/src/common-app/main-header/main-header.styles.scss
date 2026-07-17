@@ -5,7 +5,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  padding-bottom: 1.6rem;
+  padding-bottom: 0rem;
   border: solid;
   width: 100%;
   z-index: 0;
@@ -25,116 +25,167 @@
   .containerMainHeader {
     position: relative;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
     width: 100%;
 
-    .boxLogo {
+    .boxUp {
+      flex-grow: 2;
+      flex-basis: 2;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: start;
-      font-size: x-small;
-      width: 200px;
-      max-width: 200px;
-
-      .boxImage {
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 0 1rem;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+      .leftBox {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
-        object-fit: cover;
-        object-fit: contain;
-        height: 100%;
-        width: 100%;
+        width: fit-content;
+        gap: 1rem;
 
-        max-height: 50px;
-        border: solid;
-        overflow: hidden;
-        border-radius: 0.25rem;
-        img {
+        .boxLogo {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: start;
+          font-size: x-small;
+          width: 200px;
+          max-width: 200px;
+
+          .boxImage {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            object-fit: contain;
+            height: 100%;
+            width: fit-content;
+
+            max-height: 50px;
+            max-width: 60px;
+
+            border: solid 1px;
+            overflow: hidden;
+            border-radius: 0.25rem;
+            img {
+              width: 100%;
+              height: 100%;
+              max-height: 50px;
+              max-width: 60px;
+            }
+          }
+
+          @media screen and (max-width: 724px) {
+            width: unset;
+          }
+        }
+      }
+
+      nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        width: 350px;
+        ul {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
           width: 100%;
-          height: 100%;
-          max-height: 50px;
+
+          padding: 0;
+          margin: 0;
+          li {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            font-weight: 600;
+
+            a {
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              flex-grow: 1;
+              color: var(--color-primary);
+              width: 100%;
+              max-width: 100px;
+              text-decoration: var(--link-selected, none);
+              padding: 0.25rem;
+              transition:
+                background-color 0.5s,
+                color 0.25s;
+              border-radius: 0.35rem;
+              &:hover {
+                color: var(--color-secondary-050);
+                background-color: var(--color-tertiary);
+              }
+            }
+          }
         }
       }
 
       @media screen and (max-width: 724px) {
-        width: unset;
-      }
-    }
-
-    nav {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-
-      width: 350px;
-      ul {
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        grid-template-areas:
+          "A . B"
+          "C C C";
         justify-content: center;
         align-items: center;
         gap: 1rem;
         width: 100%;
 
-        padding: 0;
-        margin: 0;
-        li {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          font-weight: 600;
+        .leftBox {
+          grid-area: A;
+        }
 
-          a {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            flex-grow: 1;
-            color: var(--color-primary);
-            width: 100%;
-            max-width: 100px;
-            text-decoration: var(--link-selected, none);
-            padding: 0.25rem;
-            transition:
-              background-color 0.5s,
-              color 0.25s;
-            border-radius: 0.35rem;
-            &:hover {
-              color: var(--color-secondary-050);
-              background-color: var(--color-tertiary);
-            }
-          }
+        h3 {
+          grid-area: B;
+          text-align: center;
+        }
+        nav {
+          grid-area: C;
+          width: 300px;
         }
       }
     }
 
-    @media screen and (max-width: 724px) {
-      display: grid;
-      grid-template-areas:
-        "A . B"
-        "C C C";
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
+    .boxDown {
+      flex-grow: 1;
+      flex-basis: 1;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
       width: 100%;
 
-      .boxLogo {
-        grid-area: A;
-      }
+      .boxRight {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--color-01) !important;
+        padding-top: 4px;
+        border-radius: 3px;
 
-      h3 {
-        grid-area: B;
-        text-align: center;
-      }
-      nav {
-        grid-area: C;
-        width: 300px;
+        & > span {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          gap: 0.5rem;
+        }
       }
     }
   }

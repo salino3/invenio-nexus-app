@@ -5,7 +5,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  padding-bottom: 1.6rem;
+  padding-bottom: 0rem;
   border: solid;
   width: 100%;
   z-index: 0;
@@ -25,7 +25,7 @@
   .containerMainHeader {
     position: relative;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
@@ -169,6 +169,24 @@
       justify-content: space-between;
       align-items: flex-end;
       width: 100%;
+
+      .boxRight {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--color-01) !important;
+        padding-top: 4px;
+        border-radius: 3px;
+
+        & > span {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          gap: 0.5rem;
+        }
+      }
     }
   }
 }

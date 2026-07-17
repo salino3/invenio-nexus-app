@@ -7,7 +7,7 @@ import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
 import { ModalApp } from "../modal-app";
 import { ImageComponent } from "../image";
-import { CheckoutForm } from "@/components";
+import { CheckoutForm, SettingIcon } from "@/components";
 import { VITE_APP_API_URL_PAYMENT } from "@/constants";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
@@ -71,6 +71,7 @@ export const MainHeader: React.FC = () => {
   );
 
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showSettings, setShowSettings] = useState<boolean | null>(null);
 
   return (
     <div className="rootMainHeader">
@@ -129,9 +130,40 @@ export const MainHeader: React.FC = () => {
             </>
           )}
         </div>
-      </div>
+        {/*  */}
+        <div className="boxDown">
+          <button>Companies</button>
 
-      <div className="boxDown"></div>
+          <div
+            role="button"
+            tabIndex={0}
+            // aria-pressed={showSettings || "false"}
+            aria-label={tw("settings_toggle_header")}
+            aria-controls="settingsPanel"
+            onClick={() => setShowSettings(true)}
+            style={{
+              cursor: showSettings ? "default" : "pointer",
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setShowSettings(true);
+              }
+            }}
+            id="spanSettingComponent"
+            className="boxRight"
+          >
+            <span>
+              {t("settings")} <SettingIcon />
+            </span>
+            {showSettings &&
+              ` <Settings
+                id="settingsPanel"
+                showSettings={showSettings}
+                setShowSettings={setShowSettings}
+              />`}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
 import { ModalApp } from "../modal-app";
+import { Settings } from "../settings";
 import { ImageComponent } from "../image";
 import { CheckoutForm, SettingIcon } from "@/components";
 import { VITE_APP_API_URL_PAYMENT } from "@/constants";
@@ -155,12 +156,12 @@ export const MainHeader: React.FC = () => {
             <span>
               {t("settings")} <SettingIcon />
             </span>
-            {showSettings &&
-              ` <Settings
-                id="settingsPanel"
+            {showSettings && (
+              <Settings
                 showSettings={showSettings}
                 setShowSettings={setShowSettings}
-              />`}
+              />
+            )}
           </div>
         </div>
       </div>

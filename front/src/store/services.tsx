@@ -1,9 +1,10 @@
 import type { FormLoginProps } from "@/utils";
-import { VITE_URL_BACK } from "@/constants";
-import type { StateLoginDataAccount } from "./interface";
+import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
+import type { PropsCurrentAccount, StateLoginDataAccount } from "./interface";
+import { routePaths } from "@/router/routes.interface";
 
 export class ServicesApp {
-  //
+  // Auth
   public static async serviceLoginAccount(
     body: FormLoginProps,
   ): Promise<StateLoginDataAccount> {
@@ -25,6 +26,26 @@ export class ServicesApp {
     const data: StateLoginDataAccount = await response.json();
 
     return data;
+  }
+
+  //
+  public static async closeSession(
+    setDataUser: ((data: PropsCurrentAccount | null) => void) | undefined,
+  ): Promise<void> {
+    sessionStorage.removeItem(VITE_TOKEN);
+    setDataUser && setDataUser(null);
+
+    try {
+      fetch(`${VITE_URL_BACK}/auth/logout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Errore durante il logout lato server", error);
+    }
+
+    window.location.href = routePaths?.public_dashboard;
   }
 
   //

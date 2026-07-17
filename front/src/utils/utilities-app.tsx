@@ -32,15 +32,6 @@ export const utilitiesApp = () => {
     }
   };
 
-  //*
-  const closeSession = (): void => {
-    sessionStorage.removeItem(VITE_TOKEN);
-    setDataUser && setDataUser(null);
-
-    window.location.href = routePaths?.public_dashboard;
-    return;
-  };
-
   //
   const handleImgError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
@@ -64,5 +55,5 @@ export const utilitiesApp = () => {
     target.src = fallbackSrc;
   };
 
-  return { getAuthToken, closeSession, handleImgError };
+  return { getAuthToken, handleImgError };
 };

@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { loadStripe, type StripeElementLocale } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { useProviderSelector } from "@/store/provider";
+import { ServicesApp } from "@/store/services";
 import { ModalApp } from "../modal-app";
 import { ImageComponent } from "../image";
 import { CheckoutForm } from "@/components";
@@ -63,20 +65,31 @@ export const MainHeader: React.FC = () => {
 
   const location = useLocation();
 
+  const { currentUser, setDataUser } = useProviderSelector(
+    "currentUser",
+    "setDataUser",
+  );
+
   const [showModal, setShowModal] = useState<boolean>(false);
 
   return (
     <div className="rootMainHeader">
       <div className="containerMainHeader">
-        <div className="boxLogo">
-          <h5>{t("image")}</h5>
-          <ImageComponent
-            vertical={false}
-            src={`/images/.png`}
-            lazy={"lazy"}
-            alt="Advertising 1"
-            customStyle="boxImage"
-          />
+        <div className="leftBox">
+          <div className="boxLogo">
+            <ImageComponent
+              vertical={false}
+              src={`/images/.png`}
+              lazy={"lazy"}
+              alt="Advertising 1"
+              customStyle="boxImage"
+            />
+          </div>
+          {currentUser?.email && (
+            <button onClick={() => ServicesApp.closeSession(setDataUser)}>
+              Logout
+            </button>
+          )}
         </div>
         <h3 className="title">Invenio Nexus</h3>
         <nav>
@@ -100,18 +113,21 @@ export const MainHeader: React.FC = () => {
             ))}
           </ul>
         </nav>
-        <button onClick={() => setShowModal(true)}>Modal</button>
+        {currentUser?.email && (
+          <>
+            <button onClick={() => setShowModal(true)}>Modal</button>
+            <ModalApp
+              title="Payment Subscription"
+              setShowModal={setShowModal}
+              showModal={showModal}
+            >
+              <Elements stripe={stripePromise} options={options}>
+                <CheckoutForm />
+              </Elements>
+            </ModalApp>
+          </>
+        )}
       </div>
-      <ModalApp
-        title="Payment Subscription"
-        setShowModal={setShowModal}
-        showModal={showModal}
-      >
-        {" "}
-        <Elements stripe={stripePromise} options={options}>
-          <CheckoutForm />
-        </Elements>
-      </ModalApp>
     </div>
   );
 };

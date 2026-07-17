@@ -94,6 +94,7 @@ export const MainHeader: React.FC = () => {
             role="button"
             tabIndex={0}
             // aria-pressed={showSettings || "false"}
+            aria-expanded={showSettings === true ? "true" : "false"} // aria-expanded accepts strings
             aria-label={tw("settings_toggle_header")}
             aria-controls="settingsPanel"
             onClick={() => setShowSettings(true)}

@@ -21,10 +21,9 @@ export const Settings: React.FC<Props> = ({
   useEffect(() => {
     if (!showSettings) return;
 
-    // Memorizza l'elemento attivo nella pagina per ripristinarlo alla chiusura
+    // 1. Stores the active element on the page to restore it when closed
     const originalFocusedElement = document.activeElement as HTMLElement;
 
-    // Trova gli elementi focalizzabili per il Focus Trap
     const focusableElements = panelRef.current?.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     ) as NodeListOf<HTMLElement>;
@@ -62,12 +61,11 @@ export const Settings: React.FC<Props> = ({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       if (originalFocusedElement) {
-        originalFocusedElement.focus();
+        originalFocusedElement.focus(); // 2. Restore focus on old element
       }
     };
   }, [showSettings, setShowSettings]);
 
-  // Gestione dello stato null iniziale per evitare animazioni indesiderate al boot
   if (!showSettings) return null;
 
   //
@@ -89,10 +87,9 @@ export const Settings: React.FC<Props> = ({
         <header className="settingsHeader">
           <button
             className="btnCloseSettings"
-            onClick={() => setShowSettings(false)}
+            onClick={handleClose}
             aria-label="Close settings"
           >
-            {/* Freccia o X orientata a sinistra per indicare la chiusura che "ritira" il pannello */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -102,28 +99,24 @@ export const Settings: React.FC<Props> = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
           </button>
           <h2>Impostazioni</h2>
         </header>
 
         <div className="settingsContent">
-          {/* Sezione di test del contenuto (Lingua, Temi, Permessi, Stripe) */}
           <section className="settingSection">
             <h3>Lingua / Language</h3>
-            {/* Qui andrà il tuo selettore i18n */}
           </section>
 
           <section className="settingSection">
             <h3>Tema Grafico</h3>
-            {/* Qui andrà il toggle per cambiare i colori */}
           </section>
 
           <section className="settingSection">
             <h3>Abbonamento</h3>
-            {/* Qui sposterai eventualmente la logica di Stripe Elements se desideri gestirla qui dentro */}
           </section>
         </div>
       </div>

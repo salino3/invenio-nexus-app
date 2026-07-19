@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
-import { ImageComponent } from "../image";
+import React from "react";
+// import { useMediaQuery } from "react-responsive";
+// import { ImageComponent } from "../image";
+import Advertisement from "../advertisement/advertisement.component";
 import "./aside.styles.scss";
 
 const asideValue: boolean = true;
@@ -8,12 +9,7 @@ const asideValue: boolean = true;
 const aside: string = asideValue ? "open" : "close";
 
 export const Aside: React.FC = () => {
-  const isMobile: boolean = useMediaQuery({ maxWidth: "724px" });
-
-  useEffect(() => {
-    // api call
-    // ... value aside boolean...
-  }, []);
+  // const isMobile: boolean = useMediaQuery({ maxWidth: "724px" });
 
   return (
     <aside className={`rootAsideComponent aside_${aside}`}>
@@ -23,7 +19,10 @@ export const Aside: React.FC = () => {
         </div>
 
         <div className="publicityContainer">
-          <ImageComponent
+          <Advertisement height="140px" width="180px" />
+          <Advertisement height="140px" width="180px" />
+          <Advertisement height="140px" width="180px" />
+          {/* <ImageComponent
             vertical={isMobile}
             src={`/images/.png`}
             lazy={"lazy"}
@@ -36,7 +35,7 @@ export const Aside: React.FC = () => {
             lazy={"lazy"}
             alt="Advertising 2"
             customStyle="boxImage"
-          />
+          /> */}
         </div>
       </div>
     </aside>

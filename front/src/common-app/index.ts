@@ -3,3 +3,4 @@ export * from "./image";
 export * from "./aside";
 export * from "./main-header";
 export * from "./settings";
+export * from "./advertisement";

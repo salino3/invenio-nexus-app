@@ -1,7 +1,7 @@
 import { ServicesApp } from "@/store/services";
 import { VITE_TOKEN } from "@/constants";
 import { regexCorrectEmail } from "../utilities-app";
-import type { FormLoginProps, StateLoginAccount } from "../interface";
+import type { FormLoginProps, StateLoginAccount } from "./interface";
 
 export async function loginAccountEvent(
   prevState: StateLoginAccount,

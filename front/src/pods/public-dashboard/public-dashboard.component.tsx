@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LoginForm } from "./components";
+import { LoginForm, RegisterForm } from "./components";
 import { VITE_URL_BACK } from "@/constants";
 import "./public-dashboard.styles.scss";
 
@@ -19,7 +19,7 @@ export const PublicDashboard: React.FC = () => {
         <button onClick={() => setIsLogin(false)}>Register</button>
       </div>
 
-      {isLogin ? <LoginForm /> : "Register component"}
+      {isLogin ? <LoginForm /> : <RegisterForm />}
     </div>
   );
 };

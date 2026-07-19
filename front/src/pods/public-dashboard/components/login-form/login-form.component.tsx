@@ -7,7 +7,7 @@ import { loginAccountEvent, type FormLoginProps } from "@/utils";
 import { routePaths } from "@/router/routes.interface";
 import "./login-form.styles.scss";
 
-export const initialDataState: FormLoginProps = {
+const initialDataState: FormLoginProps = {
   email: "",
   password: "",
 };

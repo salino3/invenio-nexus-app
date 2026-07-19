@@ -1,8 +1,11 @@
-import type { FormRegisterErrorsProps, FormRegisterProps } from "@/utils";
 import type React from "react";
-import { useState } from "react";
+import { useActionState, useState } from "react";
+import type { FormRegisterErrorsProps, FormRegisterProps } from "@/utils";
+import { registerAccountEvent } from "@/utils/accounts/register-account.event";
+import { ButtonForm } from "@/common";
+import "./register-form.styles.scss";
 
-export const initialDataState: FormRegisterProps = {
+const initialDataState: FormRegisterProps = {
   name: "",
   email: "",
   password: "",
@@ -10,7 +13,7 @@ export const initialDataState: FormRegisterProps = {
   age: null,
 };
 
-export const initialErrorDataState: FormRegisterErrorsProps = {
+const initialErrorDataState: FormRegisterErrorsProps = {
   name: "",
   email: "",
   password: "",
@@ -24,5 +27,28 @@ export const RegisterForm: React.FC = () => {
     initialErrorDataState,
   );
 
-  return <form className="rootRegisterForm"></form>;
+  const [state, formAction, isPending] = useActionState(registerAccountEvent, {
+    success: false,
+    error: "",
+    fieldErrors: null,
+    formData: null,
+  });
+
+  const isButtonDisabled: boolean = Object.values(formData).some(
+    (value: string) =>
+      typeof value === "string" ? value.trim().length > 0 : !!value,
+  );
+
+  return (
+    <form className="rootRegisterForm" action={formAction}>
+      <fieldset disabled={isPending}>
+        <ButtonForm
+          text="Submit"
+          type="submit"
+          disabled={isButtonDisabled}
+          pendingForm={isPending}
+        />
+      </fieldset>
+    </form>
+  );
 };

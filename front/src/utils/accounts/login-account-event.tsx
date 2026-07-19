@@ -3,6 +3,11 @@ import { VITE_TOKEN } from "@/constants";
 import { regexCorrectEmail } from "../utilities-app";
 import type { FormLoginProps, StateLoginAccount } from "./interface";
 
+let accountErrorData: FormLoginProps = {
+  email: "",
+  password: "",
+};
+
 export async function loginAccountEvent(
   prevState: StateLoginAccount,
   formData: FormData,
@@ -10,11 +15,6 @@ export async function loginAccountEvent(
   let accountData: FormLoginProps = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
-  };
-
-  let accountErrorData: FormLoginProps = {
-    email: "",
-    password: "",
   };
 
   (Object.entries(accountData) as [keyof FormLoginProps, string][]).forEach(

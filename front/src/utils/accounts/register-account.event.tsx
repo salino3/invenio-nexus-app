@@ -1,3 +1,4 @@
+import { ServicesApp } from "@/store/services";
 import { regexCorrectEmail } from "../utilities-app";
 import type {
   FormRegisterErrorsProps,
@@ -18,11 +19,11 @@ export async function registerAccountEvent(
   formData: FormData,
 ): Promise<StateRegisterAccount> {
   let accountData: FormRegisterProps = {
-    name: formData.get("email") as string,
+    name: formData.get("name") as string,
     email: formData.get("email") as string,
     password: formData.get("password") as string,
     age: formData.get("age") as number | null,
-    confirmPassword: formData.get("email") as string,
+    confirmPassword: formData.get("confirmPassword") as string,
   };
 
   let accountErrorData: FormRegisterErrorsProps = createInitialErrorState();
@@ -68,7 +69,7 @@ export async function registerAccountEvent(
       }
     },
   );
-
+  console.log("acc", accountData);
   const hasErrors: boolean = Object.values(accountErrorData).some(
     (msg) => msg !== "",
   );
@@ -83,6 +84,17 @@ export async function registerAccountEvent(
   }
 
   try {
+    const result = await ServicesApp.registerAccount(accountData);
+
+    if (result.user) {
+      return {
+        ...prevState,
+        success: true,
+        error: "",
+        fieldErrors: null,
+      };
+    }
+
     return {
       success: true,
       error: "",

@@ -1,5 +1,4 @@
-import type React from "react";
-import { useActionState, useEffect, useState } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import type { FormRegisterErrorsProps, FormRegisterProps } from "@/utils";
 import { registerAccountEvent } from "@/utils/accounts/register-account.event";
 import { BasicInput, ButtonForm } from "@/common";
@@ -21,7 +20,9 @@ const initialErrorDataState: FormRegisterErrorsProps = {
   age: "",
 };
 
-export const RegisterForm: React.FC = () => {
+export const RegisterForm: React.FC<{
+  setIsLogin: (value: React.SetStateAction<boolean>) => void;
+}> = ({ setIsLogin }) => {
   const [formData, setFormData] = useState<FormRegisterProps>(initialDataState);
   const [formErrorData, setFormErrorData] = useState<FormRegisterErrorsProps>(
     initialErrorDataState,
@@ -55,6 +56,7 @@ export const RegisterForm: React.FC = () => {
     if (state?.success) {
       setFormData(initialDataState);
       setFormErrorData(initialErrorDataState);
+      setIsLogin(true);
     } else if (!state?.success && state?.error) {
       setFormErrorData(state?.fieldErrors as FormRegisterErrorsProps);
     }

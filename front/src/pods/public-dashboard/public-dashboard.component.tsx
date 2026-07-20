@@ -19,7 +19,7 @@ export const PublicDashboard: React.FC = () => {
         <button onClick={() => setIsLogin(false)}>Register</button>
       </div>
 
-      {isLogin ? <LoginForm /> : <RegisterForm />}
+      {isLogin ? <LoginForm /> : <RegisterForm setIsLogin={setIsLogin} />}
     </div>
   );
 };

@@ -3,10 +3,10 @@ import { VITE_TOKEN } from "@/constants";
 import { regexCorrectEmail } from "../utilities-app";
 import type { FormLoginProps, StateLoginAccount } from "./interface";
 
-let accountErrorData: FormLoginProps = {
+const createInitialErrorState = (): FormLoginProps => ({
   email: "",
   password: "",
-};
+});
 
 export async function loginAccountEvent(
   prevState: StateLoginAccount,
@@ -16,6 +16,8 @@ export async function loginAccountEvent(
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
+
+  let accountErrorData: FormLoginProps = createInitialErrorState();
 
   (Object.entries(accountData) as [keyof FormLoginProps, string][]).forEach(
     ([key, value]) => {
@@ -81,6 +83,7 @@ export async function loginAccountEvent(
       ...prevState,
       error: err as string,
       formData: accountData,
+      fieldErrors: null,
     };
   }
 }

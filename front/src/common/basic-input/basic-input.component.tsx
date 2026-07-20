@@ -17,7 +17,7 @@ export const BasicInput: React.FC<Props> = (props) => {
     props;
 
   return (
-    <div className={`rootBasicInput ${customStyles}`}>
+    <div className={`rootBasicInput ${customStyles ?? ""}`}>
       <label htmlFor={name + "ID"}>{lbl ?? name}</label>
       <input
         type={type}

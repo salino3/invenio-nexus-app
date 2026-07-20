@@ -39,6 +39,6 @@ export interface FormRegisterErrorsProps extends Pick<
 export interface StateRegisterAccount {
   success: boolean;
   error: string;
-  fieldErrors: FormRegisterProps | null;
+  fieldErrors: FormRegisterErrorsProps | null;
   formData: FormRegisterProps | null;
 }

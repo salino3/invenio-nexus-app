@@ -1,4 +1,4 @@
-import type { FormLoginProps } from "@/utils";
+import type { FormLoginProps, FormRegisterProps } from "@/utils";
 import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
 import type { PropsCurrentAccount, StateLoginDataAccount } from "./interface";
 import { routePaths } from "@/router/routes.interface";
@@ -29,6 +29,29 @@ export class ServicesApp {
   }
 
   //
+  public static async registerAccount(body: FormRegisterProps) {
+    const response = await fetch(`${VITE_URL_BACK}/register-account`, {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Register failed with status: ${response.status}`);
+    }
+
+    const data: {
+      message: string;
+      user: Pick<PropsCurrentAccount, "hasAdFreeAccess" | "iat" | "exp">;
+    } = await response.json();
+
+    return data;
+  }
+
+  //
   public static async closeSession(
     setDataUser: ((data: PropsCurrentAccount | null) => void) | undefined,
   ): Promise<void> {
@@ -47,7 +70,7 @@ export class ServicesApp {
         window.location.href = routePaths?.public_dashboard;
       }
     } catch (error) {
-      console.error("Errore durante il logout lato server", error);
+      console.error("Server error during logout", error);
     }
   }
 

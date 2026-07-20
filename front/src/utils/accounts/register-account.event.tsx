@@ -5,13 +5,13 @@ import type {
   StateRegisterAccount,
 } from "./interface";
 
-let accountErrorData: FormRegisterErrorsProps = {
+const createInitialErrorState = (): FormRegisterErrorsProps => ({
   name: "",
   email: "",
   password: "",
   confirmPassword: "",
   age: "",
-};
+});
 
 export async function registerAccountEvent(
   prevState: StateRegisterAccount,
@@ -24,6 +24,8 @@ export async function registerAccountEvent(
     age: formData.get("age") as number | null,
     confirmPassword: formData.get("email") as string,
   };
+
+  let accountErrorData: FormRegisterErrorsProps = createInitialErrorState();
 
   (Object.entries(accountData) as [keyof FormRegisterProps, string][]).forEach(
     ([key, value]) => {
@@ -40,6 +42,14 @@ export async function registerAccountEvent(
               [key]: "Invalid Email address",
             };
           }
+        } else if (
+          key === "confirmPassword" &&
+          value !== accountData.password
+        ) {
+          accountErrorData = {
+            ...accountErrorData,
+            [key]: "Password mismatch with confirm password",
+          };
         } else if (key === "password") {
           if (value.length < 6 || value.length > 20) {
             accountErrorData = {
@@ -47,11 +57,11 @@ export async function registerAccountEvent(
               [key]: "Password must be between 6 and 20 characters",
             };
           }
-        } else if (key === "age" && typeof value === "number") {
-          if (value < 18) {
+        } else if (key === "age") {
+          if (Number(value) < 18) {
             accountErrorData = {
               ...accountErrorData,
-              [key]: "Your age must be more than 17 years",
+              [key]: "Your age must be minimum 18 years old",
             };
           }
         }
@@ -65,9 +75,10 @@ export async function registerAccountEvent(
 
   if (hasErrors) {
     return {
-      ...prevState,
       fieldErrors: accountErrorData,
       formData: accountData,
+      error: "Error",
+      success: false,
     };
   }
 

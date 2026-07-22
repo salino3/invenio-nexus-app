@@ -12,6 +12,12 @@ routerCompanies.post(
   companiesController.registerCompany,
 );
 
+routerCompanies.get(
+  "/get-company/:idCompany",
+  authMiddleware,
+  companiesController.getCompanyById,
+);
+
 routerCompanies.post(
   "/search-companies",
   companiesController.getSearchingCompanies,

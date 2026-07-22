@@ -20,6 +20,7 @@ routerCompanies.get(
 
 routerCompanies.post(
   "/search-companies",
+  authMiddleware,
   companiesController.getSearchingCompanies,
 );
 

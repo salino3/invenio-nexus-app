@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
-import { utilitiesApp } from "../utils/utilities-app";
 import { query } from "../db";
-import { RegistretionCompanyDB } from "../interfaces/company.interface";
 import { Company } from "../models/company.model";
+import { AccountCompany } from "../models/account_company.model";
 import { AuthRequest } from "../middlewares/auth-middleware";
+import { utilitiesApp } from "../utils/utilities-app";
+import {
+  CompanyProps,
+  RegistretionCompanyDB,
+} from "../interfaces/company.interface";
+import { AccountCompanyRole } from "../interfaces/account_companies.interface";
 
 const { checkRequiredFields } = utilitiesApp();
 
@@ -105,6 +110,46 @@ export class CompaniesController {
       return res.status(500).json({
         error:
           "An internal server error occurred while processing your registration.",
+      });
+    }
+  }
+
+  public async getCompanyByUUID(
+    req: Request,
+    res: Response,
+  ): Promise<
+    Response<{ company: CompanyProps; roles?: AccountCompanyRole[] }>
+  > {
+    const { uuidCompany } = req.params;
+
+    try {
+      if (!uuidCompany) {
+        return res.status(400).send("The Company's UUID is missing.");
+      }
+
+      const company: CompanyProps | null = await Company.getCompanyWithUUID(
+        uuidCompany as string,
+      );
+
+      if (!company) {
+        return res.status(404).json({ message: "Company not found" });
+      }
+
+      const roles: AccountCompanyRole[] =
+        await AccountCompany.getCompanyRolesByUUID(uuidCompany as string);
+
+      if (roles.length === 0) {
+        return res.status(200).json({ company });
+      }
+
+      return res.status(200).json({ company, roles });
+    } catch (error: unknown) {
+      console.error(
+        "Critical error inside CompaniesController.getCompanyById:",
+        error,
+      );
+      return res.status(500).json({
+        error: "An internal server error occurred during the process.",
       });
     }
   }

@@ -13,9 +13,9 @@ routerCompanies.post(
 );
 
 routerCompanies.get(
-  "/get-company/:idCompany",
+  "/get-company/:uuidCompany",
   authMiddleware,
-  companiesController.getCompanyById,
+  companiesController.getCompanyByUUID,
 );
 
 routerCompanies.post(

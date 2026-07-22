@@ -144,4 +144,20 @@ export class Company {
       throw error;
     }
   }
+
+  static async getCompanyWithUUID(
+    uuidCompany: string,
+  ): Promise<CompanyProps | null> {
+    const sql = `SELECT * FROM companies WHERE uuid = $1`;
+
+    const result = await query(sql, [uuidCompany]);
+
+    if (!result.rows[0]) {
+      return null;
+    }
+
+    const companyRows: CompanyProps = result.rows[0];
+
+    return new Company(companyRows);
+  }
 }

@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { utilitiesApp } from "../utils/utilities-app";
 import { query } from "../db";
-import { RegistretionCompanyDB } from "../interfaces/company.interface";
+import {
+  CompanyProps,
+  RegistretionCompanyDB,
+} from "../interfaces/company.interface";
 import { Company } from "../models/company.model";
 import { AuthRequest } from "../middlewares/auth-middleware";
 
@@ -109,7 +112,36 @@ export class CompaniesController {
     }
   }
 
-  public async getCompanyById(req: Request, res: Response): Promise<Response> {
+  public async getCompanyByUUID(
+    req: Request,
+    res: Response,
+  ): Promise<Response<CompanyProps | null>> {
+    const { uuidCompany } = req.params;
+
+    try {
+      if (!uuidCompany) {
+        return res.status(400).send("The Company's UUID is missing.");
+      }
+
+      const company: CompanyProps | null = await Company.getCompanyWithUUID(
+        uuidCompany as string,
+      );
+
+      if (!company) {
+        return res.status(404).json({ message: "Company not found" });
+      }
+
+      return res.status(200).json(company);
+    } catch (error: unknown) {
+      console.error(
+        "Critical error inside CompaniesController.getCompanyById:",
+        error,
+      );
+      return res.status(500).json({
+        error: "An internal server error occurred during the process.",
+      });
+    }
+
     return res;
   }
 

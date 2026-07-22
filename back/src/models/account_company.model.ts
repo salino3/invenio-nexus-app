@@ -20,7 +20,7 @@ export class AccountCompany {
 
   static async getCompanyRolesByUUID(
     uuidCompany: string,
-  ): Promise<AccountCompanyRole[] | null> {
+  ): Promise<AccountCompanyRole[]> {
     const sql = `
       SELECT 
         a.name, 
@@ -33,10 +33,6 @@ export class AccountCompany {
 
     const result = await query(sql, [uuidCompany]);
 
-    if (result.rows.length === 0) {
-      return null;
-    }
-
-    return result.rows;
+    return result.rows ?? [];
   }
 }

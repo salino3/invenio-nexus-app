@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
-import { utilitiesApp } from "../utils/utilities-app";
 import { query } from "../db";
+import { Company } from "../models/company.model";
+import { AccountCompany } from "../models/account_company.model";
+import { AuthRequest } from "../middlewares/auth-middleware";
+import { utilitiesApp } from "../utils/utilities-app";
 import {
   CompanyProps,
   RegistretionCompanyDB,
 } from "../interfaces/company.interface";
-import { Company } from "../models/company.model";
-import { AuthRequest } from "../middlewares/auth-middleware";
+import { AccountCompanyRole } from "../interfaces/account_companies.interface";
 
 const { checkRequiredFields } = utilitiesApp();
 
@@ -131,7 +133,14 @@ export class CompaniesController {
         return res.status(404).json({ message: "Company not found" });
       }
 
-      return res.status(200).json(company);
+      const roles: AccountCompanyRole[] =
+        await AccountCompany.getCompanyRolesByUUID(uuidCompany as string);
+
+      if (roles.length === 0) {
+        return res.status(200).json(company);
+      }
+
+      return res.status(200).json({ roles, company });
     } catch (error: unknown) {
       console.error(
         "Critical error inside CompaniesController.getCompanyById:",
@@ -141,8 +150,6 @@ export class CompaniesController {
         error: "An internal server error occurred during the process.",
       });
     }
-
-    return res;
   }
 
   /**

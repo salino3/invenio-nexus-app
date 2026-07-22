@@ -117,7 +117,9 @@ export class CompaniesController {
   public async getCompanyByUUID(
     req: Request,
     res: Response,
-  ): Promise<Response<CompanyProps | null>> {
+  ): Promise<
+    Response<{ company: CompanyProps; roles?: AccountCompanyRole[] }>
+  > {
     const { uuidCompany } = req.params;
 
     try {
@@ -137,10 +139,10 @@ export class CompaniesController {
         await AccountCompany.getCompanyRolesByUUID(uuidCompany as string);
 
       if (roles.length === 0) {
-        return res.status(200).json(company);
+        return res.status(200).json({ company });
       }
 
-      return res.status(200).json({ roles, company });
+      return res.status(200).json({ company, roles });
     } catch (error: unknown) {
       console.error(
         "Critical error inside CompaniesController.getCompanyById:",

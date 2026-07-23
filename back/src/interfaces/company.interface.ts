@@ -40,3 +40,6 @@ export interface RegistretionCompanyInput extends Pick<
 > {
   role: string;
 }
+
+// Interface update
+export interface UpdateCompanyProps extends Omit<CompanyProps, "id" | "uuid"> {}

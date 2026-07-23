@@ -7,6 +7,7 @@ import { utilitiesApp } from "../utils/utilities-app";
 import {
   CompanyProps,
   RegistretionCompanyDB,
+  UpdateCompanyProps,
 } from "../interfaces/company.interface";
 import { AccountCompanyRole } from "../interfaces/account_companies.interface";
 
@@ -301,10 +302,31 @@ export class CompaniesController {
     }
   }
 
+  // 'role' it will be modified in another endpoint
   public async updateCompanyByUUID(
     req: Request,
     res: Response,
   ): Promise<Response> {
+    const { uuidCompany } = req.params;
+
+    const {
+      name,
+      tax_id,
+      description,
+      hashtags,
+      sector,
+      location,
+      country_code,
+      funding_required_min,
+      funding_required_max,
+      ticket_investor_min,
+      ticket_investor_max,
+      connection_objectives,
+      contacts,
+      logo,
+      multimedia,
+    }: UpdateCompanyProps = req.body;
+
     return res;
   }
 }

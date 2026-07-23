@@ -7,6 +7,7 @@ import { utilitiesApp } from "../utils/utilities-app";
 import {
   CompanyProps,
   RegistretionCompanyDB,
+  UpdateCompanyProps,
 } from "../interfaces/company.interface";
 import { AccountCompanyRole } from "../interfaces/account_companies.interface";
 
@@ -295,6 +296,144 @@ export class CompaniesController {
       });
     } catch (error) {
       console.error("Error executing getSearchingCompanies query:", error);
+      return res
+        .status(500)
+        .json({ error: "Internal server error during search" });
+    }
+  }
+
+  // 'role' it will be modified in another endpoint
+  public async updateCompanyByUUID(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const { uuidCompany } = req.params;
+
+    const {
+      name,
+      tax_id,
+      description,
+      hashtags,
+      sector,
+      location,
+      country_code,
+      funding_required_min,
+      funding_required_max,
+      ticket_investor_min,
+      ticket_investor_max,
+      connection_objectives,
+      contacts,
+      logo,
+      multimedia,
+    }: UpdateCompanyProps = req.body;
+
+    // Check required fields
+    if (!name || !description || !sector || !location || !contacts) {
+      return res.status(400).send("Missing required field(s)");
+    }
+
+    if (!uuidCompany) {
+      return res.status(400).send("Missing company UUID");
+    }
+
+    try {
+      const updates: Partial<Record<keyof UpdateCompanyProps, string>> = {};
+      const values: UpdateCompanyProps[keyof UpdateCompanyProps][] = [];
+      let paramCount: number = 1;
+
+      if (name !== undefined) {
+        updates.name = `$${paramCount++}`;
+        values.push(name);
+      }
+      if (description !== undefined) {
+        updates.description = `$${paramCount++}`;
+        values.push(description);
+      }
+      if (hashtags !== undefined) {
+        updates.hashtags = `$${paramCount++}::jsonb`;
+        values.push(JSON.stringify(hashtags));
+      }
+      if (sector !== undefined) {
+        updates.sector = `$${paramCount++}`;
+        values.push(sector);
+      }
+      if (location !== undefined) {
+        updates.location = `$${paramCount++}`;
+        values.push(location);
+      }
+      if (funding_required_min !== undefined) {
+        updates.funding_required_min = `$${paramCount++}`;
+        values.push(funding_required_min);
+      }
+      if (funding_required_max !== undefined) {
+        updates.funding_required_max = `$${paramCount++}`;
+        values.push(funding_required_max);
+      }
+      if (tax_id !== undefined) {
+        updates.tax_id = `$${paramCount++}`;
+        values.push(tax_id);
+      }
+      if (country_code !== undefined) {
+        updates.country_code = `$${paramCount++}`;
+        values.push(country_code);
+      }
+      if (connection_objectives !== undefined) {
+        updates.connection_objectives = `$${paramCount++}`;
+        values.push(connection_objectives);
+      }
+      if (ticket_investor_min !== undefined) {
+        updates.ticket_investor_min = `$${paramCount++}`;
+        values.push(ticket_investor_min);
+      }
+      if (ticket_investor_max !== undefined) {
+        updates.ticket_investor_max = `$${paramCount++}`;
+        values.push(ticket_investor_max);
+      }
+      if (contacts !== undefined) {
+        updates.contacts = `$${paramCount++}::jsonb`;
+        values.push(JSON.stringify(contacts));
+      }
+      if (multimedia !== undefined) {
+        updates.multimedia = `$${paramCount++}::jsonb`;
+        values.push(JSON.stringify(multimedia));
+      }
+      if (logo !== undefined) {
+        updates.logo = `$${paramCount++}`;
+        values.push(logo);
+      }
+
+      //
+      if (Object.keys(updates).length === 0) {
+        return res.status(200).send("No fields to update");
+      }
+
+      const setClauses = Object.entries(updates)
+        .map(([key, value]) => `${key} = ${value}`)
+        .join(", ");
+
+      console.log("clog3", setClauses);
+
+      const sql = `
+        UPDATE companies
+        SET ${setClauses}, updated_at = NOW()
+        WHERE uuid = $${paramCount}
+      `;
+
+      values.push(uuidCompany);
+
+      const result = await query(sql, values);
+
+      if (result.rowCount === 0) {
+        return res
+          .status(404)
+          .send(`Company with UUID ${uuidCompany} not found`);
+      }
+
+      return res
+        .status(200)
+        .send(`Company with UUID ${uuidCompany} updated successfully`);
+    } catch (error) {
+      console.error("Error executing updateCompanyByUUID endpoint:", error);
       return res
         .status(500)
         .json({ error: "Internal server error during search" });

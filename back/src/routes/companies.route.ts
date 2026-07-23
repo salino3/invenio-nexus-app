@@ -24,4 +24,9 @@ routerCompanies.post(
   companiesController.getSearchingCompanies,
 );
 
+routerCompanies.put(
+  "/update-company/:uuidCompany",
+  companiesController.updateCompanyByUUID,
+);
+
 export default routerCompanies;

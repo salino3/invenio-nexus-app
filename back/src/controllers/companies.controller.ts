@@ -337,9 +337,74 @@ export class CompaniesController {
     }
 
     try {
-      const updates: Partial<UpdateCompanyProps> = {};
-      const values: Partial<UpdateCompanyProps>[] = [];
+      const updates: Partial<Record<keyof UpdateCompanyProps, string>> = {};
+      const values: UpdateCompanyProps[keyof UpdateCompanyProps][] = [];
       let paramCount: number = 1;
+
+      if (name !== undefined) {
+        updates.name = `$${paramCount++}`;
+        values.push(name);
+      }
+      if (description !== undefined) {
+        updates.description = `$${paramCount++}`;
+        values.push(description);
+      }
+      if (hashtags !== undefined) {
+        updates.hashtags = `$${paramCount++}::jsonb`;
+        values.push(JSON.stringify(hashtags));
+      }
+      if (sector !== undefined) {
+        updates.sector = `$${paramCount++}`;
+        values.push(sector);
+      }
+      if (location !== undefined) {
+        updates.location = `$${paramCount++}`;
+        values.push(location);
+      }
+      if (funding_required_min !== undefined) {
+        updates.funding_required_min = `$${paramCount++}`;
+        values.push(funding_required_min);
+      }
+      if (funding_required_max !== undefined) {
+        updates.funding_required_max = `$${paramCount++}`;
+        values.push(funding_required_max);
+      }
+      if (tax_id !== undefined) {
+        updates.tax_id = `$${paramCount++}`;
+        values.push(tax_id);
+      }
+      if (country_code !== undefined) {
+        updates.country_code = `$${paramCount++}`;
+        values.push(country_code);
+      }
+      if (connection_objectives !== undefined) {
+        updates.connection_objectives = `$${paramCount++}`;
+        values.push(connection_objectives);
+      }
+      if (ticket_investor_min !== undefined) {
+        updates.ticket_investor_min = `$${paramCount++}`;
+        values.push(ticket_investor_min);
+      }
+      if (ticket_investor_max !== undefined) {
+        updates.ticket_investor_max = `$${paramCount++}`;
+        values.push(ticket_investor_max);
+      }
+      if (contacts !== undefined) {
+        updates.contacts = `$${paramCount++}::jsonb`;
+        values.push(JSON.stringify(contacts));
+      }
+      if (multimedia !== undefined) {
+        updates.multimedia = `$${paramCount++}::jsonb`;
+        values.push(JSON.stringify(multimedia));
+      }
+      if (logo !== undefined) {
+        updates.logo = `$${paramCount++}`;
+        values.push(logo);
+      }
+
+      if (Object.keys(updates).length === 0) {
+        return res.status(200).send("No fields to update");
+      }
     } catch (error) {}
 
     return res;

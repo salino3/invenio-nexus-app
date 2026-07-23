@@ -327,6 +327,15 @@ export class CompaniesController {
       multimedia,
     }: UpdateCompanyProps = req.body;
 
+    // Check required fields
+    if (!name || !description || !sector || !location || !contacts) {
+      return res.status(400).send("Missing required field(s)");
+    }
+
+    if (!uuidCompany) {
+      return res.status(400).send("Missing company UUID");
+    }
+
     return res;
   }
 }

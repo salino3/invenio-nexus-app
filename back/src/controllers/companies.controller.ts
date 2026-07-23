@@ -406,17 +406,38 @@ export class CompaniesController {
       if (Object.keys(updates).length === 0) {
         return res.status(200).send("No fields to update");
       }
-      console.log("clog2", updates);
+
       const setClauses = Object.entries(updates)
         .map(([key, value]) => `${key} = ${value}`)
         .join(", ");
 
       console.log("clog3", setClauses);
 
-      return res;
-    } catch (error) {}
+      const sql = `
+        UPDATE companies
+        SET ${setClauses}, updated_at = NOW()
+        WHERE uuid = $${paramCount}
+      `;
 
-    return res;
+      values.push(uuidCompany);
+
+      const result = await query(sql, values);
+
+      if (result.rowCount === 0) {
+        return res
+          .status(404)
+          .send(`Company with UUID ${uuidCompany} not found`);
+      }
+
+      return res
+        .status(200)
+        .send(`Company with UUID ${uuidCompany} updated successfully`);
+    } catch (error) {
+      console.error("Error executing updateCompanyByUUID endpoint:", error);
+      return res
+        .status(500)
+        .json({ error: "Internal server error during search" });
+    }
   }
 }
 

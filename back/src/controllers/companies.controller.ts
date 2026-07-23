@@ -300,6 +300,13 @@ export class CompaniesController {
         .json({ error: "Internal server error during search" });
     }
   }
+
+  public async updateCompanyByUUID(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    return res;
+  }
 }
 
 export const companiesController = new CompaniesController();

@@ -336,6 +336,12 @@ export class CompaniesController {
       return res.status(400).send("Missing company UUID");
     }
 
+    try {
+      const updates: Partial<UpdateCompanyProps> = {};
+      const values: Partial<UpdateCompanyProps>[] = [];
+      let paramCount: number = 1;
+    } catch (error) {}
+
     return res;
   }
 }

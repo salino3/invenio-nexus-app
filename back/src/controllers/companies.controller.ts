@@ -402,9 +402,18 @@ export class CompaniesController {
         values.push(logo);
       }
 
+      //
       if (Object.keys(updates).length === 0) {
         return res.status(200).send("No fields to update");
       }
+      console.log("clog2", updates);
+      const setClauses = Object.entries(updates)
+        .map(([key, value]) => `${key} = ${value}`)
+        .join(", ");
+
+      console.log("clog3", setClauses);
+
+      return res;
     } catch (error) {}
 
     return res;

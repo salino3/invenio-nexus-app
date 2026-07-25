@@ -11,7 +11,7 @@ import {
 } from "../interfaces/company.interface";
 import { AccountCompanyRole } from "../interfaces/account_companies.interface";
 
-const { checkRequiredFields } = utilitiesApp();
+const { checkRequiredFields, cleanupUploadedFiles } = utilitiesApp();
 
 // Helper to safely parse JSON strings sent via multipart form data
 const safeJsonParse = <T>(value: any, defaultValue: T): T => {
@@ -36,11 +36,16 @@ const parseNumber = (
 export class CompaniesController {
   //
   public async registerCompany(req: Request, res: Response): Promise<Response> {
+    const files = req.files as
+      | { [fieldname: string]: Express.Multer.File[] }
+      | undefined;
+
     try {
       const authenticatedUserId: number | null =
         (req as AuthRequest).user?.id ?? null;
 
       if (!authenticatedUserId) {
+        cleanupUploadedFiles(files); // 🧹 Cleanup if unauthorized
         return res.status(401).json({
           error:
             "Unauthorized: Active user session is required to perform this action.",
@@ -59,6 +64,7 @@ export class CompaniesController {
       });
 
       if (requiredFields.length > 0) {
+        cleanupUploadedFiles(files);
         return res.status(400).json({
           error: `Missing fields:${requiredFields.map(
             (item: string) => ` ${item}`,
@@ -66,10 +72,45 @@ export class CompaniesController {
         });
       }
 
-      // Handle uploaded logo file path if present
-      const logoUrl = req.file ? `/uploads/${req.file.filename}` : null;
+      // 1. Handle Logo from req.files
+      const logoFile = files?.["logo"]?.[0];
+      const logoUrl = logoFile ? `/uploads/${logoFile.filename}` : null;
 
-      // Extract and map all parameters cleanly to match RegistretionCompanyDB
+      // 2. Handle Multimedia Files
+      const uploadedMediaFiles = files?.["multimedia_files"] || [];
+      let parsedMultimedia: any[] = [];
+
+      if (body.multimedia) {
+        const parsed = safeJsonParse<any[] | null>(body.multimedia, null);
+
+        if (parsed === null || !Array.isArray(parsed)) {
+          cleanupUploadedFiles(files);
+          return res
+            .status(400)
+            .json({ error: "Invalid JSON format in 'multimedia' field" });
+        }
+
+        parsedMultimedia = parsed.map((item) => {
+          if (
+            typeof item.fileIndex === "number" &&
+            uploadedMediaFiles[item.fileIndex]
+          ) {
+            const uploadedFile = uploadedMediaFiles[item.fileIndex];
+            return {
+              title: item.title,
+              type: item.type,
+              file_url: `/uploads/${uploadedFile.filename}`,
+            };
+          }
+          return {
+            title: item.title,
+            type: item.type,
+            file_url: item.file_url,
+          };
+        });
+      }
+
+      // Extract and map all parameters cleanly
       const companyInputData: RegistretionCompanyDB = {
         name: body.name,
         tax_id: body.tax_id || null,
@@ -88,7 +129,7 @@ export class CompaniesController {
         ),
         contacts: safeJsonParse(body.contacts, []),
         logo: logoUrl,
-        multimedia: [], // Multimedia handled separately in a dedicated endpoint
+        multimedia: parsedMultimedia, // Saved mapped multimedia array!
       };
 
       const newCompany = await Company.createCompanyWithAccount(
@@ -104,6 +145,7 @@ export class CompaniesController {
         logo: newCompany.logo,
       });
     } catch (error: unknown) {
+      cleanupUploadedFiles(files);
       console.error(
         "Critical error inside CompaniesController.registerCompany:",
         error,
@@ -302,48 +344,111 @@ export class CompaniesController {
     }
   }
 
-  // 'role' it will be modified in another endpoint
+  // 'role' will be modified in another endpoint
   public async updateCompanyByUUID(
     req: Request,
     res: Response,
   ): Promise<Response> {
     const { uuidCompany } = req.params;
 
-    const {
-      name,
-      tax_id,
-      description,
-      hashtags,
-      sector,
-      location,
-      country_code,
-      funding_required_min,
-      funding_required_max,
-      ticket_investor_min,
-      ticket_investor_max,
-      connection_objectives,
-      contacts,
-      logo,
-      multimedia,
-    }: UpdateCompanyProps = req.body;
-
-    // Check required fields
-    if (!name || !description || !sector || !location || !contacts) {
-      return res.status(400).send("Missing required field(s)");
-    }
+    // Extract files early so we can clean them up if needed
+    const files = req.files as
+      | { [fieldname: string]: Express.Multer.File[] }
+      | undefined;
 
     if (!uuidCompany) {
+      cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
       return res.status(400).send("Missing company UUID");
     }
 
     try {
+      const body = req.body;
+
+      // Process Logo
+      const logoFile = files?.["logo"]?.[0];
+      const logoUrl = logoFile ? `/uploads/${logoFile.filename}` : body.logo;
+
+      // Process Multimedia Files
+      const uploadedMediaFiles = files?.["multimedia_files"] || [];
+      let parsedMultimedia: any[] | undefined = undefined;
+
+      // 1. Only attempt parsing if 'multimedia' key was explicitly sent in body
+      if (body.multimedia !== undefined) {
+        // Use `null` as the fallback if JSON parsing fails
+        const parsed = safeJsonParse<any[] | null>(body.multimedia, null);
+
+        // 🚨 Guard: If invalid JSON was sent (e.g. missing comma), abort immediately!
+        if (parsed === null || !Array.isArray(parsed)) {
+          cleanupUploadedFiles(files);
+          return res
+            .status(400)
+            .send("Invalid JSON format in 'multimedia' field");
+        }
+
+        // 2. Map files and fileIndex pointers
+        parsedMultimedia = parsed.map((item) => {
+          if (
+            typeof item.fileIndex === "number" &&
+            uploadedMediaFiles[item.fileIndex]
+          ) {
+            const uploadedFile = uploadedMediaFiles[item.fileIndex];
+            return {
+              title: item.title,
+              type: item.type,
+              file_url: `/uploads/${uploadedFile.filename}`,
+            };
+          }
+          return {
+            title: item.title,
+            type: item.type,
+            file_url: item.file_url,
+          };
+        });
+      }
+
+      // Body validation checks
+      const name = body.name;
+      const tax_id = body.tax_id ?? null;
+      const description = body.description;
+      const sector = body.sector;
+      const location = body.location;
+      const country_code = body.country_code ?? null;
+      const funding_required_min = parseNumber(body.funding_required_min);
+      const funding_required_max = parseNumber(body.funding_required_max);
+      const ticket_investor_min = parseNumber(body.ticket_investor_min);
+      const ticket_investor_max = parseNumber(body.ticket_investor_max);
+
+      const hashtags = safeJsonParse<string[] | undefined>(
+        body.hashtags,
+        undefined,
+      );
+      const connection_objectives = safeJsonParse<string[] | undefined>(
+        body.connection_objectives,
+        undefined,
+      );
+      const contacts = safeJsonParse<any[] | undefined>(
+        body.contacts,
+        undefined,
+      );
+
+      // 🛑 VALIDATION CHECK: If required fields fail, clean up files and exit!
+      if (!name || !description || !sector || !location || !contacts) {
+        cleanupUploadedFiles(files);
+        return res.status(400).send("Missing required field(s)");
+      }
+
+      // Build Dynamic SQL UPDATE Query
       const updates: Partial<Record<keyof UpdateCompanyProps, string>> = {};
-      const values: UpdateCompanyProps[keyof UpdateCompanyProps][] = [];
+      const values: any[] = [];
       let paramCount: number = 1;
 
       if (name !== undefined) {
         updates.name = `$${paramCount++}`;
         values.push(name);
+      }
+      if (tax_id !== undefined) {
+        updates.tax_id = `$${paramCount++}`;
+        values.push(tax_id);
       }
       if (description !== undefined) {
         updates.description = `$${paramCount++}`;
@@ -361,6 +466,10 @@ export class CompaniesController {
         updates.location = `$${paramCount++}`;
         values.push(location);
       }
+      if (country_code !== undefined) {
+        updates.country_code = `$${paramCount++}`;
+        values.push(country_code);
+      }
       if (funding_required_min !== undefined) {
         updates.funding_required_min = `$${paramCount++}`;
         values.push(funding_required_min);
@@ -368,18 +477,6 @@ export class CompaniesController {
       if (funding_required_max !== undefined) {
         updates.funding_required_max = `$${paramCount++}`;
         values.push(funding_required_max);
-      }
-      if (tax_id !== undefined) {
-        updates.tax_id = `$${paramCount++}`;
-        values.push(tax_id);
-      }
-      if (country_code !== undefined) {
-        updates.country_code = `$${paramCount++}`;
-        values.push(country_code);
-      }
-      if (connection_objectives !== undefined) {
-        updates.connection_objectives = `$${paramCount++}`;
-        values.push(connection_objectives);
       }
       if (ticket_investor_min !== undefined) {
         updates.ticket_investor_min = `$${paramCount++}`;
@@ -389,21 +486,27 @@ export class CompaniesController {
         updates.ticket_investor_max = `$${paramCount++}`;
         values.push(ticket_investor_max);
       }
+      if (connection_objectives !== undefined) {
+        updates.connection_objectives = `$${paramCount++}`;
+        values.push(`{${connection_objectives.join(",")}}`);
+      }
       if (contacts !== undefined) {
         updates.contacts = `$${paramCount++}::jsonb`;
         values.push(JSON.stringify(contacts));
       }
-      if (multimedia !== undefined) {
+      // This validation protect existing data: if the key isn't sent in the request,
+      // the database column remains untouched.
+      if (parsedMultimedia !== undefined) {
         updates.multimedia = `$${paramCount++}::jsonb`;
-        values.push(JSON.stringify(multimedia));
+        values.push(JSON.stringify(parsedMultimedia));
       }
-      if (logo !== undefined) {
+      if (logoUrl !== undefined) {
         updates.logo = `$${paramCount++}`;
-        values.push(logo);
+        values.push(logoUrl);
       }
 
-      //
       if (Object.keys(updates).length === 0) {
+        cleanupUploadedFiles(files);
         return res.status(200).send("No fields to update");
       }
 
@@ -411,19 +514,18 @@ export class CompaniesController {
         .map(([key, value]) => `${key} = ${value}`)
         .join(", ");
 
-      console.log("clog3", setClauses);
-
       const sql = `
-        UPDATE companies
-        SET ${setClauses}, updated_at = NOW()
-        WHERE uuid = $${paramCount}
-      `;
+      UPDATE companies
+      SET ${setClauses}, updated_at = NOW()
+      WHERE uuid = $${paramCount}
+    `;
 
       values.push(uuidCompany);
 
       const result = await query(sql, values);
 
       if (result.rowCount === 0) {
+        cleanupUploadedFiles(files);
         return res
           .status(404)
           .send(`Company with UUID ${uuidCompany} not found`);
@@ -433,10 +535,11 @@ export class CompaniesController {
         .status(200)
         .send(`Company with UUID ${uuidCompany} updated successfully`);
     } catch (error) {
+      cleanupUploadedFiles(files);
       console.error("Error executing updateCompanyByUUID endpoint:", error);
       return res
         .status(500)
-        .json({ error: "Internal server error during search" });
+        .json({ error: "Internal server error during update" });
     }
   }
 }

@@ -313,7 +313,7 @@ export class CompaniesController {
     const files = req.files as
       | { [fieldname: string]: Express.Multer.File[] }
       | undefined;
-    console.log("files", files);
+
     if (!uuidCompany) {
       cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
       return res.status(400).send("Missing company UUID");
@@ -328,13 +328,23 @@ export class CompaniesController {
 
       // Process Multimedia Files
       const uploadedMediaFiles = files?.["multimedia_files"] || [];
-      let parsedMultimedia = safeJsonParse<any[] | undefined>(
-        body.multimedia,
-        undefined,
-      );
+      let parsedMultimedia: any[] | undefined = undefined;
 
-      if (parsedMultimedia && Array.isArray(parsedMultimedia)) {
-        parsedMultimedia = parsedMultimedia.map((item) => {
+      // 1. Only attempt parsing if 'multimedia' key was explicitly sent in body
+      if (body.multimedia !== undefined) {
+        // Use `null` as the fallback if JSON parsing fails
+        const parsed = safeJsonParse<any[] | null>(body.multimedia, null);
+
+        // 🚨 Guard: If invalid JSON was sent (e.g. missing comma), abort immediately!
+        if (parsed === null || !Array.isArray(parsed)) {
+          cleanupUploadedFiles(files);
+          return res
+            .status(400)
+            .send("Invalid JSON format in 'multimedia' field");
+        }
+
+        // 2. Map files and fileIndex pointers
+        parsedMultimedia = parsed.map((item) => {
           if (
             typeof item.fileIndex === "number" &&
             uploadedMediaFiles[item.fileIndex]

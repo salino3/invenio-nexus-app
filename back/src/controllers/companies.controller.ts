@@ -11,7 +11,7 @@ import {
 } from "../interfaces/company.interface";
 import { AccountCompanyRole } from "../interfaces/account_companies.interface";
 
-const { checkRequiredFields } = utilitiesApp();
+const { checkRequiredFields, cleanupUploadedFiles } = utilitiesApp();
 
 // Helper to safely parse JSON strings sent via multipart form data
 const safeJsonParse = <T>(value: any, defaultValue: T): T => {
@@ -309,17 +309,18 @@ export class CompaniesController {
   ): Promise<Response> {
     const { uuidCompany } = req.params;
 
+    // Extract files early so we can clean them up if needed
+    const files = req.files as
+      | { [fieldname: string]: Express.Multer.File[] }
+      | undefined;
+    console.log("files", files);
     if (!uuidCompany) {
+      cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
       return res.status(400).send("Missing company UUID");
     }
 
     try {
       const body = req.body;
-
-      // 1. Extract files from Multer .fields()
-      const files = req.files as
-        | { [fieldname: string]: Express.Multer.File[] }
-        | undefined;
 
       // Process Logo
       const logoFile = files?.["logo"]?.[0];
@@ -334,7 +335,6 @@ export class CompaniesController {
 
       if (parsedMultimedia && Array.isArray(parsedMultimedia)) {
         parsedMultimedia = parsedMultimedia.map((item) => {
-          // If frontend marks an item with a fileIndex pointing to a new file in multimedia_files
           if (
             typeof item.fileIndex === "number" &&
             uploadedMediaFiles[item.fileIndex]
@@ -346,8 +346,6 @@ export class CompaniesController {
               file_url: `/uploads/${uploadedFile.filename}`,
             };
           }
-
-          // Existing item keeping its URL
           return {
             title: item.title,
             type: item.type,
@@ -356,7 +354,7 @@ export class CompaniesController {
         });
       }
 
-      // 2. Parse body inputs
+      // Body validation checks
       const name = body.name;
       const tax_id = body.tax_id ?? null;
       const description = body.description;
@@ -381,12 +379,13 @@ export class CompaniesController {
         undefined,
       );
 
-      // 3. Check Required fields
+      // 🛑 VALIDATION CHECK: If required fields fail, clean up files and exit!
       if (!name || !description || !sector || !location || !contacts) {
+        cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
         return res.status(400).send("Missing required field(s)");
       }
 
-      // 4. Build Dynamic SQL UPDATE Query
+      // Build Dynamic SQL UPDATE Query
       const updates: Partial<Record<keyof UpdateCompanyProps, string>> = {};
       const values: any[] = [];
       let paramCount: number = 1;
@@ -453,6 +452,7 @@ export class CompaniesController {
       }
 
       if (Object.keys(updates).length === 0) {
+        cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
         return res.status(200).send("No fields to update");
       }
 
@@ -471,6 +471,7 @@ export class CompaniesController {
       const result = await query(sql, values);
 
       if (result.rowCount === 0) {
+        cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
         return res
           .status(404)
           .send(`Company with UUID ${uuidCompany} not found`);
@@ -480,6 +481,7 @@ export class CompaniesController {
         .status(200)
         .send(`Company with UUID ${uuidCompany} updated successfully`);
     } catch (error) {
+      cleanupUploadedFiles(files); // 🧹 Cleanup orphan files on unexpected exceptions
       console.error("Error executing updateCompanyByUUID endpoint:", error);
       return res
         .status(500)

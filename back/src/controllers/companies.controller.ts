@@ -36,11 +36,16 @@ const parseNumber = (
 export class CompaniesController {
   //
   public async registerCompany(req: Request, res: Response): Promise<Response> {
+    const files = req.files as
+      | { [fieldname: string]: Express.Multer.File[] }
+      | undefined;
+
     try {
       const authenticatedUserId: number | null =
         (req as AuthRequest).user?.id ?? null;
 
       if (!authenticatedUserId) {
+        cleanupUploadedFiles(files); // 🧹 Cleanup if unauthorized
         return res.status(401).json({
           error:
             "Unauthorized: Active user session is required to perform this action.",
@@ -59,6 +64,7 @@ export class CompaniesController {
       });
 
       if (requiredFields.length > 0) {
+        cleanupUploadedFiles(files);
         return res.status(400).json({
           error: `Missing fields:${requiredFields.map(
             (item: string) => ` ${item}`,
@@ -66,10 +72,45 @@ export class CompaniesController {
         });
       }
 
-      // Handle uploaded logo file path if present
-      const logoUrl = req.file ? `/uploads/${req.file.filename}` : null;
+      // 1. Handle Logo from req.files
+      const logoFile = files?.["logo"]?.[0];
+      const logoUrl = logoFile ? `/uploads/${logoFile.filename}` : null;
 
-      // Extract and map all parameters cleanly to match RegistretionCompanyDB
+      // 2. Handle Multimedia Files
+      const uploadedMediaFiles = files?.["multimedia_files"] || [];
+      let parsedMultimedia: any[] = [];
+
+      if (body.multimedia) {
+        const parsed = safeJsonParse<any[] | null>(body.multimedia, null);
+
+        if (parsed === null || !Array.isArray(parsed)) {
+          cleanupUploadedFiles(files);
+          return res
+            .status(400)
+            .json({ error: "Invalid JSON format in 'multimedia' field" });
+        }
+
+        parsedMultimedia = parsed.map((item) => {
+          if (
+            typeof item.fileIndex === "number" &&
+            uploadedMediaFiles[item.fileIndex]
+          ) {
+            const uploadedFile = uploadedMediaFiles[item.fileIndex];
+            return {
+              title: item.title,
+              type: item.type,
+              file_url: `/uploads/${uploadedFile.filename}`,
+            };
+          }
+          return {
+            title: item.title,
+            type: item.type,
+            file_url: item.file_url,
+          };
+        });
+      }
+
+      // Extract and map all parameters cleanly
       const companyInputData: RegistretionCompanyDB = {
         name: body.name,
         tax_id: body.tax_id || null,
@@ -88,7 +129,7 @@ export class CompaniesController {
         ),
         contacts: safeJsonParse(body.contacts, []),
         logo: logoUrl,
-        multimedia: [], // Multimedia handled separately in a dedicated endpoint
+        multimedia: parsedMultimedia, // Saved mapped multimedia array!
       };
 
       const newCompany = await Company.createCompanyWithAccount(
@@ -104,6 +145,7 @@ export class CompaniesController {
         logo: newCompany.logo,
       });
     } catch (error: unknown) {
+      cleanupUploadedFiles(files);
       console.error(
         "Critical error inside CompaniesController.registerCompany:",
         error,

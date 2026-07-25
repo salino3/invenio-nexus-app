@@ -9,7 +9,7 @@ const routerCompanies = express.Router();
 routerCompanies.post(
   "/register-company",
   authMiddleware,
-  uploadLogo.single("logo"),
+  uploadCompanyAssets,
   companiesController.registerCompany,
 );
 

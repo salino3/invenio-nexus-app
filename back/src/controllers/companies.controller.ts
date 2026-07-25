@@ -442,6 +442,8 @@ export class CompaniesController {
         updates.contacts = `$${paramCount++}::jsonb`;
         values.push(JSON.stringify(contacts));
       }
+      // This validation protect existing data: if the key isn't sent in the request,
+      // the database column remains untouched.
       if (parsedMultimedia !== undefined) {
         updates.multimedia = `$${paramCount++}::jsonb`;
         values.push(JSON.stringify(parsedMultimedia));

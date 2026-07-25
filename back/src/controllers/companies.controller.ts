@@ -381,7 +381,7 @@ export class CompaniesController {
 
       // 🛑 VALIDATION CHECK: If required fields fail, clean up files and exit!
       if (!name || !description || !sector || !location || !contacts) {
-        cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
+        cleanupUploadedFiles(files);
         return res.status(400).send("Missing required field(s)");
       }
 
@@ -452,7 +452,7 @@ export class CompaniesController {
       }
 
       if (Object.keys(updates).length === 0) {
-        cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
+        cleanupUploadedFiles(files);
         return res.status(200).send("No fields to update");
       }
 
@@ -471,7 +471,7 @@ export class CompaniesController {
       const result = await query(sql, values);
 
       if (result.rowCount === 0) {
-        cleanupUploadedFiles(files); // 🧹 Cleanup orphan files
+        cleanupUploadedFiles(files);
         return res
           .status(404)
           .send(`Company with UUID ${uuidCompany} not found`);
@@ -481,7 +481,7 @@ export class CompaniesController {
         .status(200)
         .send(`Company with UUID ${uuidCompany} updated successfully`);
     } catch (error) {
-      cleanupUploadedFiles(files); // 🧹 Cleanup orphan files on unexpected exceptions
+      cleanupUploadedFiles(files);
       console.error("Error executing updateCompanyByUUID endpoint:", error);
       return res
         .status(500)

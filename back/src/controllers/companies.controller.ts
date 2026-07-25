@@ -302,48 +302,102 @@ export class CompaniesController {
     }
   }
 
-  // 'role' it will be modified in another endpoint
+  // 'role' will be modified in another endpoint
   public async updateCompanyByUUID(
     req: Request,
     res: Response,
   ): Promise<Response> {
     const { uuidCompany } = req.params;
 
-    const {
-      name,
-      tax_id,
-      description,
-      hashtags,
-      sector,
-      location,
-      country_code,
-      funding_required_min,
-      funding_required_max,
-      ticket_investor_min,
-      ticket_investor_max,
-      connection_objectives,
-      contacts,
-      logo,
-      multimedia,
-    }: UpdateCompanyProps = req.body;
-
-    // Check required fields
-    if (!name || !description || !sector || !location || !contacts) {
-      return res.status(400).send("Missing required field(s)");
-    }
-
     if (!uuidCompany) {
       return res.status(400).send("Missing company UUID");
     }
 
     try {
+      const body = req.body;
+
+      // 1. Extract files from Multer .fields()
+      const files = req.files as
+        | { [fieldname: string]: Express.Multer.File[] }
+        | undefined;
+
+      // Process Logo
+      const logoFile = files?.["logo"]?.[0];
+      const logoUrl = logoFile ? `/uploads/${logoFile.filename}` : body.logo;
+
+      // Process Multimedia Files
+      const uploadedMediaFiles = files?.["multimedia_files"] || [];
+      let parsedMultimedia = safeJsonParse<any[] | undefined>(
+        body.multimedia,
+        undefined,
+      );
+
+      if (parsedMultimedia && Array.isArray(parsedMultimedia)) {
+        parsedMultimedia = parsedMultimedia.map((item) => {
+          // If frontend marks an item with a fileIndex pointing to a new file in multimedia_files
+          if (
+            typeof item.fileIndex === "number" &&
+            uploadedMediaFiles[item.fileIndex]
+          ) {
+            const uploadedFile = uploadedMediaFiles[item.fileIndex];
+            return {
+              title: item.title,
+              type: item.type,
+              file_url: `/uploads/${uploadedFile.filename}`,
+            };
+          }
+
+          // Existing item keeping its URL
+          return {
+            title: item.title,
+            type: item.type,
+            file_url: item.file_url,
+          };
+        });
+      }
+
+      // 2. Parse body inputs
+      const name = body.name;
+      const tax_id = body.tax_id ?? null;
+      const description = body.description;
+      const sector = body.sector;
+      const location = body.location;
+      const country_code = body.country_code ?? null;
+      const funding_required_min = parseNumber(body.funding_required_min);
+      const funding_required_max = parseNumber(body.funding_required_max);
+      const ticket_investor_min = parseNumber(body.ticket_investor_min);
+      const ticket_investor_max = parseNumber(body.ticket_investor_max);
+
+      const hashtags = safeJsonParse<string[] | undefined>(
+        body.hashtags,
+        undefined,
+      );
+      const connection_objectives = safeJsonParse<string[] | undefined>(
+        body.connection_objectives,
+        undefined,
+      );
+      const contacts = safeJsonParse<any[] | undefined>(
+        body.contacts,
+        undefined,
+      );
+
+      // 3. Check Required fields
+      if (!name || !description || !sector || !location || !contacts) {
+        return res.status(400).send("Missing required field(s)");
+      }
+
+      // 4. Build Dynamic SQL UPDATE Query
       const updates: Partial<Record<keyof UpdateCompanyProps, string>> = {};
-      const values: UpdateCompanyProps[keyof UpdateCompanyProps][] = [];
+      const values: any[] = [];
       let paramCount: number = 1;
 
       if (name !== undefined) {
         updates.name = `$${paramCount++}`;
         values.push(name);
+      }
+      if (tax_id !== undefined) {
+        updates.tax_id = `$${paramCount++}`;
+        values.push(tax_id);
       }
       if (description !== undefined) {
         updates.description = `$${paramCount++}`;
@@ -361,6 +415,10 @@ export class CompaniesController {
         updates.location = `$${paramCount++}`;
         values.push(location);
       }
+      if (country_code !== undefined) {
+        updates.country_code = `$${paramCount++}`;
+        values.push(country_code);
+      }
       if (funding_required_min !== undefined) {
         updates.funding_required_min = `$${paramCount++}`;
         values.push(funding_required_min);
@@ -368,18 +426,6 @@ export class CompaniesController {
       if (funding_required_max !== undefined) {
         updates.funding_required_max = `$${paramCount++}`;
         values.push(funding_required_max);
-      }
-      if (tax_id !== undefined) {
-        updates.tax_id = `$${paramCount++}`;
-        values.push(tax_id);
-      }
-      if (country_code !== undefined) {
-        updates.country_code = `$${paramCount++}`;
-        values.push(country_code);
-      }
-      if (connection_objectives !== undefined) {
-        updates.connection_objectives = `$${paramCount++}`;
-        values.push(connection_objectives);
       }
       if (ticket_investor_min !== undefined) {
         updates.ticket_investor_min = `$${paramCount++}`;
@@ -389,20 +435,23 @@ export class CompaniesController {
         updates.ticket_investor_max = `$${paramCount++}`;
         values.push(ticket_investor_max);
       }
+      if (connection_objectives !== undefined) {
+        updates.connection_objectives = `$${paramCount++}`;
+        values.push(`{${connection_objectives.join(",")}}`);
+      }
       if (contacts !== undefined) {
         updates.contacts = `$${paramCount++}::jsonb`;
         values.push(JSON.stringify(contacts));
       }
-      if (multimedia !== undefined) {
+      if (parsedMultimedia !== undefined) {
         updates.multimedia = `$${paramCount++}::jsonb`;
-        values.push(JSON.stringify(multimedia));
+        values.push(JSON.stringify(parsedMultimedia));
       }
-      if (logo !== undefined) {
+      if (logoUrl !== undefined) {
         updates.logo = `$${paramCount++}`;
-        values.push(logo);
+        values.push(logoUrl);
       }
 
-      //
       if (Object.keys(updates).length === 0) {
         return res.status(200).send("No fields to update");
       }
@@ -411,13 +460,11 @@ export class CompaniesController {
         .map(([key, value]) => `${key} = ${value}`)
         .join(", ");
 
-      console.log("clog3", setClauses);
-
       const sql = `
-        UPDATE companies
-        SET ${setClauses}, updated_at = NOW()
-        WHERE uuid = $${paramCount}
-      `;
+      UPDATE companies
+      SET ${setClauses}, updated_at = NOW()
+      WHERE uuid = $${paramCount}
+    `;
 
       values.push(uuidCompany);
 
@@ -436,7 +483,7 @@ export class CompaniesController {
       console.error("Error executing updateCompanyByUUID endpoint:", error);
       return res
         .status(500)
-        .json({ error: "Internal server error during search" });
+        .json({ error: "Internal server error during update" });
     }
   }
 }

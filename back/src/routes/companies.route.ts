@@ -2,6 +2,7 @@ import express from "express";
 import { companiesController } from "../controllers/companies.controller";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { uploadLogo } from "../middlewares/upload.middleware";
+import { uploadCompanyAssets } from "../middlewares/multimedia-upload.middleware";
 
 const routerCompanies = express.Router();
 
@@ -26,6 +27,7 @@ routerCompanies.post(
 
 routerCompanies.put(
   "/update-company/:uuidCompany",
+  uploadCompanyAssets,
   companiesController.updateCompanyByUUID,
 );
 

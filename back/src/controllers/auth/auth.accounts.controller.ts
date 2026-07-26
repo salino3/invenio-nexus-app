@@ -55,7 +55,7 @@ export class AuthController {
       sameSite: "lax", //  'lax' the same configuration
     });
 
-    return res.status(200).json({ message: "Logout effettuato con successo" });
+    return res.status(200).json({ message: "Logout successful" });
   }
 
   //

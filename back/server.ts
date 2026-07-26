@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import passport from "./src/config/passport";
+import { initMediaCleanupJob } from "./src/jobs/media-cleanup.job";
 // Routes
 import routerAccount from "./src/routes/accounts.route";
 import routerAuth from "./src/routes/auth/auth.accounts.routes";
@@ -51,6 +52,8 @@ app.use("/api", routerAccount);
 app.use("/api", routerAuth);
 app.use("/api", routerCompanies);
 app.use("/api", routerSubscriptions);
+
+initMediaCleanupJob();
 
 app.listen(PORT, () => {
   console.log(`🚀 Server up and running at http://localhost:${PORT}`);

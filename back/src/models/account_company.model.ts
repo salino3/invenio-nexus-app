@@ -34,4 +34,10 @@ export class AccountCompany {
 
     return result.rows ?? [];
   }
+
+  //
+  static async updateRoleCompanyByUUID(
+    uuidCompany: string,
+    accountId: string,
+  ) {}
 }

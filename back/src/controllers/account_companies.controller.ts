@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AccountCookie } from "../interfaces/account.interface";
+import { AccountCompany } from "../models/account_company.model";
 
 export class AccountCompaniesController {
   //
@@ -30,6 +31,10 @@ export class AccountCompaniesController {
     }
 
     try {
+      const result = await AccountCompany.updateRoleCompanyByUUID(
+        uuidCompany,
+        id,
+      );
     } catch (error) {
       console.error("Error executing updateCompanyByUUID endpoint:", error);
       return res

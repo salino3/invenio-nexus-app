@@ -40,7 +40,7 @@ export class AccountCompaniesController {
       );
 
       if (!isUpdated) {
-        return res.status(404).json({
+        return res.status(403).json({
           message:
             "Company not found or you do not have permission to modify this role company",
         });

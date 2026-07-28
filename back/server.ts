@@ -10,6 +10,7 @@ import routerAccount from "./src/routes/accounts.route";
 import routerAuth from "./src/routes/auth/auth.accounts.routes";
 import routerCompanies from "./src/routes/companies.route";
 import routerSubscriptions from "./src/routes/subscriptions.router";
+import routerAccountCompanies from "./src/routes/account_companies.route";
 import { stripeServices } from "./src/services/stripe-services";
 //
 import { FRONTEND_DEV_PORT, FRONTEND_PROD_PORT, PORT } from "./src/constants";
@@ -52,6 +53,7 @@ app.use("/api", routerAccount);
 app.use("/api", routerAuth);
 app.use("/api", routerCompanies);
 app.use("/api", routerSubscriptions);
+app.use("/api", routerAccountCompanies);
 
 initMediaCleanupJob();
 

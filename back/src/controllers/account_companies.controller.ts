@@ -26,10 +26,9 @@ export class AccountCompaniesController {
 
     const { role } = req.body;
 
-    if (!role) {
-      return res.status(404).json({
-        message:
-          "Company not found or account is not associated with this company",
+    if (!role || typeof role !== "string") {
+      return res.status(400).json({
+        message: "Missing or invalid new role for updating account role",
       });
     }
 
@@ -41,9 +40,10 @@ export class AccountCompaniesController {
       );
 
       if (!isUpdated) {
-        return res
-          .status(400)
-          .json({ message: "Missing some data for modify correctly the role" });
+        return res.status(404).json({
+          message:
+            "Company not found or you do not have permission to modify this role company",
+        });
       }
 
       return res.status(200).json({ message: "Role updated successfully" });

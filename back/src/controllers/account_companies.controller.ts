@@ -48,7 +48,7 @@ export class AccountCompaniesController {
 
       return res.status(200).json({ message: "Role updated successfully" });
     } catch (error) {
-      console.error("Error executing updateCompanyByUUID endpoint:", error);
+      console.error("Error executing updateRolesCompanies endpoint:", error);
       return res
         .status(500)
         .json({ error: "Internal server error during update" });

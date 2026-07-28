@@ -37,8 +37,20 @@ export class AccountCompany {
 
   //
   static async updateRoleCompanyByUUID(
-    uuidCompany: string,
-    accountId: number,
     role: string,
-  ) {}
+    accountId: number,
+    uuidCompany: string,
+  ): Promise<boolean> {
+    const sql = `
+    UPDATE account_companies ac
+    SET role = $1
+    FROM companies c
+    WHERE ac.company_id = c.id
+      AND ac.account_id = $2
+      AND c.uuid = $3;
+  `;
+    const result = await query(sql, [role, accountId, uuidCompany]);
+
+    return (result.rowCount ?? 0) > 0;
+  }
 }

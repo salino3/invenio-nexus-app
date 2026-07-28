@@ -32,9 +32,9 @@ export class AccountCompaniesController {
 
     try {
       const result = await AccountCompany.updateRoleCompanyByUUID(
-        uuidCompany,
-        id,
         role,
+        id,
+        uuidCompany,
       );
     } catch (error) {
       console.error("Error executing updateCompanyByUUID endpoint:", error);

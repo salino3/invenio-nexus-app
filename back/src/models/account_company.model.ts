@@ -1,4 +1,3 @@
-import { QueryResult } from "pg";
 import { query } from "../db";
 import {
   AccountCompanyProps,

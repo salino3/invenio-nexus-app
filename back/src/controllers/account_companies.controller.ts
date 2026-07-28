@@ -19,31 +19,40 @@ export class AccountCompaniesController {
     const { uuidCompany } = req.params;
 
     if (!uuidCompany || typeof uuidCompany !== "string") {
-      return res.status(400).send("Missing company UUID");
+      return res
+        .status(400)
+        .json({ message: "Missing or invalid company UUID" });
     }
 
     const { role } = req.body;
 
     if (!role) {
-      return res
-        .status(400)
-        .json({ message: "Missing new role for updating account role" });
+      return res.status(404).json({
+        message:
+          "Company not found or account is not associated with this company",
+      });
     }
 
     try {
-      const result = await AccountCompany.updateRoleCompanyByUUID(
+      const isUpdated = await AccountCompany.updateRoleCompanyByUUID(
         role,
         id,
         uuidCompany,
       );
+
+      if (!isUpdated) {
+        return res
+          .status(400)
+          .json({ message: "Missing some data for modify correctly the role" });
+      }
+
+      return res.status(200).json({ message: "Role updated successfully" });
     } catch (error) {
       console.error("Error executing updateCompanyByUUID endpoint:", error);
       return res
         .status(500)
         .json({ error: "Internal server error during update" });
     }
-
-    return res;
   }
 }
 

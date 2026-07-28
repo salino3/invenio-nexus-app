@@ -18,7 +18,7 @@ export class AccountCompaniesController {
 
     const { uuidCompany } = req.params;
 
-    if (!uuidCompany) {
+    if (!uuidCompany || typeof uuidCompany !== "string") {
       return res.status(400).send("Missing company UUID");
     }
 
@@ -26,7 +26,7 @@ export class AccountCompaniesController {
 
     if (!role) {
       return res
-        .status(401)
+        .status(400)
         .json({ message: "Missing new role for updating account role" });
     }
 
@@ -34,6 +34,7 @@ export class AccountCompaniesController {
       const result = await AccountCompany.updateRoleCompanyByUUID(
         uuidCompany,
         id,
+        role,
       );
     } catch (error) {
       console.error("Error executing updateCompanyByUUID endpoint:", error);

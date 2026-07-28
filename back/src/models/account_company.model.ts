@@ -38,6 +38,7 @@ export class AccountCompany {
   //
   static async updateRoleCompanyByUUID(
     uuidCompany: string,
-    accountId: string,
+    accountId: number,
+    role: string,
   ) {}
 }

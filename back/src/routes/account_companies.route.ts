@@ -5,7 +5,7 @@ import { authMiddleware } from "../middlewares/auth-middleware";
 const routerAccountCompanies = express.Router();
 
 routerAccountCompanies.patch(
-  "roles-company/:uuidCompany",
+  "/roles-company/:uuidCompany",
   authMiddleware,
   accountCompaniesController.updateRolesCompanies,
 );

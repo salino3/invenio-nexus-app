@@ -1,4 +1,5 @@
 import { QueryResult } from "pg";
+import Stripe from "stripe";
 import { query } from "../db";
 import {
   SubscriptionsProps,
@@ -40,8 +41,43 @@ export class Subscriptions {
       LIMIT 1;
     `;
 
-    const result = await query(checkSubscriptionSql, [accountId]);
+    return await query(checkSubscriptionSql, [accountId]);
+  }
 
-    return result;
+  static async upsertSubscription(
+    accountId: string,
+    planType: string,
+    paymentIntent: Stripe.PaymentIntent,
+  ): Promise<QueryResult<any>> {
+    const customerId =
+      typeof paymentIntent.customer === "string"
+        ? paymentIntent.customer
+        : paymentIntent.customer?.id || null;
+
+    // Upsert active subscription for 30 days
+    const upsertSubscriptionSql = `
+            INSERT INTO subscriptions (
+              account_id, 
+              plan_type, 
+              status, 
+              current_period_start, 
+              current_period_end, 
+              stripe_customer_id
+            )
+            VALUES ($1, $2, 'active', NOW(), NOW() + INTERVAL '30 days', $3)
+            ON CONFLICT (account_id) DO UPDATE SET
+              plan_type = EXCLUDED.plan_type,
+              status = 'active',
+              current_period_start = NOW(),
+              current_period_end = NOW() + INTERVAL '30 days',
+              stripe_customer_id = EXCLUDED.stripe_customer_id,
+              updated_at = NOW();
+          `;
+
+    return await query(upsertSubscriptionSql, [
+      accountId,
+      planType,
+      customerId,
+    ]);
   }
 }

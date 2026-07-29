@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Stripe from "stripe";
 import { query } from "../db";
+import { Subscriptions } from "../models/subscriptions.model";
 import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "../constants";
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
@@ -18,18 +19,8 @@ export class StripeServices {
 
     try {
       // 1. Check if the account already has an active subscription in database
-      const checkSubscriptionSql = `
-      SELECT id, plan_type, current_period_end 
-      FROM subscriptions 
-      WHERE account_id = $1 
-        AND status = 'active' 
-        AND current_period_end > NOW() 
-      LIMIT 1;
-    `;
-
-      const existingSubscription = await query(checkSubscriptionSql, [
-        accountId,
-      ]);
+      const existingSubscription =
+        await Subscriptions.checkSubscription(accountId);
 
       if (existingSubscription.rows.length > 0) {
         return res.status(409).json({

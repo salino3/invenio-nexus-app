@@ -1,3 +1,5 @@
+import { QueryResult } from "pg";
+import { query } from "../db";
 import {
   SubscriptionsProps,
   TypePlaneType,
@@ -25,5 +27,21 @@ export class Subscriptions {
     this.stripe_customer_id = data.stripe_customer_id;
     this.created_at = data.created_at;
     this.updated_at = data.updated_at;
+  }
+
+  //
+  static async checkSubscription(accountId: number): Promise<QueryResult<any>> {
+    const checkSubscriptionSql = `
+      SELECT id, plan_type, current_period_end 
+      FROM subscriptions 
+      WHERE account_id = $1 
+        AND status = 'active' 
+        AND current_period_end > NOW() 
+      LIMIT 1;
+    `;
+
+    const result = await query(checkSubscriptionSql, [accountId]);
+
+    return result;
   }
 }

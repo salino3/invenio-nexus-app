@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Stripe from "stripe";
 import { query } from "../db";
+import { Subscriptions } from "../models/subscriptions.model";
 import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "../constants";
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
@@ -18,18 +19,8 @@ export class StripeServices {
 
     try {
       // 1. Check if the account already has an active subscription in database
-      const checkSubscriptionSql = `
-      SELECT id, plan_type, current_period_end 
-      FROM subscriptions 
-      WHERE account_id = $1 
-        AND status = 'active' 
-        AND current_period_end > NOW() 
-      LIMIT 1;
-    `;
-
-      const existingSubscription = await query(checkSubscriptionSql, [
-        accountId,
-      ]);
+      const existingSubscription =
+        await Subscriptions.checkSubscription(accountId);
 
       if (existingSubscription.rows.length > 0) {
         return res.status(409).json({
@@ -98,34 +89,16 @@ export class StripeServices {
       if (accountId) {
         try {
           // Upsert active subscription for 30 days
-          const upsertSubscriptionSql = `
-            INSERT INTO subscriptions (
-              account_id, 
-              plan_type, 
-              status, 
-              current_period_start, 
-              current_period_end, 
-              stripe_customer_id
-            )
-            VALUES ($1, $2, 'active', NOW(), NOW() + INTERVAL '30 days', $3)
-            ON CONFLICT (account_id) DO UPDATE SET
-              plan_type = EXCLUDED.plan_type,
-              status = 'active',
-              current_period_start = NOW(),
-              current_period_end = NOW() + INTERVAL '30 days',
-              stripe_customer_id = EXCLUDED.stripe_customer_id,
-              updated_at = NOW();
-          `;
 
-          await query(upsertSubscriptionSql, [
+          const upsertedSubscription = await Subscriptions.upsertSubscription(
             accountId,
             planType,
-            (paymentIntent.customer as string) || null,
-          ]);
-
-          console.log(
-            `Subscription successfully updated for accountId: ${accountId}`,
+            paymentIntent,
           );
+
+          if ((upsertedSubscription.rowCount ?? 0) === 0) {
+            console.error(`No rows updated for accountId: ${accountId}`);
+          }
         } catch (dbError) {
           console.error("Error updating subscription in database:", dbError);
           return res

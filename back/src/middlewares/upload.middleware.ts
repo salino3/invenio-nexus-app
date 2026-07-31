@@ -1,24 +1,27 @@
-import multer from "multer";
-import path from "path";
-import fs from "fs";
+//
+// * Comment it at the moment *
 
-// Define destination path
-const uploadDir = path.join(__dirname, "../../public/uploads");
+// import multer from "multer";
+// import path from "path";
+// import fs from "fs";
 
-// Ensure directory exists synchronously before handling uploads
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+// // Define destination path
+// const uploadDir = path.join(__dirname, "../../public/uploads");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, `company-logo-${uniqueSuffix}${ext}`);
-  },
-});
+// // Ensure directory exists synchronously before handling uploads
+// if (!fs.existsSync(uploadDir)) {
+//   fs.mkdirSync(uploadDir, { recursive: true });
+// }
 
-export const uploadLogo = multer({ storage });
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, uploadDir);
+//   },
+//   filename: (req, file, cb) => {
+//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//     const ext = path.extname(file.originalname);
+//     cb(null, `company-logo-${uniqueSuffix}${ext}`);
+//   },
+// });
+
+// export const uploadLogo = multer({ storage });

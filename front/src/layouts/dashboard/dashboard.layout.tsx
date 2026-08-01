@@ -28,7 +28,7 @@ const DashboardLayout: React.FC = () => {
     if (!currentUser?.hasAdFreeAccess) {
       checkGoogleSession();
     }
-  }, [setDataUser, currentUser?.hasAdFreeAccess]);
+  }, []);
 
   return (
     <div className="rootDashboardLayout data-theme light">DashboardLayout</div>

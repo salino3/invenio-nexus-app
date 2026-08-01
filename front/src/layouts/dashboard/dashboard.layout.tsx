@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { ServicesApp } from "@/store/services";
 import { useProviderSelector } from "@/store/provider";
 import { VITE_TOKEN } from "@/constants";
@@ -24,7 +24,7 @@ const DashboardLayout: React.FC = () => {
     });
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!currentUser?.hasAdFreeAccess) {
       checkGoogleSession();
     }

@@ -196,4 +196,28 @@ export class Account {
 
     return await query(sql, valuesToUpdate);
   }
+
+  //
+  static async getAccountWithSubscription(
+    id: number,
+  ): Promise<QueryResult<AccountCookie>> {
+    const sql = `
+         SELECT 
+       a.id,
+       a.name,
+       a.email,
+       a.role_user,
+       COALESCE(
+         s.status = 'active' AND s.current_period_end > NOW(), 
+         false
+       ) AS "hasAdFreeAccess"
+     FROM accounts a
+     LEFT JOIN subscriptions s ON a.id = s.account_id
+     WHERE a.id = $1;
+    `;
+
+    const result = await query(sql, [id]);
+
+    return result.rows[0] || null;
+  }
 }

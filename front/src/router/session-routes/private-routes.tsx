@@ -17,10 +17,10 @@ export const PrivateRoutes: React.FC = () => {
 
   const token: PropsCurrentAccount | null = getAuthToken();
   React.useEffect(() => {
-    if (token && setDataUser) {
+    if (token && !currentUser && setDataUser) {
       setDataUser(token);
     }
-  }, [token, setDataUser]);
+  }, [token?.id, currentUser, setDataUser]);
 
   if (!token) {
     return <Navigate to={routePaths.public_dashboard} replace />;

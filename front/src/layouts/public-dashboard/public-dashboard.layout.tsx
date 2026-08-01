@@ -1,12 +1,15 @@
 import { PublicDashboard } from "@/pods";
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
 import { VITE_TOKEN } from "@/constants";
 import "./public-dashboard.styles.scss";
 
 const PublicDashboardLayout: React.FC = () => {
-  const { setDataUser } = useProviderSelector("setDataUser");
+  const { setDataUser, currentUser } = useProviderSelector(
+    "setDataUser",
+    "currentUser",
+  );
 
   const checkGoogleSession = async () => {
     ServicesApp.checkGoogleSession().then((data) => {
@@ -21,9 +24,9 @@ const PublicDashboardLayout: React.FC = () => {
     });
   };
 
-  useLayoutEffect(() => {
-    checkGoogleSession();
-  }, [setDataUser]);
+  useEffect(() => {
+    if (currentUser?.email) checkGoogleSession();
+  }, []);
 
   return (
     <div className="rootPublicDashboardLayout">

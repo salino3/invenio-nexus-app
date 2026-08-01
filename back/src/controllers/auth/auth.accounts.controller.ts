@@ -112,17 +112,45 @@ export class AuthController {
         });
       }
 
-      // const decodedUser = jwt.decode(token) as AccountCookie;
+      // 1. Verify the token to extract the account ID securely
       const decodedUser = jwt.verify(
         token,
         SECRET_KEY as string,
       ) as AccountCookie;
 
+      // 2. Fetch fresh user data & active subscription directly from PostgreSQL
+      const freshUser = await Account.getAccountWithSubscription(
+        decodedUser.id,
+      );
+
+      if (!freshUser) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      // 3. 🔑 RE-SIGN THE JWT WITH UPDATED USER DATA
+      const newToken = jwt.sign({ ...freshUser }, SECRET_KEY as string, {
+        expiresIn: "1h",
+      });
+
+      // 4. 🔑 RE-SET THE COOKIE WITH THE NEW TOKEN
+      const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax" as const,
+        expires: new Date(Date.now() + 3600 * 1000),
+      };
+
+      res.cookie(COOKIES_NAME as string, newToken, cookieOptions);
+      console.log("clog3", freshUser);
+      // 3. Return the updated user status
       return res.status(200).json({
         success: true,
-        message: "Login successful",
-        user: decodedUser,
-        token,
+        message: "Session fetched successfully",
+        user: freshUser,
+        token: newToken,
       });
     } catch (error) {
       return res.status(401).json({

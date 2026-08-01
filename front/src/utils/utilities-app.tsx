@@ -1,16 +1,12 @@
 import { jwtDecode } from "jwt-decode";
-import { useProviderSelector } from "@/store/provider";
 import type { PropsCurrentAccount } from "@/store/interface";
 import { VITE_TOKEN } from "@/constants";
-import { routePaths } from "@/router/routes.interface";
 
 //*
 export const regexCorrectEmail: RegExp =
   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export const utilitiesApp = () => {
-  const { setDataUser } = useProviderSelector("setDataUser");
-
   //*
   const getAuthToken = (): PropsCurrentAccount | null => {
     const token = sessionStorage.getItem(VITE_TOKEN);

@@ -14,6 +14,7 @@ export class ServicesApp {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }).catch((err) => {
       console.error(err);
       return Promise.reject(err);

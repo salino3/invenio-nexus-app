@@ -231,4 +231,15 @@ export class Account {
 
     return (result.rowCount || 0) > 0;
   }
+
+  //
+  static async queryHardDeleteAccount(id: number): Promise<boolean> {
+    const sql = `
+    DELETE FROM accounts WHERE id = $1;
+   `;
+
+    const result = await query(sql, [id]);
+
+    return (result.rowCount || 0) > 0;
+  }
 }

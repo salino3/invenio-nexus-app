@@ -26,4 +26,11 @@ routerAccount.patch(
   accountController.acSoftDeleteAccount,
 );
 
+routerAccount.delete(
+  "/accounts/delete/:accountId",
+  authMiddleware,
+  roleMiddleware(["admin", "manager"]),
+  accountController.acHardDeleteAccount,
+);
+
 export default routerAccount;

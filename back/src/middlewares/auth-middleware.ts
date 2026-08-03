@@ -46,7 +46,7 @@ export const authMiddleware = (
 
 export const roleMiddleware =
   (allowedRoles: UserRole[]) =>
-  (req: AuthRequest, res: Response, next: NextFunction) => {
+  (req: Request, res: Response, next: NextFunction) => {
     let token = req.cookies[COOKIES_NAME as string];
 
     if (!token && req.headers.authorization?.startsWith("Bearer ")) {

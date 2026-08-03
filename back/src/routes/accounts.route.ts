@@ -23,7 +23,7 @@ routerAccount.put(
 routerAccount.patch(
   "/accounts/delete/:accountId",
   authMiddleware,
-  roleMiddleware(["admin", "manager"]),
+  // roleMiddleware(["admin", "manager"]),
   accountController.acSoftDeleteAccount,
 );
 

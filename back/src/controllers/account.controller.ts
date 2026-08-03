@@ -196,7 +196,7 @@ export class AccountController {
   ): Promise<Response> {
     const { id } = (req.user || {}) as AccountCookie;
 
-    if (id) {
+    if (!id) {
       return res
         .status(401)
         .json({ message: "Unauthorized: Missing account ID" });

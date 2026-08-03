@@ -224,7 +224,7 @@ export class Account {
   //
   static async querySoftDeleteAccount(id: number): Promise<boolean> {
     const sql = `
-    UPDATE accounts SET is_active = false WHERE id = 1$;
+    UPDATE accounts SET is_active = false WHERE id = $1;
    `;
 
     const result = await query(sql, [id]);

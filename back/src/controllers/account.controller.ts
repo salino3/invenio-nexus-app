@@ -259,14 +259,12 @@ export class AccountController {
         return res.status(404).json({ message: "Account not found" });
       }
 
-      return res
-        .status(200)
-        .json({
-          success: true,
-          message: "Account successfully deletied from DB",
-        });
+      return res.status(200).json({
+        success: true,
+        message: "Account successfully deletied from DB",
+      });
     } catch (error) {
-      console.error("Error executing acSoftDeleteAccount endpoint:", error);
+      console.error("Error executing acHardDeleteAccount endpoint:", error);
       return res
         .status(500)
         .json({ error: "Internal server error during deleting account" });

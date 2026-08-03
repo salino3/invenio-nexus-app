@@ -4,7 +4,7 @@ import { AccountCompany } from "../models/account_company.model";
 
 export class AccountCompaniesController {
   //
-  public async updateRolesCompanies(
+  public async updateRoleCompany(
     req: Request,
     res: Response,
   ): Promise<Response> {

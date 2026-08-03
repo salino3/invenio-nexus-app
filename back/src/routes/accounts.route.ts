@@ -21,10 +21,10 @@ routerAccount.put(
 );
 
 routerAccount.patch(
-  "/accounts/delete:id",
+  "/accounts/delete/:accountId",
   authMiddleware,
   roleMiddleware(["admin", "manager"]),
-  accountController.softDeleteAccount,
+  accountController.acSoftDeleteAccount,
 );
 
 export default routerAccount;

@@ -211,17 +211,23 @@ export class AccountController {
     }
 
     try {
-      
-      const deactivatedAccount: boolean = false;
+      const deactivatedAccount: boolean = await Account.querySoftDeleteAccount(
+        Number(accountId),
+      );
+
+      if (!deactivatedAccount) {
+        return res.status(404).json({ message: "Account not found" });
+      }
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Account deleted successfully" });
     } catch (error) {
-            console.error("Error executing acSoftDeleteAccount endpoint:", error);
+      console.error("Error executing acSoftDeleteAccount endpoint:", error);
       return res
         .status(500)
         .json({ error: "Internal server error during deleting account" });
     }
-    }
-
-     
   }
 }
 

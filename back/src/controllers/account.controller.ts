@@ -189,6 +189,40 @@ export class AccountController {
       return res.status(500).json({ message: "Error updating account" });
     }
   }
+
+  public async acSoftDeleteAccount(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const { id } = (req.user || {}) as AccountCookie;
+
+    if (id) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: Missing account ID" });
+    }
+
+    const { accountId } = req.params;
+
+    if (!accountId) {
+      return res
+        .status(400)
+        .json({ message: "Missing or invalid company account ID" });
+    }
+
+    try {
+      
+      const deactivatedAccount: boolean = false;
+    } catch (error) {
+            console.error("Error executing acSoftDeleteAccount endpoint:", error);
+      return res
+        .status(500)
+        .json({ error: "Internal server error during deleting account" });
+    }
+    }
+
+     
+  }
 }
 
 export const accountController = new AccountController();

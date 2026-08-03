@@ -93,7 +93,7 @@ export class AccountCompaniesController {
       console.error("Error executing deleteRoleCompany endpoint:", error);
       return res
         .status(500)
-        .json({ error: "Internal server error during update" });
+        .json({ error: "Internal server error during deleting role" });
     }
   }
 }

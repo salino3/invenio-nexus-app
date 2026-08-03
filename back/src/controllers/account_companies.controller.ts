@@ -54,6 +54,14 @@ export class AccountCompaniesController {
         .json({ error: "Internal server error during update" });
     }
   }
+
+  //
+  public async deleteRoleCompany(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    return res;
+  }
 }
 
 export const accountCompaniesController = new AccountCompaniesController();

@@ -1,6 +1,6 @@
 import express from "express";
 import { accountController } from "../controllers/account.controller";
-import { authMiddleware } from "../middlewares/auth-middleware";
+import { authMiddleware, roleMiddleware } from "../middlewares/auth-middleware";
 
 const routerAccount = express.Router();
 
@@ -18,6 +18,19 @@ routerAccount.put(
   "/accounts/profile",
   authMiddleware,
   accountController?.updateAccount,
+);
+
+routerAccount.patch(
+  "/accounts/delete/:accountId",
+  authMiddleware,
+  accountController.acSoftDeleteAccount,
+);
+
+routerAccount.delete(
+  "/accounts/delete/:accountId",
+  authMiddleware,
+  roleMiddleware(["admin", "manager"]),
+  accountController.acHardDeleteAccount,
 );
 
 export default routerAccount;

@@ -189,6 +189,89 @@ export class AccountController {
       return res.status(500).json({ message: "Error updating account" });
     }
   }
+
+  public async acSoftDeleteAccount(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const { id } = (req.user || {}) as AccountCookie;
+
+    if (!id) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: Missing account ID" });
+    }
+
+    const { accountId } = req.params;
+
+    if (!accountId) {
+      return res
+        .status(400)
+        .json({ message: "Missing or invalid company account ID" });
+    }
+
+    try {
+      const deactivatedAccount: boolean = await Account.querySoftDeleteAccount(
+        Number(accountId),
+      );
+
+      if (!deactivatedAccount) {
+        return res.status(404).json({ message: "Account not found" });
+      }
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Account deleted successfully" });
+    } catch (error) {
+      console.error("Error executing acSoftDeleteAccount endpoint:", error);
+      return res
+        .status(500)
+        .json({ error: "Internal server error during deleting account" });
+    }
+  }
+
+  public async acHardDeleteAccount(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const { id } = (req.user || {}) as AccountCookie;
+
+    if (!id) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: Missing account ID" });
+    }
+
+    const { accountId } = req.params;
+
+    if (!accountId) {
+      return res
+        .status(400)
+        .json({ message: "Missing or invalid company account ID" });
+    }
+
+    try {
+      const deactivatedAccount: boolean = await Account.queryHardDeleteAccount(
+        Number(accountId),
+      );
+
+      if (!deactivatedAccount) {
+        return res.status(404).json({ message: "Account not found" });
+      }
+
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "Account successfully deletied from DB",
+        });
+    } catch (error) {
+      console.error("Error executing acSoftDeleteAccount endpoint:", error);
+      return res
+        .status(500)
+        .json({ error: "Internal server error during deleting account" });
+    }
+  }
 }
 
 export const accountController = new AccountController();

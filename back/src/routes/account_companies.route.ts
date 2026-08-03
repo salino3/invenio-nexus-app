@@ -7,7 +7,13 @@ const routerAccountCompanies = express.Router();
 routerAccountCompanies.patch(
   "/roles-company/:uuidCompany",
   authMiddleware,
-  accountCompaniesController.updateRolesCompanies,
+  accountCompaniesController.updateRoleCompany,
+);
+
+routerAccountCompanies.delete(
+  "/roles-company/:uuidCompany",
+  authMiddleware,
+  accountCompaniesController.deleteRoleCompany,
 );
 
 export default routerAccountCompanies;

@@ -12,6 +12,8 @@ routerAccountCompanies.patch(
 
 routerAccountCompanies.delete(
   "/roles-company/:uuidCompany",
+  authMiddleware,
+
   accountCompaniesController.deleteRoleCompany,
 );
 

@@ -53,4 +53,22 @@ export class AccountCompany {
 
     return (result.rowCount ?? 0) > 0;
   }
+
+  //
+  static async deleteRoleCompanyByUUID(
+    accountId: number,
+    uuidCompany: string,
+  ): Promise<boolean> {
+    const sql = `
+     DELETE FROM account_companies ac  
+     USING companies c
+        WHERE ac.company_id = c.id
+      AND ac.account_id = $1
+      AND c.uuid = $2;
+    `;
+
+    const result = await query(sql, [accountId, uuidCompany]);
+
+    return (result.rowCount || 0) > 0;
+  }
 }

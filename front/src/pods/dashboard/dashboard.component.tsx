@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ServicesApp } from "@/store/services";
-import type { SearchedCompanies } from "@/store/interface";
+import type { ResponseSearchedCompanies } from "@/store/interface";
 import { ListComponent } from "./components";
 import "./dashboard.styles.scss";
 
@@ -10,7 +10,8 @@ export interface SearchValuesCompaniesProps {
 }
 
 export const Dashboard: React.FC = () => {
-  const [companyList, setCompanyList] = useState<SearchedCompanies[]>([]);
+  const [companyResponse, setCompanyResponse] =
+    useState<ResponseSearchedCompanies | null>(null);
   const [searchValuesCompanies, setSearchValuesCompanies] =
     useState<SearchValuesCompaniesProps>({
       search: "",
@@ -24,7 +25,7 @@ export const Dashboard: React.FC = () => {
       searchValuesCompanies.search,
       searchValuesCompanies.offset,
       controller.signal,
-    ).then((res) => setCompanyList(res ?? []));
+    ).then((res) => setCompanyResponse(res ?? null));
 
     return () => {
       // If endpoint is done there is not execution for 'controller.abort'
@@ -32,12 +33,14 @@ export const Dashboard: React.FC = () => {
     };
   }, [searchValuesCompanies]);
 
-  console.log("clog2", companyList);
+  console.log("clog2", companyResponse);
 
   return (
     <div className="rootDashboard">
       <h1>DashboardLayout</h1>
-      <ListComponent />
+      {companyResponse?.success ? (
+        <ListComponent companyResponse={companyResponse} />
+      ) : null}
     </div>
   );
 };

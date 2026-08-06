@@ -1,1 +1,2 @@
-export * from "./list-list-companies";
+export * from "./list-companies";
+export * from "./card-company-list";

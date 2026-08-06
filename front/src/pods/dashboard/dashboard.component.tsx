@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ServicesApp } from "@/store/services";
 import type { ResponseSearchedCompanies } from "@/store/interface";
-import { ListComponent } from "./components";
+import { ListCompanies } from "./components";
 import "./dashboard.styles.scss";
 
 export interface SearchValuesCompaniesProps {
@@ -39,7 +39,7 @@ export const Dashboard: React.FC = () => {
     <div className="rootDashboard">
       <h1>DashboardLayout</h1>
       {companyResponse?.success ? (
-        <ListComponent companyResponse={companyResponse} />
+        <ListCompanies companyResponse={companyResponse} />
       ) : null}
     </div>
   );

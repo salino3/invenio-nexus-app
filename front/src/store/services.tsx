@@ -1,6 +1,10 @@
 import type { FormLoginProps, FormRegisterProps } from "@/utils";
 import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
-import type { PropsCurrentAccount, StateLoginDataAccount } from "./interface";
+import type {
+  PropsCurrentAccount,
+  SearchedCompanies,
+  StateLoginDataAccount,
+} from "./interface";
 import { routePaths } from "@/router/routes.interface";
 
 export class ServicesApp {
@@ -94,5 +98,24 @@ export class ServicesApp {
     } catch (error) {
       console.log("There is not active Google session:", error);
     }
+  }
+
+  // Companies
+  public static async getSearchingCompanies(
+    searching: string,
+    offset: number = 0,
+  ): Promise<SearchedCompanies[] | void> {
+    const res = await fetch(`${VITE_URL_BACK}/search-companies`, {
+      method: "POST",
+      body: JSON.stringify({ searching, offset }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!res.ok) return;
+
+    return await res.json();
   }
 }

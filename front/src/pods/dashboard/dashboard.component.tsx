@@ -21,5 +21,20 @@ export const Dashboard: React.FC = () => {
     ).then((res) => console.log("clog1", res));
   }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    ServicesApp.getSearchingCompanies(
+      searchValuesCompanies.search,
+      searchValuesCompanies.offset,
+      controller.signal,
+    ).then((res) => console.log("Response:", res));
+
+    return () => {
+      // If endpoint is done there is not execution for 'controller.abort'
+      controller.abort();
+    };
+  }, [searchValuesCompanies]);
+
   return <div className="rootDashboard">DashboardLayout</div>;
 };

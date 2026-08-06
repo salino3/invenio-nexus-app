@@ -104,18 +104,29 @@ export class ServicesApp {
   public static async getSearchingCompanies(
     searching: string,
     offset: number = 0,
+    signal?: AbortSignal,
   ): Promise<SearchedCompanies[] | void> {
-    const res = await fetch(`${VITE_URL_BACK}/search-companies`, {
-      method: "POST",
-      body: JSON.stringify({ searching, offset }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/search-companies`, {
+        method: "POST",
+        body: JSON.stringify({ searching, offset }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal,
+      });
 
-    if (!res.ok) return;
+      if (!res.ok) return;
 
-    return await res.json();
+      return await res.json();
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        console.log("Request successfully canceled");
+        return;
+      }
+
+      console.error("Error while searching for companies:", error);
+    }
   }
 }

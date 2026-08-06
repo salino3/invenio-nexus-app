@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ServicesApp } from "@/store/services";
+import type { ResponseSearchedCompanies } from "@/store/interface";
+import { ListCompanies } from "./components";
 import "./dashboard.styles.scss";
 
 export interface SearchValuesCompaniesProps {
@@ -8,18 +10,13 @@ export interface SearchValuesCompaniesProps {
 }
 
 export const Dashboard: React.FC = () => {
+  const [companyResponse, setCompanyResponse] =
+    useState<ResponseSearchedCompanies | null>(null);
   const [searchValuesCompanies, setSearchValuesCompanies] =
     useState<SearchValuesCompaniesProps>({
       search: "",
       offset: 0,
     });
-
-  useEffect(() => {
-    ServicesApp.getSearchingCompanies(
-      searchValuesCompanies.search,
-      searchValuesCompanies.offset,
-    ).then((res) => console.log("clog1", res));
-  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -28,7 +25,7 @@ export const Dashboard: React.FC = () => {
       searchValuesCompanies.search,
       searchValuesCompanies.offset,
       controller.signal,
-    ).then((res) => console.log("Response:", res));
+    ).then((res) => setCompanyResponse(res ?? null));
 
     return () => {
       // If endpoint is done there is not execution for 'controller.abort'
@@ -36,5 +33,15 @@ export const Dashboard: React.FC = () => {
     };
   }, [searchValuesCompanies]);
 
-  return <div className="rootDashboard">DashboardLayout</div>;
+  // console.log("clog2", companyResponse);
+
+  return (
+    <div className="rootDashboard">
+      <h1>DashboardLayout</h1>
+      {/* // TODO: create form to searching list */}
+      {companyResponse?.success ? (
+        <ListCompanies companyResponse={companyResponse} />
+      ) : null}
+    </div>
+  );
 };

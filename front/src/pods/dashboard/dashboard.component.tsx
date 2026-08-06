@@ -38,7 +38,7 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="rootDashboard">
       <h1>DashboardLayout</h1>
-      // TODO: create form to searching list
+      {/* // TODO: create form to searching list */}
       {companyResponse?.success ? (
         <ListCompanies companyResponse={companyResponse} />
       ) : null}

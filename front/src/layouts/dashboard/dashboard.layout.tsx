@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { ServicesApp } from "@/store/services";
 import { useProviderSelector } from "@/store/provider";
+import { Dashboard } from "@/pods";
 import { VITE_TOKEN } from "@/constants";
 import "./dashboard.styles.scss";
 
@@ -30,7 +31,9 @@ const DashboardLayout: React.FC = () => {
   }, []);
 
   return (
-    <div className="rootDashboardLayout data-theme light">DashboardLayout</div>
+    <div className="rootDashboardLayout">
+      <Dashboard />
+    </div>
   );
 };
 

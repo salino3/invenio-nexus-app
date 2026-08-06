@@ -1,6 +1,10 @@
 import type { FormLoginProps, FormRegisterProps } from "@/utils";
 import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
-import type { PropsCurrentAccount, StateLoginDataAccount } from "./interface";
+import type {
+  PropsCurrentAccount,
+  SearchedCompanies,
+  StateLoginDataAccount,
+} from "./interface";
 import { routePaths } from "@/router/routes.interface";
 
 export class ServicesApp {
@@ -93,6 +97,36 @@ export class ServicesApp {
       return data;
     } catch (error) {
       console.log("There is not active Google session:", error);
+    }
+  }
+
+  // Companies
+  public static async getSearchingCompanies(
+    searching: string,
+    offset: number = 0,
+    signal?: AbortSignal,
+  ): Promise<SearchedCompanies[] | void> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/search-companies`, {
+        method: "POST",
+        body: JSON.stringify({ searching, offset }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal,
+      });
+
+      if (!res.ok) return;
+
+      return await res.json();
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        console.log("Request successfully canceled");
+        return;
+      }
+
+      console.error("Error while searching for companies:", error);
     }
   }
 }

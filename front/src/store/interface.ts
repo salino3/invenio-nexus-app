@@ -79,7 +79,13 @@ export interface CompanyProps {
   updated_at: Date;
 }
 
-export interface SearchedCompanies extends Pick<
+export interface DataSearchedCompanies extends Omit<
   CompanyProps,
   "created_at" | "updated_at" | "id" | "tax_id"
 > {}
+
+export interface ResponseSearchedCompanies {
+  data: DataSearchedCompanies[];
+  success: boolean;
+  total: number;
+}

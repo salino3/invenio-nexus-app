@@ -13,7 +13,6 @@ const DashboardLayout: React.FC = () => {
   const checkGoogleSession = async () => {
     ServicesApp.checkGoogleSession().then((data) => {
       if (data) {
-        console.log("clog5", data);
         if (data.token) {
           sessionStorage.setItem(VITE_TOKEN, data.token);
         }

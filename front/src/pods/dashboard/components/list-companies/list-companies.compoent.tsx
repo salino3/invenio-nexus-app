@@ -16,11 +16,15 @@ export const ListCompanies: React.FC<Props> = (props) => {
     <div className="rootListComponent">
       <h3>Companies found ~ {companyResponse.total ?? 0}</h3>
       <hr />
-      {companyResponse.data.length > 0
-        ? companyResponse.data.map((company: DataSearchedCompanies) => (
+      <ol>
+        {companyResponse.data.length > 0 ? (
+          companyResponse.data.map((company: DataSearchedCompanies) => (
             <CardCompanyList key={company.uuid} company={company} />
           ))
-        : null}
+        ) : (
+          <li>No companies found</li>
+        )}
+      </ol>
     </div>
   );
 };

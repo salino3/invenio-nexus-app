@@ -8,8 +8,8 @@ interface Props {
 
 export const CardCompanyList: React.FC<Props> = ({ company }) => {
   return (
-    <div className="rootCardCompanyList">
+    <li className="rootCardCompanyList">
       <h4>{company.name}</h4>
-    </div>
+    </li>
   );
 };

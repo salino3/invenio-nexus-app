@@ -8,7 +8,7 @@ interface Props {
 
 export const CardCompanyList: React.FC<Props> = ({ company }) => {
   return (
-    <li className="rootCardCompanyList">
+    <li className="rootCardCompanyList cleanList">
       <h4>{company.name}</h4>
     </li>
   );

@@ -22,7 +22,7 @@ export const ListCompanies: React.FC<Props> = (props) => {
             <CardCompanyList key={company.uuid} company={company} />
           ))
         ) : (
-          <li className="liNCF">No companies found</li>
+          <li className="cleanList">No companies found</li>
         )}
       </ol>
     </div>

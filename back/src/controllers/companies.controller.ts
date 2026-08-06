@@ -224,9 +224,9 @@ export class CompaniesController {
       return res.status(200).json({
         success: true,
         data: companies,
-        offset: parseInt(offset, 10),
         total: companies.length ?? 0,
-        limit,
+        // offset: parseInt(offset, 10),
+        // limit,
       });
     }
 
@@ -332,9 +332,9 @@ export class CompaniesController {
       return res.status(200).json({
         success: true,
         data: companies,
-        offset: parsedOffset,
         total: companies.length ?? 0,
-        limit,
+        // offset: parsedOffset,
+        // limit,
       });
     } catch (error) {
       console.error("Error executing getSearchingCompanies query:", error);

@@ -11,15 +11,23 @@ interface Props {
 export const CardCompanyList: React.FC<Props> = ({ company }) => {
   return (
     <li className="rootCardCompanyList cleanList">
-      <h4>{company.name}</h4>
-
-      <ImageComponent
-        vertical={false}
-        src={`${VITE_URL_BACK_FILE}${company.logo ?? ""}`}
-        lazy={"lazy"}
-        alt={company.name}
-        customStyle="boxImage"
-      />
+      <div className="containerCardUp">
+        <h4>{company.name}</h4>
+        <ImageComponent
+          vertical={false}
+          src={`${VITE_URL_BACK_FILE}${company.logo ?? ""}`}
+          lazy={"lazy"}
+          alt={company.name}
+          customStyle="boxImage"
+        />
+      </div>
+      <div className="containerCardDown">
+        {company.hashtags &&
+          company.hashtags.length > 0 &&
+          company.hashtags.map((h: string) => (
+            <span className="hashtag">#{h}</span>
+          ))}
+      </div>
     </li>
   );
 };

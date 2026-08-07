@@ -1,5 +1,23 @@
 .rootListComponent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+
+  .totalTag {
+    font-size: 20px;
+    padding-bottom: 0.5rem;
+    border-bottom: solid;
+  }
+
   .cleanList {
     list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
   }
 }

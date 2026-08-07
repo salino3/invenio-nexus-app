@@ -1,5 +1,31 @@
 .rootListComponent {
-  .cleanList {
-    list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+
+  .totalTag {
+    font-size: 20px;
+    padding-bottom: 0.5rem;
+    border-bottom: solid;
+  }
+
+  ol {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1rem;
+
+    .cleanList {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
   }
 }

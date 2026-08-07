@@ -14,8 +14,10 @@ export const ListCompanies: React.FC<Props> = (props) => {
   const { companyResponse } = props;
   return (
     <div className="rootListComponent">
-      <h3>Companies found ~ {companyResponse.total ?? 0}</h3>
-      <hr />
+      <strong className="totalTag">
+        Companies found ~ {companyResponse.total ?? 0}
+      </strong>
+
       <ol>
         {companyResponse.data.length > 0 ? (
           companyResponse.data.map((company: DataSearchedCompanies) => (

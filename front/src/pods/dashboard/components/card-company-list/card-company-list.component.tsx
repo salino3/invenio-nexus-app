@@ -1,5 +1,6 @@
 import type React from "react";
 import type { DataSearchedCompanies } from "@/store/interface";
+import { utilitiesApp } from "@/utils";
 import { ImageComponent } from "@/common-app";
 import { VITE_URL_BACK_FILE } from "@/constants";
 import "./card-company-list.styles.scss";
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export const CardCompanyList: React.FC<Props> = ({ company }) => {
+  const { getCountryName, getCountryFlag } = utilitiesApp();
+
   return (
     <li className="rootCardCompanyList cleanList">
       <div className="containerCardUp">
@@ -18,7 +21,10 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
         </div>
         <div className="boxCenter">
           <span>{company.location}</span>
-          <span>{company.country_code}</span>
+          <span>
+            {getCountryName(company.country_code ?? "")} &nbsp;
+            {getCountryFlag(company.country_code ?? "")}
+          </span>
         </div>
         <div className="boxRight">
           <ImageComponent
@@ -33,8 +39,10 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
       <div className="containerCardDown">
         {company.hashtags &&
           company.hashtags.length > 0 &&
-          company.hashtags.map((h: string) => (
-            <span className="hashtag">#{h}</span>
+          company.hashtags.map((h: string, i: number) => (
+            <span className="hashtag" key={i}>
+              #{h}
+            </span>
           ))}
         <span
           className="redirectionText"

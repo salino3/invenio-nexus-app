@@ -51,5 +51,32 @@ export const utilitiesApp = () => {
     target.src = fallbackSrc;
   };
 
-  return { getAuthToken, handleImgError };
+  //
+  const getCountryName = (
+    countryCode: string,
+    locale: string = "en", // TODO: Use language value from 'i18next'
+  ): string => {
+    if (!countryCode) return "-";
+
+    try {
+      const regionNames = new Intl.DisplayNames([locale], { type: "region" });
+      return regionNames.of(countryCode.toUpperCase()) || countryCode;
+    } catch (error) {
+      return countryCode;
+    }
+  };
+
+  //
+  const getCountryFlag = (countryCode: string): string => {
+    if (!countryCode) return "-";
+
+    const codePoints = countryCode
+      .toUpperCase()
+      .split("")
+      .map((char) => 127397 + char.charCodeAt(0));
+
+    return String.fromCodePoint(...codePoints);
+  };
+
+  return { getAuthToken, handleImgError, getCountryName, getCountryFlag };
 };

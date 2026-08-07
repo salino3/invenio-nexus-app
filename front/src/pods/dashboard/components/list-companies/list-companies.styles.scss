@@ -12,12 +12,20 @@
     border-bottom: solid;
   }
 
-  .cleanList {
-    list-style-type: none;
+  ol {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     gap: 1rem;
+
+    .cleanList {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
   }
 }

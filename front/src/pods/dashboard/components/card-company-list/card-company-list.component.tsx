@@ -30,6 +30,7 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
             customStyles={"boxTextCardCompany"}
           />
         </div>
+        <hr className="divider" />
         <div className="boxCenter">
           <BoxText
             tag={"span"}
@@ -44,6 +45,7 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
             customStyles={"boxTextCardCompany"}
           />
         </div>
+        <hr className="divider" />
         <div className="boxRight">
           <ImageComponent
             vertical={false}

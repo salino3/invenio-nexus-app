@@ -49,6 +49,13 @@
       }
     }
 
+    .divider {
+      all: unset;
+      border-left: solid 1px;
+      height: 100%;
+      min-height: 2rem;
+    }
+
     .boxRight {
       flex-direction: row;
 

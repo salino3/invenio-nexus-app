@@ -16,7 +16,10 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
     <li className="rootCardCompanyList cleanList">
       <div className="containerCardUp">
         <div className="boxLeft">
-          <h4>{company.name}</h4>
+          <div className="boxText">
+            <strong>Name:</strong>
+            <h4>{company.name}</h4>
+          </div>
           <span>{company.sector}</span>
         </div>
         <div className="boxCenter">

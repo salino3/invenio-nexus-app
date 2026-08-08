@@ -5,6 +5,25 @@ import { ImageComponent } from "@/common-app";
 import { VITE_URL_BACK_FILE } from "@/constants";
 import "./card-company-list.styles.scss";
 
+interface BoxTextProps {
+  title: string;
+  tag: React.ElementType;
+  value: string;
+  customStyles?: CSSStyleProperties;
+}
+
+export const BoxText: React.FC<BoxTextProps> = ({
+  title,
+  tag: Tag = "span",
+  value,
+  customStyles,
+}) => (
+  <div className={`boxText ${customStyles}`}>
+    <strong>{title}</strong>
+    <Tag>{value}</Tag>
+  </div>
+);
+
 interface Props {
   company: DataSearchedCompanies;
 }
@@ -16,10 +35,8 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
     <li className="rootCardCompanyList cleanList">
       <div className="containerCardUp">
         <div className="boxLeft">
-          <div className="boxText">
-            <strong>Name:</strong>
-            <h4>{company.name}</h4>
-          </div>
+          <BoxText tag={"h4"} title="Name:" value={company.name} />
+
           <span>{company.sector}</span>
         </div>
         <div className="boxCenter">

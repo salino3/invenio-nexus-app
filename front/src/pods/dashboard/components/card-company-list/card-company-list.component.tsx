@@ -23,15 +23,26 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
             value={company.name}
             customStyles={"boxTextCardCompany"}
           />
-
-          <span>{company.sector}</span>
+          <BoxText
+            tag={"span"}
+            title="Sector:"
+            value={company.sector}
+            customStyles={"boxTextCardCompany"}
+          />
         </div>
         <div className="boxCenter">
-          <span>{company.location}</span>
-          <span>
-            {getCountryName(company.country_code ?? "")} &nbsp;
-            {getCountryFlag(company.country_code ?? "")}
-          </span>
+          <BoxText
+            tag={"span"}
+            title="Location:"
+            value={company.location}
+            customStyles={"boxTextCardCompany"}
+          />
+          <BoxText
+            tag={"span"}
+            title="Country:"
+            value={`${getCountryName(company.country_code ?? "")} ${getCountryFlag(company.country_code ?? "")} `}
+            customStyles={"boxTextCardCompany"}
+          />
         </div>
         <div className="boxRight">
           <ImageComponent

@@ -34,6 +34,12 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
             alt={company.name}
             customStyle="boxImage"
           />
+          <span
+            className="redirectionText"
+            onClick={() => alert("TODO: redirection page..")}
+          >
+            More info..
+          </span>
         </div>
       </div>
       <div className="containerCardDown">
@@ -44,12 +50,6 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
               #{h}
             </span>
           ))}
-        <span
-          className="redirectionText"
-          onClick={() => alert("TODO: redirection page..")}
-        >
-          More info..
-        </span>
       </div>
     </li>
   );

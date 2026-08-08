@@ -16,6 +16,6 @@ export const BoxText: React.FC<BoxTextProps> = ({
 }) => (
   <div className={`boxText ${customStyles}`}>
     <strong>{title}</strong>
-    <Tag>{value}</Tag>
+    <Tag className="tagValue">{value}</Tag>
   </div>
 );

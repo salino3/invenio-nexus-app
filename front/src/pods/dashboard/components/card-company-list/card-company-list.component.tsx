@@ -45,7 +45,7 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
             customStyles={"boxTextCardCompany"}
           />
         </div>
-        <hr className="divider" />
+        <hr className="divider divider_02" />
         <div className="boxRight">
           <ImageComponent
             vertical={false}

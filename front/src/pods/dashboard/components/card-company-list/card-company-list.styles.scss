@@ -7,7 +7,7 @@
   gap: 1rem;
   padding: 0.25rem;
   border-radius: 0.5rem;
-  max-width: 1000px;
+  max-width: 900px;
   .containerCardUp {
     display: flex;
     flex-direction: row;
@@ -26,19 +26,38 @@
       width: 100%;
       height: 100%;
 
-      h4,
-      span {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        width: 100%;
-        height: 100%;
+      .boxTextCardCompany {
+        strong {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+          color: var(--global-03);
+        }
 
-        border: solid;
+        h4,
+        span {
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          justify-content: center;
+          gap: 0.5rem;
+          width: 100%;
+          height: 100%;
+        }
       }
+    }
+
+    .divider {
+      all: unset;
+      border-left: solid 1px;
+      height: 100%;
+      min-height: 3rem;
+    }
+
+    .boxRight {
+      flex-direction: row;
 
       .boxImage {
         display: flex;
@@ -52,6 +71,8 @@
 
         max-height: 100px;
         max-width: 120px;
+        min-height: 100px;
+        min-width: 120px;
 
         border: solid 1px;
         overflow: hidden;
@@ -62,6 +83,64 @@
           max-height: 90px;
           max-width: 110px;
         }
+      }
+
+      .redirectionText {
+        flex-grow: 0;
+        height: fit-content;
+        text-wrap: nowrap;
+        width: auto;
+        border-width: 1px;
+        text-decoration-line: underline;
+        background-color: rgba(198, 226, 252, 0.2);
+        padding: 0.2rem 0.5rem;
+        border-radius: 2px;
+        transition: background-color 0.5s ease-in-out;
+        align-self: flex-end;
+
+        /* x-offset | y-offset | blur radius | color */
+        text-shadow:
+          0 0 2px rgba(255, 255, 255, 0.5),
+          0 0 5px rgba(255, 255, 255, 0.4),
+          0 0 8px rgba(255, 255, 255, 0.3);
+
+        // text-decoration: underline wavy red;
+
+        &:hover {
+          cursor: pointer;
+          background-color: rgba(198, 226, 252, 0.4);
+        }
+      }
+    }
+
+    @media screen and (max-width: 724px) {
+      flex-wrap: wrap;
+      min-width: inherit;
+
+      & > * {
+        width: fit-content;
+        height: fit-content;
+      }
+      .divider {
+        height: inherit;
+      }
+
+      .divider_02 {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 425px) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      & > * {
+        width: 100%;
+      }
+      .divider {
+        display: none;
       }
     }
   }
@@ -82,27 +161,6 @@
       color: var(--color-evidenced);
       word-break: break-all;
       width: fit-content;
-    }
-
-    .redirectionText {
-      text-decoration-line: underline;
-      background-color: rgba(198, 226, 252, 0.2);
-      padding: 0.2rem;
-      border-radius: 2px;
-      transition: background-color 0.5s ease-in-out;
-
-      /* x-offset | y-offset | blur radius | color */
-      text-shadow:
-        0 0 2px rgba(255, 255, 255, 0.5),
-        0 0 5px rgba(255, 255, 255, 0.4),
-        0 0 8px rgba(255, 255, 255, 0.3);
-
-      // text-decoration: underline wavy red;
-
-      &:hover {
-        cursor: pointer;
-        background-color: rgba(198, 226, 252, 0.4);
-      }
     }
   }
 }

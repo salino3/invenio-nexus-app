@@ -1,6 +1,7 @@
 import type React from "react";
 import type { DataSearchedCompanies } from "@/store/interface";
 import { utilitiesApp } from "@/utils";
+import { BoxText } from "@/common";
 import { ImageComponent } from "@/common-app";
 import { VITE_URL_BACK_FILE } from "@/constants";
 import "./card-company-list.styles.scss";
@@ -16,16 +17,35 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
     <li className="rootCardCompanyList cleanList">
       <div className="containerCardUp">
         <div className="boxLeft">
-          <h4>{company.name}</h4>
-          <span>{company.sector}</span>
+          <BoxText
+            tag={"h4"}
+            title="Name:"
+            value={company.name}
+            customStyles={"boxTextCardCompany"}
+          />
+          <BoxText
+            tag={"span"}
+            title="Sector:"
+            value={company.sector}
+            customStyles={"boxTextCardCompany"}
+          />
         </div>
+        <hr className="divider" />
         <div className="boxCenter">
-          <span>{company.location}</span>
-          <span>
-            {getCountryName(company.country_code ?? "")} &nbsp;
-            {getCountryFlag(company.country_code ?? "")}
-          </span>
+          <BoxText
+            tag={"span"}
+            title="Location:"
+            value={company.location}
+            customStyles={"boxTextCardCompany"}
+          />
+          <BoxText
+            tag={"span"}
+            title="Country:"
+            value={`${getCountryName(company.country_code ?? "")} ${getCountryFlag(company.country_code ?? "")} `}
+            customStyles={"boxTextCardCompany"}
+          />
         </div>
+        <hr className="divider divider_02" />
         <div className="boxRight">
           <ImageComponent
             vertical={false}
@@ -34,6 +54,12 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
             alt={company.name}
             customStyle="boxImage"
           />
+          <span
+            className="redirectionText"
+            onClick={() => alert("TODO: redirection page..")}
+          >
+            More info..
+          </span>
         </div>
       </div>
       <div className="containerCardDown">
@@ -44,12 +70,6 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
               #{h}
             </span>
           ))}
-        <span
-          className="redirectionText"
-          onClick={() => alert("TODO: redirection page..")}
-        >
-          More info..
-        </span>
       </div>
     </li>
   );

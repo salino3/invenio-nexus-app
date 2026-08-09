@@ -97,7 +97,7 @@ export class AuthController {
       const newToken = jwt.sign(userPayload, SECRET_KEY as string, {
         expiresIn: "1h",
       });
-      console.log("clog6", newToken);
+
       // 3. Overwrite the old cookie with the new token
       res.cookie(COOKIES_NAME as string, newToken, {
         httpOnly: true, // cookie cannot be accessed via document.cookie

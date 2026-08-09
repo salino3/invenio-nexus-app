@@ -100,6 +100,25 @@ export class ServicesApp {
     }
   }
 
+  //
+  public static async refreshToken(): Promise<PropsCurrentAccount | undefined> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/auth/refresh-token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      return data;
+    } catch (error) {
+      console.log("Error refreshing session:", error);
+    }
+  }
+
   // Companies
   public static async getSearchingCompanies(
     searching: string,

@@ -1,11 +1,11 @@
 import type { FormLoginProps, FormRegisterProps } from "@/utils";
 import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
+import { routePaths } from "@/router/routes.interface";
 import type {
   PropsCurrentAccount,
   ResponseSearchedCompanies,
   StateLoginDataAccount,
 } from "./interface";
-import { routePaths } from "@/router/routes.interface";
 
 export class ServicesApp {
   // Auth

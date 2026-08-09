@@ -59,7 +59,10 @@ export class AuthController {
   }
 
   //
-  public async refreshToken(req: Request, res: Response): Promise<Response> {
+  public async refreshToken(
+    req: Request,
+    res: Response,
+  ): Promise<Response<{ message: "Token refreshed"; user: AccountCookie }>> {
     const token = req.cookies[COOKIES_NAME as string];
 
     if (!token) {
@@ -70,11 +73,28 @@ export class AuthController {
       // 1. Verify token
       const decodedToken = jwt.verify(token, SECRET_KEY as string) as any;
 
-      // Remove 'iat' and 'exp' from decoded so jwt.sign creates new ones
-      const { iat, exp, ...userData } = decodedToken;
+      const freshUser = await Account.getAccountWithSubscription(
+        decodedToken.id,
+      );
+
+      if (!freshUser) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      // Ensure plain object payload
+      const userPayload = {
+        id: freshUser.id,
+        name: freshUser.name,
+        email: freshUser.email,
+        role_user: freshUser.role_user,
+        hasAdFreeAccess: freshUser.hasAdFreeAccess,
+      };
 
       // 2. Create new token
-      const newToken = jwt.sign(userData, SECRET_KEY as string, {
+      const newToken = jwt.sign(userPayload, SECRET_KEY as string, {
         expiresIn: "1h",
       });
 
@@ -88,8 +108,9 @@ export class AuthController {
 
       return res
         .status(200)
-        .json({ message: "Token refreshed", user: userData });
+        .json({ message: "Token refreshed", user: userPayload });
     } catch (err) {
+      console.error("Refresh token error:", err);
       return res
         .status(403)
         .json({ error: "Refresh token expired or invalid" });

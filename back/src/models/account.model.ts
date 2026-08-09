@@ -198,9 +198,7 @@ export class Account {
   }
 
   //
-  static async getAccountWithSubscription(
-    id: number,
-  ): Promise<QueryResult<AccountCookie>> {
+  static async getAccountWithSubscription(id: number): Promise<AccountCookie> {
     const sql = `
          SELECT 
        a.id,

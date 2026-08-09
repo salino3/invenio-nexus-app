@@ -1,11 +1,11 @@
 import type { FormLoginProps, FormRegisterProps } from "@/utils";
 import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
+import { routePaths } from "@/router/routes.interface";
 import type {
   PropsCurrentAccount,
   ResponseSearchedCompanies,
   StateLoginDataAccount,
 } from "./interface";
-import { routePaths } from "@/router/routes.interface";
 
 export class ServicesApp {
   // Auth
@@ -97,6 +97,25 @@ export class ServicesApp {
       return data;
     } catch (error) {
       console.log("There is not active Google session:", error);
+    }
+  }
+
+  //
+  public static async refreshToken(): Promise<PropsCurrentAccount | undefined> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/auth/refresh-token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      return data;
+    } catch (error) {
+      console.log("Error refreshing session:", error);
     }
   }
 

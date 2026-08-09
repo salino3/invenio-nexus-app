@@ -1,4 +1,6 @@
 import { jwtDecode } from "jwt-decode";
+import { useProviderSelector } from "@/store/provider";
+import { ServicesApp } from "@/store/services";
 import type { PropsCurrentAccount } from "@/store/interface";
 import { VITE_TOKEN } from "@/constants";
 
@@ -7,6 +9,8 @@ export const regexCorrectEmail: RegExp =
   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 export const utilitiesApp = () => {
+  const { setDataUser } = useProviderSelector("setDataUser");
+
   //*
   const getAuthToken = (): PropsCurrentAccount | null => {
     const token = sessionStorage.getItem(VITE_TOKEN);
@@ -17,6 +21,17 @@ export const utilitiesApp = () => {
     if (token && token.split(".").length === 3) {
       try {
         const decoded: any = jwtDecode<PropsCurrentAccount>(token);
+
+        // JWT 'exp' is in seconds, Date.now() is in milliseconds
+        const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+
+        // If token is already expired, treat it as null
+        if (decoded.exp && decoded.exp <= currentTimeInSeconds) {
+          console.warn("Token has expired.");
+          ServicesApp.closeSession(setDataUser);
+          return null;
+        }
+
         return decoded || null;
       } catch (error) {
         console.error("Error decoding JWT:", error);

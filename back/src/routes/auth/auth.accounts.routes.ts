@@ -9,7 +9,7 @@ routerAuth.post("/login-account", authController.loginAccount);
 
 routerAuth.post("/logout-account", authController.logoutAccount);
 
-routerAuth.post("/refresh-token", authController.refreshToken);
+routerAuth.post("/auth/refresh-token", authController.refreshToken);
 
 routerAuth.get("/auth/get-me", authController.getMe);
 

@@ -240,4 +240,22 @@ export class Account {
 
     return (result.rowCount || 0) > 0;
   }
+
+  //
+  static async temporaryPassword(
+    hashedToken: string,
+    email: string,
+  ): Promise<QueryResult> {
+    const sql = `
+      UPDATE accounts
+      SET 
+        reset_password_token = $1,
+        reset_password_expires = NOW() + INTERVAL '15 minutes',
+        updated_at = NOW()
+      WHERE email = $2 AND is_active = true AND deleted_at IS NULL
+      RETURNING id;
+    `;
+
+    return await query(sql, [hashedToken, email]);
+  }
 }

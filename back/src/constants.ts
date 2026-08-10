@@ -14,6 +14,12 @@ export const {
   //
   FRONTEND_DEV_PORT,
   FRONTEND_PROD_PORT,
+  // Email sender SMTP (Simple Mail Transfer Protocol)
+  SMTP_HOST,
+  SMTP_PORT,
+  SMTP_USER,
+  SMTP_PASSWORD,
+  SMTP_FROM,
   // Google OAuth
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,

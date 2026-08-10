@@ -33,4 +33,6 @@ routerAuth.get(
   oauthController.googleCallback,
 );
 
+routerAuth.post("/auth/forgot-password", authController.forgotPassword);
+
 export default routerAuth;

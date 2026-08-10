@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import crypto from "node:crypto";
 import { Account } from "../../models/account.model";
-import { COOKIES_NAME, SECRET_KEY } from "../../constants";
+import { sendEmail } from "../../services/send-email";
+import { COOKIES_NAME, FRONTEND_DEV_PORT, SECRET_KEY } from "../../constants";
 import { AccountCookie } from "../../interfaces/account.interface";
 
 const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -178,6 +180,57 @@ export class AuthController {
         success: false,
         message: "Invalid or expired token",
       });
+    }
+  }
+
+  //
+  public async forgotPassword(req: Request, res: Response): Promise<Response> {
+    const { email } = req.body;
+
+    try {
+      // Generate a secure random token for the email link
+      const rawToken = crypto.randomBytes(32).toString("hex");
+
+      // Hash token to store safely in DB
+      const hashedToken = crypto
+        .createHash("sha256")
+        .update(rawToken)
+        .digest("hex");
+
+      const result = await Account.temporaryPassword(hashedToken, email);
+
+      if (result.rows.length > 0) {
+        const resetUrl = `${FRONTEND_DEV_PORT}/reset-password?token=${rawToken}`;
+
+        const emailHtml = `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2>Password Reset Request</h2>
+            <p>You requested a password reset for your account.</p>
+            <p>Click the button below to choose a new password. This link is valid for <strong>15 minutes</strong>:</p>
+            <p style="margin: 25px 0;">
+              <a href="${resetUrl}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                Reset Password
+              </a>
+            </p>
+            <p style="color: #666; font-size: 12px;">If you did not request this email, you can safely ignore it.</p>
+          </div>
+        `;
+
+        await sendEmail({
+          to: email,
+          subject: "Password Reset Request",
+          html: emailHtml,
+        });
+      }
+
+      // Always return success to prevent email enumeration attacks
+      return res.status(200).json({
+        message:
+          "If an account exists with that email, a password reset link has been sent.",
+      });
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
   }
 }

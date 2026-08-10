@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
 import { Account } from "../../models/account.model";
 import { sendEmail } from "../../services/send-email";
@@ -230,6 +231,46 @@ export class AuthController {
       });
     } catch (error) {
       console.error("Forgot password error:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  //
+  public async resetPassword(req: Request, res: Response): Promise<Response> {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res
+        .status(400)
+        .json({ error: "Token and new password are required." });
+    }
+
+    try {
+      // Hash the token received from frontend to match the database entry
+      const hashedToken = crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex");
+
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      const result = await Account.resetingPasswordToken(
+        hashedPassword,
+        hashedToken,
+      );
+
+      if (result.rows.length === 0) {
+        return res
+          .status(400)
+          .json({ error: "Password reset token is invalid or has expired." });
+      }
+
+      return res.status(200).json({
+        message: "Password updated successfully. You can now log in.",
+      });
+    } catch (error) {
+      console.error("Reset password error:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
   }

@@ -258,4 +258,26 @@ export class Account {
 
     return await query(sql, [hashedToken, email]);
   }
+
+  //
+  static async resetingPasswordToken(
+    hashedPassword: string,
+    hashedToken: string,
+  ) {
+    const sql = `
+      UPDATE accounts
+      SET 
+        password = $1,
+        reset_password_token = NULL,
+        reset_password_expires = NULL,
+        updated_at = NOW()
+      WHERE reset_password_token = $2 
+        AND reset_password_expires > NOW()
+        AND is_active = true 
+        AND deleted_at IS NULL
+      RETURNING id, email;
+    `;
+
+    return await query(sql, [hashedPassword, hashedToken]);
+  }
 }

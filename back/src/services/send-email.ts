@@ -1,6 +1,12 @@
 import nodemailer from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
-import { SMTP_HOST, SMTP_PORT } from "../constants";
+import {
+  SMTP_FROM,
+  SMTP_HOST,
+  SMTP_PASSWORD,
+  SMTP_PORT,
+  SMTP_USER,
+} from "../constants";
 
 interface SendEmailOptions {
   to: string;
@@ -14,8 +20,8 @@ const smtpOptions: SMTPTransport.Options = {
   port: Number(SMTP_PORT) || 587,
   secure: (Number(SMTP_PORT) || 587) === 465,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: SMTP_USER,
+    pass: SMTP_PASSWORD,
   },
 };
 
@@ -28,7 +34,7 @@ export const sendEmail = async ({
   html,
 }: SendEmailOptions): Promise<void> => {
   await transporter.sendMail({
-    from: `"Your App Name" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    from: `"Your App Name" <${SMTP_FROM || SMTP_USER}>`,
     to,
     subject,
     html,

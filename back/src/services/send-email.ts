@@ -12,6 +12,7 @@ interface SendEmailOptions {
   to: string;
   subject: string;
   html: string;
+  attachments?: nodemailer.SendMailOptions["attachments"];
 }
 
 // Configure SMTP Transporter
@@ -32,11 +33,13 @@ export const sendEmail = async ({
   to,
   subject,
   html,
+  attachments,
 }: SendEmailOptions): Promise<void> => {
   await transporter.sendMail({
     from: `"Your App Name" <${SMTP_FROM || SMTP_USER}>`,
     to,
     subject,
     html,
+    attachments,
   });
 };

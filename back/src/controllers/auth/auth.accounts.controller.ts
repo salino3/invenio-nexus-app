@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import path from "node:path";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
@@ -204,23 +205,33 @@ export class AuthController {
         const resetUrl = `${FRONTEND_DEV_PORT}/reset-password?token=${rawToken}`;
 
         const emailHtml = `
-          <div style="font-family: Arial, sans-serif; padding: 20px;">
-            <h2>Password Reset Request</h2>
-            <p>You requested a password reset for your account.</p>
-            <p>Click the button below to choose a new password. This link is valid for <strong>15 minutes</strong>:</p>
-            <p style="margin: 25px 0;">
-              <a href="${resetUrl}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
-                Reset Password
-              </a>
-            </p>
-            <p style="color: #666; font-size: 12px;">If you did not request this email, you can safely ignore it.</p>
-          </div>
-        `;
+  <div style="font-family: Arial, sans-serif; padding: 20px;">
+    <div style="margin-bottom: 20px;">
+      <img src="cid:companyLogo" alt="Company Logo" style="max-width: 150px; height: auto;" />
+    </div>
+    <h2>Password Reset Request</h2>
+    <p>You requested a password reset for your account.</p>
+    <p>Click the button below to choose a new password. This link is valid for <strong>15 minutes</strong>:</p>
+    <p style="margin: 25px 0;">
+      <a href="${resetUrl}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+        Reset Password
+      </a>
+    </p>
+    <p style="color: #666; font-size: 12px;">If you did not request this email, you can safely ignore it.</p>
+  </div>
+`;
 
         await sendEmail({
           to: email,
           subject: "Password Reset Request",
           html: emailHtml,
+          attachments: [
+            {
+              filename: "logo.png",
+              path: path.join(__dirname, "../../assets/web-icon.svg"),
+              cid: "companyLogo",
+            },
+          ],
         });
       }
 

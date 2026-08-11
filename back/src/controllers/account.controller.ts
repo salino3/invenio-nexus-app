@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { Account } from "../models/account.model";
 import { utilitiesApp } from "../utils/utilities-app";
-import { query } from "../db";
 import {
   AccountCookie,
   RegistretionAccountDB,

@@ -1,5 +1,3 @@
-import { Account } from "../models/account.model";
-
 export type UserRole = "admin" | "user" | "manager";
 
 export interface AccountProps {
@@ -43,7 +41,7 @@ export interface AllAccounts extends Omit<
 
 // Interface Auth Accounts
 export interface AccountCookie extends Pick<
-  Account,
+  AccountProps,
   "id" | "name" | "role_user" | "email"
 > {
   hasAdFreeAccess: boolean;

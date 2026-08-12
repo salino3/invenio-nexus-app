@@ -4,12 +4,14 @@ type EnumVisibility = "public" | "private" | "restricted" | "admin";
 
 export interface RoutePaths {
   public_dashboard: string;
+  recover_password: string;
   dashboard: string;
   error_page: string;
 }
 
 export const routePaths: RoutePaths = {
   public_dashboard: "/",
+  recover_password: "recover_password",
   dashboard: "/dashboard",
   error_page: "*",
 };

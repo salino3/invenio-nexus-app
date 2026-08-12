@@ -8,6 +8,9 @@ import { MainHeader } from "@/common-app";
 const PublicDashboardLayout = lazy(
   () => import("../layouts/public-dashboard/public-dashboard.layout"),
 );
+const RecoverPasswordLayout = lazy(
+  () => import("../layouts/recover-password/recover-password.layout"),
+);
 const DashboardLayout = lazy(
   () => import("../layouts/dashboard/dashboard.layout"),
 );
@@ -20,6 +23,11 @@ const routes: AppRoute[] = [
   {
     path: routePaths.public_dashboard,
     element: <PublicDashboardLayout />,
+    visibility: "public",
+  },
+  {
+    path: routePaths.recover_password,
+    element: <RecoverPasswordLayout />,
     visibility: "public",
   },
   {

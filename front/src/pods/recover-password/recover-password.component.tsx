@@ -38,6 +38,7 @@ export const RecoverPassword: React.FC = () => {
               name="email"
               type="email"
               lbl="Email"
+              pl="name@example.com"
               change={(
                 e: React.ChangeEvent<HTMLInputElement, Element> | undefined,
               ) => setFormEmail(e?.target.value ?? "")}

@@ -10,11 +10,21 @@ interface Props {
   lbl?: string;
   customStyles?: string;
   errorMsg: string;
+  pl?: string | undefined;
 }
 
 export const BasicInput: React.FC<Props> = (props) => {
-  const { value, stateValue, change, name, type, lbl, customStyles, errorMsg } =
-    props;
+  const {
+    value,
+    stateValue,
+    change,
+    name,
+    type,
+    lbl,
+    customStyles,
+    errorMsg,
+    pl,
+  } = props;
 
   return (
     <div className={`rootBasicInput ${customStyles ?? ""}`}>
@@ -24,6 +34,7 @@ export const BasicInput: React.FC<Props> = (props) => {
         id={name + "ID"}
         name={name}
         defaultValue={stateValue}
+        placeholder={pl}
         value={value}
         onChange={change}
       />

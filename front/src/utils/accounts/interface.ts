@@ -42,3 +42,11 @@ export interface StateRegisterAccount {
   fieldErrors: FormRegisterErrorsProps | null;
   formData: FormRegisterProps | null;
 }
+
+//
+export type StatusRecoverPassword = "idle" | "success" | "error";
+
+export interface StateRecoverPasswordAction {
+  status: StatusRecoverPassword;
+  message: string;
+}

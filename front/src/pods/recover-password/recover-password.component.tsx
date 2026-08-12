@@ -1,14 +1,17 @@
-import React, { useActionState } from "react";
-import { ServicesApp } from "@/store/services";
+import React, { useActionState, useEffect, useState } from "react";
 import {
   recoverPasswordAction,
   type StateRecoverPasswordAction,
 } from "@/utils";
+import { BasicInput } from "@/common";
 import "./recover-password.styles.scss";
 
 const initialState: StateRecoverPasswordAction = {
   status: "idle",
   message: "",
+  formData: {
+    email: "",
+  },
 };
 
 export const RecoverPassword: React.FC = () => {
@@ -16,6 +19,12 @@ export const RecoverPassword: React.FC = () => {
     recoverPasswordAction,
     initialState,
   );
+
+  const [formEmail, setFormEmail] = useState<string>("");
+
+  useEffect(() => {
+    setFormEmail(state.formData.email);
+  }, [state.formData]);
 
   return (
     <div className="rootRecoverPassword">
@@ -25,17 +34,17 @@ export const RecoverPassword: React.FC = () => {
 
         <form action={formAction} noValidate>
           <fieldset disabled={isPending}>
-            <div className="form-group">
-              <label htmlFor="email">Email Address</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="name@example.com"
-                disabled={isPending}
-                required
-              />
-            </div>
+            <BasicInput
+              name="email"
+              type="email"
+              lbl="Email"
+              change={(
+                e: React.ChangeEvent<HTMLInputElement, Element> | undefined,
+              ) => setFormEmail(e?.target.value ?? "")}
+              stateValue={formEmail ?? state?.formData?.email}
+              value={formEmail ?? state?.formData?.email}
+              errorMsg={""}
+            />
 
             {state.status !== "idle" && (
               <div className={`status-message ${state.status}`}>

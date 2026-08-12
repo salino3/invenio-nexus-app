@@ -49,4 +49,7 @@ export type StatusRecoverPassword = "idle" | "success" | "error";
 export interface StateRecoverPasswordAction {
   status: StatusRecoverPassword;
   message: string;
+  formData: {
+    email: string;
+  };
 }

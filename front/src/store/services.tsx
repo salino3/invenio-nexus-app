@@ -119,13 +119,13 @@ export class ServicesApp {
     }
   }
 
-  private static async recoverPassword(email: string): Promise<boolean> {
+  static async recoverPassword(email: string): Promise<boolean> {
     try {
       const res = await fetch(`${VITE_URL_BACK}/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(email),
+        body: JSON.stringify({ email }),
       });
 
       return res.ok;

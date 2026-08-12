@@ -1,6 +1,9 @@
 import React, { useActionState, useEffect, useState } from "react";
-import type { FormRegisterErrorsProps, FormRegisterProps } from "@/utils";
-import { registerAccountEvent } from "@/utils/accounts/register-account.event";
+import {
+  registerAccountEvent,
+  type FormRegisterErrorsProps,
+  type FormRegisterProps,
+} from "@/utils";
 import { BasicInput, ButtonForm } from "@/common";
 import "./register-form.styles.scss";
 

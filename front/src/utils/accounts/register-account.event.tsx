@@ -69,7 +69,7 @@ export async function registerAccountEvent(
       }
     },
   );
-  console.log("acc", accountData);
+
   const hasErrors: boolean = Object.values(accountErrorData).some(
     (msg) => msg !== "",
   );

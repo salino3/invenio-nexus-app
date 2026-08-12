@@ -64,7 +64,7 @@ export const PrivateRoutes: React.FC = () => {
 
   return (
     <div className="rootRouter">
-      {!currentUser?.hasAdFreeAccess && <Aside />}
+      <Aside />
       <Outlet />
     </div>
   );

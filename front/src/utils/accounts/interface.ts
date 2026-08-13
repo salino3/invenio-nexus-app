@@ -44,7 +44,7 @@ export interface StateRegisterAccount {
 }
 
 //
-export type StatusRecoverPassword = "idle" | "success" | "error";
+export type StatusRecoverPassword = "pending" | "success" | "error";
 
 export interface StateRecoverPasswordAction {
   status: StatusRecoverPassword;
@@ -52,4 +52,19 @@ export interface StateRecoverPasswordAction {
   formData: {
     email: string;
   };
+}
+
+//
+
+export interface FormResetProps {
+  token: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+export interface StateResetPasswordAction {
+  success: boolean;
+  fieldErrors: FormResetProps | null;
+  error: string;
+  formData: FormResetProps | null;
 }

@@ -34,7 +34,7 @@ const routes: AppRoute[] = [
     visibility: "public",
   },
   {
-    path: routePaths.reset_password,
+    path: routePaths.reset_password(":token"),
     element: <ResetPasswordLayout />,
     visibility: "public",
   },

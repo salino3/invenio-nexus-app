@@ -1,4 +1,4 @@
-import React, { useActionState, useState } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   resetPasswordAction,
@@ -8,8 +8,10 @@ import {
 import { BasicInput, ButtonForm } from "@/common";
 import "./reset-password.styles.scss";
 
+type FromRestOmitedToken = Omit<FormResetProps, "token">;
+
 const initialState: StateResetPasswordAction = {
-  status: false,
+  success: false,
   error: "",
   fieldErrors: null,
   formData: {
@@ -27,29 +29,28 @@ export const ResetPassword: React.FC = () => {
     initialState,
   );
 
-  const [formData, setFormData] = useState<Omit<FormResetProps, "token">>({
+  const [formData, setFormData] = useState<FromRestOmitedToken>({
     newPassword: "",
     confirmNewPassword: "",
   });
 
-  const [formErrorData, setFormErrorData] = useState<FormResetProps>({
+  const [formErrorData, setFormErrorData] = useState<FromRestOmitedToken>({
     newPassword: "",
     confirmNewPassword: "",
-    token: "",
   });
 
   //
   const hanldeChangeFrom =
-    (key: keyof Omit<FormResetProps, "token">) =>
+    (key: keyof FromRestOmitedToken) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
 
-      setFormData((prev: Omit<FormResetProps, "token">) => ({
+      setFormData((prev: FromRestOmitedToken) => ({
         ...prev,
         [key]: value,
       }));
 
-      setFormErrorData((prev: FormResetProps) => ({
+      setFormErrorData((prev: FromRestOmitedToken) => ({
         ...prev,
         [key]: "",
       }));
@@ -60,11 +61,22 @@ export const ResetPassword: React.FC = () => {
       typeof value === "string" ? value.trim().length === 0 : !!value,
   );
 
+  //
+  useEffect(() => {
+    if (state?.success) {
+      const { token, ...resetFields } = initialState.formData as FormResetProps;
+      setFormData(resetFields);
+      setFormErrorData(resetFields);
+    } else if (!state?.success && state?.error) {
+      setFormErrorData(state?.fieldErrors as FormResetProps);
+    }
+  }, [state]);
+
   return (
     <div className="rootResetPassword">
       <form action={formAction} noValidate>
         <fieldset disabled={false}>
-          <h2>Reset Password Form</h2>
+          <legend>Reset Password Form</legend>
           <input type="hidden" name="token" value={token ?? ""} />
           <BasicInput
             name="newPassword"
@@ -84,6 +96,9 @@ export const ResetPassword: React.FC = () => {
             value={formData.confirmNewPassword}
             errorMsg={formErrorData?.confirmNewPassword}
           />
+          {state.error && state.error !== "error" && (
+            <span className="errMsg">{state.error}</span>
+          )}
           <ButtonForm
             text="Submit"
             type="submit"

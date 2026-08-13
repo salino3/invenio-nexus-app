@@ -50,9 +50,10 @@ export async function resetPasswordAction(
 
   if (haserrors) {
     return {
-      ...prevState,
+      success: false,
       fieldErrors: formRestErrorData,
       formData: formResetData,
+      error: "error",
     };
   }
 
@@ -67,14 +68,14 @@ export async function resetPasswordAction(
         formData: null,
         fieldErrors: null,
         error: "",
-        status: true,
+        success: true,
       };
     } else {
       return {
         formData: formResetData,
         fieldErrors: formRestErrorData,
-        error: "Server error, try again later",
-        status: false,
+        error: "Something is wrong",
+        success: false,
       };
     }
   } catch (err) {
@@ -82,7 +83,7 @@ export async function resetPasswordAction(
       formData: formResetData,
       fieldErrors: formRestErrorData,
       error: err as string,
-      status: false,
+      success: false,
     };
   }
 }

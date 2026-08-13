@@ -11,6 +11,9 @@ const PublicDashboardLayout = lazy(
 const RecoverPasswordLayout = lazy(
   () => import("../layouts/recover-password/recover-password.layout"),
 );
+const ResetPasswordLayout = lazy(
+  () => import("../layouts/reset-password/reset-password.layout"),
+);
 const DashboardLayout = lazy(
   () => import("../layouts/dashboard/dashboard.layout"),
 );
@@ -28,6 +31,11 @@ const routes: AppRoute[] = [
   {
     path: routePaths.recover_password,
     element: <RecoverPasswordLayout />,
+    visibility: "public",
+  },
+  {
+    path: routePaths.reset_password,
+    element: <ResetPasswordLayout />,
     visibility: "public",
   },
   {

@@ -1,11 +1,12 @@
 import React, { useActionState } from "react";
 import { useParams } from "react-router-dom";
-import type { StateResetPasswordAction } from "@/utils";
+import { resetPasswordAction, type StateResetPasswordAction } from "@/utils";
 import "./reset-password.styles.scss";
 
 const initialState: StateResetPasswordAction = {
   status: false,
   message: "",
+  fieldErrors: null,
   formData: {
     token: "",
     newPassword: "",

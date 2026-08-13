@@ -64,6 +64,7 @@ export interface FormResetProps {
 
 export interface StateResetPasswordAction {
   status: boolean;
+  fieldErrors: FormResetProps | null;
   message: string;
   formData: FormResetProps;
 }

@@ -7,7 +7,7 @@ import { BasicInput } from "@/common";
 import "./recover-password.styles.scss";
 
 const initialState: StateRecoverPasswordAction = {
-  status: "idle",
+  status: "pending",
   message: "",
   formData: {
     email: "",
@@ -47,7 +47,7 @@ export const RecoverPassword: React.FC = () => {
               errorMsg={""}
             />
 
-            {state.status !== "idle" && (
+            {state.status !== "pending" && (
               <div className={`status-message ${state.status}`}>
                 {state.message}
               </div>

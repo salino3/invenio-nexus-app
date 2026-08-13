@@ -169,7 +169,7 @@ export class AuthController {
       };
 
       res.cookie(COOKIES_NAME as string, newToken, cookieOptions);
-      console.log("clog3", freshUser);
+
       // 3. Return the updated user status
       return res.status(200).json({
         success: true,
@@ -202,7 +202,7 @@ export class AuthController {
       const result = await Account.temporaryPassword(hashedToken, email);
 
       if (result.rows.length > 0) {
-        const resetUrl = `${FRONTEND_DEV_PORT}/reset-password?token=${rawToken}`;
+        const resetUrl = `${FRONTEND_DEV_PORT}/reset-password/${rawToken}`;
 
         const emailHtml = `
   <div style="font-family: Arial, sans-serif; padding: 20px;">

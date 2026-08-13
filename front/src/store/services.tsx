@@ -119,6 +119,26 @@ export class ServicesApp {
     }
   }
 
+  //
+  public static async resetPassword(
+    token: string,
+    newpassword: string,
+  ): Promise<boolean> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/auth/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ token, newpassword }),
+      });
+
+      return res.ok;
+    } catch (error) {
+      console.error("Error:", error);
+      return false;
+    }
+  }
+
   static async recoverPassword(email: string): Promise<boolean> {
     try {
       const res = await fetch(`${VITE_URL_BACK}/auth/forgot-password`, {

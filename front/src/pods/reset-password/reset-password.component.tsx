@@ -1,6 +1,6 @@
 import type React from "react";
-import "./reset-password.styles.scss";
 import { useParams } from "react-router-dom";
+import "./reset-password.styles.scss";
 
 export const ResetPassword: React.FC = () => {
   const { token } = useParams();

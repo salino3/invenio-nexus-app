@@ -65,8 +65,9 @@ export const ResetPassword: React.FC = () => {
       <form action={formAction} noValidate>
         <fieldset disabled={false}>
           <h2>Reset Password Form</h2>
+          <input type="hidden" name="token" value={token ?? ""} />
           <BasicInput
-            name="password"
+            name="newPassword"
             type="password"
             lbl="New Password"
             change={hanldeChangeFrom("newPassword")}
@@ -75,7 +76,7 @@ export const ResetPassword: React.FC = () => {
             errorMsg={formErrorData?.newPassword}
           />
           <BasicInput
-            name="password"
+            name="confirmNewPassword"
             type="password"
             lbl="Confirm New Password"
             change={hanldeChangeFrom("confirmNewPassword")}

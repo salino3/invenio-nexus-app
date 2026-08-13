@@ -34,7 +34,7 @@ export async function resetPasswordAction(
           };
         }
       } else if (key === "confirmNewPassword") {
-        if (value === formResetData.newPassword) {
+        if (value !== formResetData.newPassword) {
           formRestErrorData = {
             ...formRestErrorData,
             [key]: "Confirm password must match with password",

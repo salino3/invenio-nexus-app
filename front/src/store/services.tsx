@@ -122,14 +122,14 @@ export class ServicesApp {
   //
   public static async resetPassword(
     token: string,
-    newpassword: string,
+    newPassword: string,
   ): Promise<boolean> {
     try {
       const res = await fetch(`${VITE_URL_BACK}/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ token, newpassword }),
+        body: JSON.stringify({ token, newPassword }),
       });
 
       return res.ok;

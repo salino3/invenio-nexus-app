@@ -1,11 +1,12 @@
 import React, { useActionState, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   resetPasswordAction,
   type FormResetProps,
   type StateResetPasswordAction,
 } from "@/utils";
 import { BasicInput, ButtonForm } from "@/common";
+import { routePaths } from "@/router/routes.interface";
 import "./reset-password.styles.scss";
 
 type FromRestOmitedToken = Omit<FormResetProps, "token">;
@@ -23,6 +24,7 @@ const initialState: StateResetPasswordAction = {
 
 export const ResetPassword: React.FC = () => {
   const { token } = useParams();
+  const navigate = useNavigate();
 
   const [state, formAction, isPending] = useActionState(
     resetPasswordAction,
@@ -64,9 +66,10 @@ export const ResetPassword: React.FC = () => {
   //
   useEffect(() => {
     if (state?.success) {
-      const { token, ...resetFields } = initialState.formData as FormResetProps;
-      setFormData(resetFields);
-      setFormErrorData(resetFields);
+      navigate(routePaths.public_dashboard);
+      //   const { token, ...resetFields } = initialState.formData as FormResetProps;
+      //   setFormData(resetFields);
+      //   setFormErrorData(resetFields);
     } else if (!state?.success && state?.error) {
       setFormErrorData(state?.fieldErrors as FormResetProps);
     }

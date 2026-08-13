@@ -1,6 +1,11 @@
-import React, { useActionState } from "react";
+import React, { useActionState, useState } from "react";
 import { useParams } from "react-router-dom";
-import { resetPasswordAction, type StateResetPasswordAction } from "@/utils";
+import {
+  resetPasswordAction,
+  type FormResetProps,
+  type StateResetPasswordAction,
+} from "@/utils";
+import { BasicInput, ButtonForm } from "@/common";
 import "./reset-password.styles.scss";
 
 const initialState: StateResetPasswordAction = {
@@ -22,12 +27,68 @@ export const ResetPassword: React.FC = () => {
     initialState,
   );
 
+  const [formData, setFormData] = useState<Omit<FormResetProps, "token">>({
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+
+  const [formErrorData, setFormErrorData] = useState<FormResetProps>({
+    newPassword: "",
+    confirmNewPassword: "",
+    token: "",
+  });
+
+  //
+  const hanldeChangeFrom =
+    (key: keyof Omit<FormResetProps, "token">) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+
+      setFormData((prev: Omit<FormResetProps, "token">) => ({
+        ...prev,
+        [key]: value,
+      }));
+
+      setFormErrorData((prev: FormResetProps) => ({
+        ...prev,
+        [key]: "",
+      }));
+    };
+
+  const isButtonDisabled: boolean = Object.values(formData).some(
+    (value: string) =>
+      typeof value === "string" ? value.trim().length === 0 : !!value,
+  );
+
   return (
     <div className="rootResetPassword">
-      <form action="">
+      <form action={formAction} noValidate>
         <fieldset disabled={false}>
-          rootResetPassword
-          <h2>{token}</h2>
+          <h2>Reset Password Form</h2>
+          <BasicInput
+            name="password"
+            type="password"
+            lbl="New Password"
+            change={hanldeChangeFrom("newPassword")}
+            stateValue={state?.formData?.newPassword}
+            value={formData.newPassword}
+            errorMsg={formErrorData?.newPassword}
+          />
+          <BasicInput
+            name="password"
+            type="password"
+            lbl="Confirm New Password"
+            change={hanldeChangeFrom("confirmNewPassword")}
+            stateValue={state?.formData?.confirmNewPassword}
+            value={formData.confirmNewPassword}
+            errorMsg={formErrorData?.confirmNewPassword}
+          />
+          <ButtonForm
+            text="Submit"
+            type="submit"
+            disabled={isButtonDisabled}
+            pendingForm={isPending}
+          />
         </fieldset>
       </form>
     </div>

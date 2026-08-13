@@ -1,3 +1,4 @@
+import { ServicesApp } from "@/store/services";
 import type { FormResetProps, StateResetPasswordAction } from "./interface";
 
 const createInitialErrorState = (): FormResetProps => ({
@@ -56,13 +57,32 @@ export async function resetPasswordAction(
   }
 
   try {
+    const result: boolean = await ServicesApp.resetPassword(
+      formResetData.token,
+      formResetData.newPassword,
+    );
+
+    if (result) {
+      return {
+        formData: null,
+        fieldErrors: null,
+        error: "",
+        status: true,
+      };
+    } else {
+      return {
+        formData: formResetData,
+        fieldErrors: formRestErrorData,
+        error: "Server error, try again later",
+        status: false,
+      };
+    }
+  } catch (err) {
     return {
-      ...prevState,
-      fieldErrors: null,
-      message: "",
-      status: true,
+      formData: formResetData,
+      fieldErrors: formRestErrorData,
+      error: err as string,
+      status: false,
     };
-  } catch (error) {
-    return await prevState;
   }
 }

@@ -5,7 +5,7 @@ import "./reset-password.styles.scss";
 
 const initialState: StateResetPasswordAction = {
   status: false,
-  message: "",
+  error: "",
   fieldErrors: null,
   formData: {
     token: "",

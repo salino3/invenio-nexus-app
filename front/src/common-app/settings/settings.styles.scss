@@ -102,6 +102,15 @@
           padding-bottom: 6px;
           color: #5c3a21;
         }
+
+        .isSubscritionActive {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          padding-top: 0.25rem;
+          color: green;
+        }
       }
     }
   }

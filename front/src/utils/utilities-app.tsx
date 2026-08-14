@@ -20,7 +20,7 @@ export const utilitiesApp = () => {
     // Verifiying it is divided in 3 parts - header, payload and signature
     if (token && token.split(".").length === 3) {
       try {
-        const decoded: any = jwtDecode<PropsCurrentAccount>(token);
+        const decoded = jwtDecode<PropsCurrentAccount>(token);
 
         // JWT 'exp' is in seconds, Date.now() is in milliseconds
         const currentTimeInSeconds = Math.floor(Date.now() / 1000);

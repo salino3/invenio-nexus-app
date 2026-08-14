@@ -139,21 +139,23 @@ export const Settings: React.FC<Props> = ({
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
           </button>
-          <h2>Impostazioni</h2>
+          <h2>Settings</h2>
         </header>
 
         <div className="settingsContent">
           <section className="settingSection">
-            <h3>Lingua / Language</h3>
+            <h3>Language</h3>
           </section>
 
           <section className="settingSection">
-            <h3>Tema Grafico</h3>
+            <h3>Graphic Theme</h3>
           </section>
 
           <section className="settingSection">
-            <h3>Abbonamento</h3>
-            {currentUser?.email && (
+            <h3>Subscription</h3>
+            {currentUser?.hasAdFreeAccess ? (
+              <strong className="isSubscritionActive">Active</strong>
+            ) : (
               <>
                 <button onClick={() => setShowModal(true)}>Modal</button>
                 <ModalApp
@@ -162,7 +164,7 @@ export const Settings: React.FC<Props> = ({
                   showModal={showModal}
                 >
                   <Elements stripe={stripePromise} options={options}>
-                    <CheckoutForm />
+                    <CheckoutForm setShowModal={setShowModal} />
                   </Elements>
                 </ModalApp>
               </>

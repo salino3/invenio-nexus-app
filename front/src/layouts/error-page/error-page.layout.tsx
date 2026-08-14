@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { Aside, ModalApp } from "../../common-app";
+import { useProviderSelector } from "@/store/provider";
+import { Aside } from "../../common-app";
 import { routePaths } from "../../router/routes.interface";
 import "../../App.scss";
 import "./error-page.styles.scss";
 
 const ErrorPageLayout: React.FC = () => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const { currentUser } = useProviderSelector("currentUser");
+
   return (
     <div className="rootRouter">
-      <Aside />
+      {!currentUser?.hasAdFreeAccess && <Aside />}
       <div className="errorPageLayout">
         <div className="errorCard">
           <h1 className="errorCode">404</h1>
@@ -18,18 +20,7 @@ const ErrorPageLayout: React.FC = () => {
           <Link to={routePaths.public_dashboard} className="back-home-btn">
             Go Back Home
           </Link>
-
-          <button onClick={() => setShowModal(true)} className="modal-btn">
-            Show modal
-          </button>
         </div>
-        <ModalApp
-          showModal={showModal}
-          setShowModal={setShowModal}
-          title="Modal Error Page"
-        >
-          ¡Hola!
-        </ModalApp>
       </div>
     </div>
   );

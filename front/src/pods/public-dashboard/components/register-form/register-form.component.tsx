@@ -25,7 +25,8 @@ const initialErrorDataState: FormRegisterErrorsProps = {
 
 export const RegisterForm: React.FC<{
   setIsLogin: (value: React.SetStateAction<boolean>) => void;
-}> = ({ setIsLogin }) => {
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ setIsLogin, setShowModal }) => {
   const [formData, setFormData] = useState<FormRegisterProps>(initialDataState);
   const [formErrorData, setFormErrorData] = useState<FormRegisterErrorsProps>(
     initialErrorDataState,
@@ -60,6 +61,7 @@ export const RegisterForm: React.FC<{
       setFormData(initialDataState);
       setFormErrorData(initialErrorDataState);
       setIsLogin(true);
+      setShowModal(true);
     } else if (!state?.success && state?.error) {
       setFormErrorData(state?.fieldErrors as FormRegisterErrorsProps);
     }

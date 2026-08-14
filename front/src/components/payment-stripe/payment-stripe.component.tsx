@@ -1,18 +1,23 @@
 import React, { useState, useMemo } from "react";
+import type { Stripe, StripeElements } from "@stripe/stripe-js";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useProviderSelector } from "@/store/provider";
 import { VITE_API_URL_PAYMENT, VITE_URL_BACK } from "@/constants";
 import "./checkout-form.styles.scss";
 
-export const CheckoutForm = () => {
+interface Props {
+  setShowModal: (value: React.SetStateAction<boolean>) => void;
+}
+
+export const CheckoutForm: React.FC<Props> = ({ setShowModal }) => {
   const { currentUser } = useProviderSelector("currentUser");
 
-  const stripe = useStripe();
-  const elements = useElements();
+  const stripe: Stripe | null = useStripe();
+  const elements: StripeElements | null = useElements();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [processing, setProcessing] = useState(false);
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [processing, setProcessing] = useState<boolean>(false);
   const [cardError, setCardError] = useState<string | null>(null);
   const [isCardComplete, setIsCardComplete] = useState(false);
 
@@ -83,6 +88,7 @@ export const CheckoutForm = () => {
       } else {
         if (result.paymentIntent.status === "succeeded") {
           alert("Payment successful! Money received in test mode.");
+          setShowModal(false);
         }
       }
     } catch (err) {

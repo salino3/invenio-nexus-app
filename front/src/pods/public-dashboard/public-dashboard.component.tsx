@@ -14,7 +14,7 @@ export const PublicDashboard: React.FC = () => {
   return (
     <div className="rootPublicDashboard">
       <h1 className="titlePagePD">Public Dashboard Layout</h1>
-      <button onClick={() => loginWithGoogle()}>click</button>
+      <button onClick={() => loginWithGoogle()}>Login with your email</button>
       <div className="boxButtonsPage">
         <button onClick={() => setIsLogin(true)}>Login</button>
         <button onClick={() => setIsLogin(false)}>Register</button>

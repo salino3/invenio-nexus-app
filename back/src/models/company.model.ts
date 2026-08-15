@@ -127,8 +127,8 @@ export class Company {
 
       // 2. Insert relationship into junction table using the dynamic role variable
       const relationSql = `
-        INSERT INTO account_companies (account_id, company_id, role)
-        VALUES ($1, $2, $3);
+        INSERT INTO account_companies (account_id, company_id, role, permission)
+        VALUES ($1, $2, $3, 'owner');
       `;
 
       const relationValues = [accountId, newCompanyData.id, role];

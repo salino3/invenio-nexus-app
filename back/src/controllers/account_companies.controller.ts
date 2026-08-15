@@ -1,21 +1,44 @@
 import { Request, Response } from "express";
 import { AccountCookie } from "../interfaces/account.interface";
 import { AccountCompany } from "../models/account_company.model";
+import { AccountCompanyAddRole } from "../interfaces/account_companies.interface";
 
 export class AccountCompaniesController {
   //
   async addRoleCompany(req: Request, res: Response): Promise<Response> {
-    const { id } = (req.user || {}) as AccountCookie;
-    const { uuid, role } = req.body;
+    const requesterId = (req.user || {}) as AccountCookie; // ID utente loggato
+    const { target_account_id, uuid, role, permission = "member" } = req.body;
 
-    if (!id || !uuid || !role) {
-      return res.status(400).send("All parameters are required");
+    if (!requesterId?.id || !target_account_id || !uuid || !role) {
+      return res
+        .status(400)
+        .json({ error: "All required parameters must be provided." });
     }
 
-    try {
-      await AccountCompany.addCompanyRole(id, uuid, role);
+    if (requesterId === target_account_id && permission !== "owner") {
+      return res.status(403).json({
+        error: "FORBIDDEN: You here cannot demote yourself from owner.",
+      });
+    }
 
-      return res.status(200).send("role successfully created");
+    const data: AccountCompanyAddRole = {
+      account_id: target_account_id,
+      permission,
+      requesterId: requesterId.id,
+      uuid,
+      role,
+    };
+
+    try {
+      const result = await AccountCompany.addCompanyRole(data);
+
+      if (!result.success) {
+        return res.status(403).json({ error: result.reason });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "User successfully added to company." });
     } catch (error: unknown) {
       console.error("Error executing addRoleCompany endpoint:", error);
       return res

@@ -1,6 +1,7 @@
 import { QueryResult } from "pg";
 import { query } from "../db";
 import {
+  AccountCompanyAddRole,
   AccountCompanyProps,
   AccountCompanyRole,
 } from "../interfaces/account_companies.interface";
@@ -19,24 +20,46 @@ export class AccountCompany {
   }
 
   static async addCompanyRole(
-    id: number,
-    uuid: string,
-    role: string,
-  ): Promise<boolean> {
+    data: AccountCompanyAddRole,
+  ): Promise<{ success: boolean; reason?: string }> {
+    const { requesterId, account_id, uuid, role, permission } = data;
+
     const sql = `
-    INSERT INTO account_companies (account_id, company_id, role)
-    VALUES (
-      $1,
-      (SELECT id FROM companies WHERE uuid = $2),
-      $3
-    )
+  INSERT INTO account_companies (account_id, company_id, role, permission)
+    SELECT 
+      $1::integer, 
+      c.id, 
+      $2::varchar, 
+      $3::company_permission
+    FROM companies c
+    JOIN account_companies ac ON ac.company_id = c.id
+    WHERE c.uuid = $4
+      AND ac.account_id = $5
+      AND ac.permission IN ('owner', 'admin')
     ON CONFLICT (account_id, company_id) DO UPDATE 
-    SET role = EXCLUDED.role;
+    SET role = EXCLUDED.role,
+        permission = EXCLUDED.permission;
   `;
 
-    const result: QueryResult<any> = await query(sql, [id, uuid, role]);
+    const values = [
+      account_id, // $1: Target User
+      role, // $2: Role
+      permission, // $3: Permission level
+      uuid, // $4: UUID company
+      requesterId, // $5: Logged in account making the request
+    ];
 
-    return (result.rowCount ?? 0) > 0;
+    const result: QueryResult<any> = await query(sql, values);
+
+    if ((result.rowCount ?? 0) === 0) {
+      return {
+        success: false,
+        reason:
+          "FORBIDDEN: Only company owners or admins can manage roles or invalid company UUID.",
+      };
+    }
+
+    return { success: true };
   }
 
   static async getCompanyRolesByUUID(

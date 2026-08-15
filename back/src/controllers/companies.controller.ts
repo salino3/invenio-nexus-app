@@ -6,10 +6,12 @@ import { AuthRequest } from "../middlewares/auth-middleware";
 import { utilitiesApp } from "../utils/utilities-app";
 import {
   CompanyProps,
+  ListMyCompanies,
   RegistretionCompanyDB,
   UpdateCompanyProps,
 } from "../interfaces/company.interface";
 import { AccountCompanyRole } from "../interfaces/account_companies.interface";
+import { AccountCookie } from "../interfaces/account.interface";
 
 const { checkRequiredFields, cleanupUploadedFiles } = utilitiesApp();
 
@@ -189,6 +191,32 @@ export class CompaniesController {
     } catch (error: unknown) {
       console.error(
         "Critical error inside CompaniesController.getCompanyById:",
+        error,
+      );
+      return res.status(500).json({
+        error: "An internal server error occurred during the process.",
+      });
+    }
+  }
+
+  async getMyCompaniesByID(
+    req: Request,
+    res: Response,
+  ): Promise<Response<ListMyCompanies[]>> {
+    const { id } = (req.user || {}) as AccountCookie;
+
+    if (!id) {
+      return res.status(400).send("The Account's ID is missing.");
+    }
+
+    try {
+      const companies: ListMyCompanies[] =
+        await Company.getMyCompaniesByAccountID(id);
+
+      return res.status(200).json(companies);
+    } catch (error: unknown) {
+      console.error(
+        "Critical error inside CompaniesController.getMyCompaniesByID:",
         error,
       );
       return res.status(500).json({

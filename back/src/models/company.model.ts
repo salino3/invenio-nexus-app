@@ -2,6 +2,7 @@ import { query } from "../db";
 import {
   CompanyProps,
   ContactsCompany,
+  ListMyCompanies,
   MultimediaCompany,
   RegistretionCompanyDB,
 } from "../interfaces/company.interface";
@@ -126,8 +127,8 @@ export class Company {
 
       // 2. Insert relationship into junction table using the dynamic role variable
       const relationSql = `
-        INSERT INTO account_companies (account_id, company_id, role)
-        VALUES ($1, $2, $3);
+        INSERT INTO account_companies (account_id, company_id, role, permission)
+        VALUES ($1, $2, $3, 'owner');
       `;
 
       const relationValues = [accountId, newCompanyData.id, role];
@@ -159,5 +160,20 @@ export class Company {
     const companyRows: CompanyProps = result.rows[0];
 
     return new Company(companyRows);
+  }
+
+  static async getMyCompaniesByAccountID(
+    id: number,
+  ): Promise<ListMyCompanies[]> {
+    const sql = `
+    SELECT c.name, c.UUID, c.logo
+    FROM companies c
+    JOIN account_companies ac ON c.id = ac.company_id
+    WHERE ac.account_id = $1;  
+     `;
+
+    const result = await query(sql, [id]);
+
+    return result.rows;
   }
 }

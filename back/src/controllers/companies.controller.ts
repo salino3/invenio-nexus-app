@@ -6,6 +6,7 @@ import { AuthRequest } from "../middlewares/auth-middleware";
 import { utilitiesApp } from "../utils/utilities-app";
 import {
   CompanyProps,
+  ListMyCompanies,
   RegistretionCompanyDB,
   UpdateCompanyProps,
 } from "../interfaces/company.interface";
@@ -200,8 +201,27 @@ export class CompaniesController {
   async getMyCompaniesByID(
     req: Request,
     res: Response,
-  ): Promise<Response<void>> {
-    return res;
+  ): Promise<Response<ListMyCompanies[]>> {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).send("The Account's ID is missing.");
+    }
+
+    try {
+      const companies: ListMyCompanies[] =
+        await Company.getMyCompaniesByAccountID(Number(id));
+
+      return res.status(200).json(companies);
+    } catch (error: unknown) {
+      console.error(
+        "Critical error inside CompaniesController.getMyCompaniesByID:",
+        error,
+      );
+      return res.status(500).json({
+        error: "An internal server error occurred during the process.",
+      });
+    }
   }
 
   /**

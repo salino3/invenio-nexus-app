@@ -197,6 +197,13 @@ export class CompaniesController {
     }
   }
 
+  async getMyCompaniesByID(
+    req: Request,
+    res: Response,
+  ): Promise<Response<void>> {
+    return res;
+  }
+
   /**
    * Search companies using key-term weight scoring and optimized indexing.
    * Relevancy Weighting: Name (High) > Sector (Medium) > Hashtags (Low)

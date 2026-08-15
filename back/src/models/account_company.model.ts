@@ -1,3 +1,4 @@
+import { QueryResult } from "pg";
 import { query } from "../db";
 import {
   AccountCompanyProps,
@@ -15,6 +16,27 @@ export class AccountCompany {
     this.company_id = data.company_id;
     this.role = data.role;
     this.joined_at = data.joined_at;
+  }
+
+  static async addCompanyRole(
+    id: number,
+    uuid: string,
+    role: string,
+  ): Promise<boolean> {
+    const sql = `
+    INSERT INTO account_companies (account_id, company_id, role)
+    VALUES (
+      $1,
+      (SELECT id FROM companies WHERE uuid = $2),
+      $3
+    )
+    ON CONFLICT (account_id, company_id) DO UPDATE 
+    SET role = EXCLUDED.role;
+  `;
+
+    const result: QueryResult<any> = await query(sql, [id, uuid, role]);
+
+    return (result.rowCount ?? 0) > 0;
   }
 
   static async getCompanyRolesByUUID(

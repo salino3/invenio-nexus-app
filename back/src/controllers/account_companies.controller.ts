@@ -4,6 +4,27 @@ import { AccountCompany } from "../models/account_company.model";
 
 export class AccountCompaniesController {
   //
+  async addRoleCompany(req: Request, res: Response): Promise<Response> {
+    const { id } = (req.user || {}) as AccountCookie;
+    const { uuid, role } = req.body;
+
+    if (!id || !uuid || !role) {
+      return res.status(400).send("All parameters are required");
+    }
+
+    try {
+      await AccountCompany.addCompanyRole(id, uuid, role);
+
+      return res.status(200).send("role successfully created");
+    } catch (error: unknown) {
+      console.error("Error executing addRoleCompany endpoint:", error);
+      return res
+        .status(500)
+        .json({ error: "Internal server error during update" });
+    }
+  }
+
+  //
   public async updateRoleCompany(
     req: Request,
     res: Response,

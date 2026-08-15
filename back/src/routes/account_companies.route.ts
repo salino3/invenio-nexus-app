@@ -5,6 +5,11 @@ import { authMiddleware } from "../middlewares/auth-middleware";
 const routerAccountCompanies = express.Router();
 
 //* Create role in route "/register-company"
+routerAccountCompanies.post(
+  "/roles-company",
+  authMiddleware,
+  accountCompaniesController.addRoleCompany,
+);
 
 routerAccountCompanies.patch(
   "/roles-company/:uuidCompany",

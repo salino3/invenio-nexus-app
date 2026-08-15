@@ -19,7 +19,7 @@ routerCompanies.get(
 );
 
 routerCompanies.get(
-  "/get-my-companies/:id",
+  "/get-my-companies",
   authMiddleware,
   companiesController.getMyCompaniesByID,
 );

@@ -11,6 +11,7 @@ import {
   UpdateCompanyProps,
 } from "../interfaces/company.interface";
 import { AccountCompanyRole } from "../interfaces/account_companies.interface";
+import { AccountCookie } from "../interfaces/account.interface";
 
 const { checkRequiredFields, cleanupUploadedFiles } = utilitiesApp();
 
@@ -202,7 +203,7 @@ export class CompaniesController {
     req: Request,
     res: Response,
   ): Promise<Response<ListMyCompanies[]>> {
-    const { id } = req.params;
+    const { id } = (req.user || {}) as AccountCookie;
 
     if (!id) {
       return res.status(400).send("The Account's ID is missing.");

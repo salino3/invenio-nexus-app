@@ -211,7 +211,7 @@ export class CompaniesController {
 
     try {
       const companies: ListMyCompanies[] =
-        await Company.getMyCompaniesByAccountID(Number(id));
+        await Company.getMyCompaniesByAccountID(id);
 
       return res.status(200).json(companies);
     } catch (error: unknown) {

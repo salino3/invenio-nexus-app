@@ -1,7 +1,7 @@
 .ContainerDynamicList {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 1rem;
   position: absolute;
@@ -10,8 +10,15 @@
   z-index: 10;
   color: rgb(70, 43, 226);
   .containerChildren {
-    border: solid;
-    height: var(--height);
-    max-height: calc(var(--height) + 20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: aquamarine;
+    //
+    overflow: hidden;
+    transition: height 0.8s ease-in-out;
+    height: var(--pxHeight);
+    // max-height: calc(var(--pxHeight) + 20px);
   }
 }

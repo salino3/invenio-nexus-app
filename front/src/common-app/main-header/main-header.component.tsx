@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
 import { Settings } from "../settings";
 import { ImageComponent } from "../image";
-import { ContainerDynamicList, SettingIcon, TriangleIcon } from "@/components";
+import {
+  ContainerDynamicList,
+  ListMyCompanies,
+  SettingIcon,
+  TriangleIcon,
+} from "@/components";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
+
+const mockArray = [
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+];
 
 interface LinkApp {
   pathName: string;
@@ -36,6 +54,8 @@ export const MainHeader: React.FC = () => {
 
   const location = useLocation();
 
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   const { currentUser, setDataUser } = useProviderSelector(
     "currentUser",
     "setDataUser",
@@ -43,6 +63,46 @@ export const MainHeader: React.FC = () => {
 
   const [showSettings, setShowSettings] = useState<boolean | null>(null);
   const [showMyCompanies, setShowMyCompanies] = useState<boolean | null>(null);
+
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+
+  //
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (showMyCompanies) {
+      // Mount content immediately when opening
+      setIsMounted(true);
+    } else {
+      // Wait for the 1s CSS transition before unmounting
+      timer = setTimeout(() => {
+        setIsMounted(false);
+      }, 850);
+    }
+
+    return () => clearTimeout(timer);
+  }, [showMyCompanies]);
+
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // If the click occurs outside the wrapper div, close the menu
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowMyCompanies(false);
+      }
+    };
+
+    if (showMyCompanies) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showMyCompanies]);
 
   return (
     <div className="rootMainHeader">
@@ -89,18 +149,21 @@ export const MainHeader: React.FC = () => {
         </div>
         {/*  */}
         <div className="boxDown">
-          <div className="boxLeft">
+          <div className="boxLeft" ref={dropdownRef}>
             {currentUser?.email && (
               <button
                 className="btnMyCompanies"
                 onClick={() => setShowMyCompanies(!showMyCompanies)}
               >
-                My Companies &nbsp; <TriangleIcon />
+                My Companies &nbsp;
+                <TriangleIcon transform={showMyCompanies ? "90" : "0"} />
               </button>
             )}
-            {showMyCompanies && (
-              <ContainerDynamicList height={100}>
-                <strong>ContainerDynamicList</strong>
+            {currentUser?.email && (
+              <ContainerDynamicList
+                height={showMyCompanies ? mockArray.length * 20 : 0}
+              >
+                {isMounted ? <ListMyCompanies /> : null}
               </ContainerDynamicList>
             )}
           </div>

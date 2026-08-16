@@ -5,7 +5,7 @@ import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
 import { Settings } from "../settings";
 import { ImageComponent } from "../image";
-import { ContainerDynamicList, SettingIcon } from "@/components";
+import { ContainerDynamicList, SettingIcon, TriangleIcon } from "@/components";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
 
@@ -89,10 +89,13 @@ export const MainHeader: React.FC = () => {
         </div>
         {/*  */}
         <div className="boxDown">
-          <div>
+          <div className="boxLeft">
             {currentUser?.email && (
-              <button onClick={() => setShowMyCompanies(true)}>
-                My Companies
+              <button
+                className="btnMyCompanies"
+                onClick={() => setShowMyCompanies(!showMyCompanies)}
+              >
+                My Companies &nbsp; <TriangleIcon />
               </button>
             )}
             {showMyCompanies && <ContainerDynamicList />}

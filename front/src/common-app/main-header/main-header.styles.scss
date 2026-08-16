@@ -170,6 +170,20 @@
       align-items: flex-end;
       width: 100%;
 
+      .boxLeft {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        .btnMyCompanies {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
       .boxRight {
         display: flex;
         flex-direction: row;

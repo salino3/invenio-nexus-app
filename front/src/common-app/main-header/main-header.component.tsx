@@ -5,7 +5,7 @@ import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
 import { Settings } from "../settings";
 import { ImageComponent } from "../image";
-import { SettingIcon } from "@/components";
+import { ContainerDynamicList, SettingIcon } from "@/components";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
 
@@ -42,6 +42,7 @@ export const MainHeader: React.FC = () => {
   );
 
   const [showSettings, setShowSettings] = useState<boolean | null>(null);
+  const [showMyCompanies, setShowMyCompanies] = useState<boolean | null>(null);
 
   return (
     <div className="rootMainHeader">
@@ -88,7 +89,14 @@ export const MainHeader: React.FC = () => {
         </div>
         {/*  */}
         <div className="boxDown">
-          <div>{currentUser?.email && <button>Companies</button>}</div>
+          <div>
+            {currentUser?.email && (
+              <button onClick={() => setShowMyCompanies(true)}>
+                My Companies
+              </button>
+            )}
+            {showMyCompanies && <ContainerDynamicList />}
+          </div>
 
           <div
             role="button"

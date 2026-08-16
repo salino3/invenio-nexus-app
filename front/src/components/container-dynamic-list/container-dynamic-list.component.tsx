@@ -9,7 +9,7 @@ interface ChildProps {
 interface Props {
   title?: string;
   height?: number;
-  children: ReactElement<ChildProps>;
+  children: ReactElement<ChildProps> | null;
   customStyles?: string;
   alt?: string | undefined;
   tabIndex?: number | undefined;
@@ -25,7 +25,7 @@ export const ContainerDynamicList: React.FC<Props> = (props) => {
     tabIndex = 0,
   } = props;
 
-  const [pxHeight, setPxHeight] = useState<number>(0);
+  const [pxHeight, setPxHeight] = useState<number>(7);
 
   // Inject props into the child
   const clonedChildren = React.isValidElement(children)

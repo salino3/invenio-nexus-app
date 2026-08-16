@@ -5,7 +5,12 @@ import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
 import { Settings } from "../settings";
 import { ImageComponent } from "../image";
-import { ContainerDynamicList, SettingIcon, TriangleIcon } from "@/components";
+import {
+  ContainerDynamicList,
+  ListMyCompanies,
+  SettingIcon,
+  TriangleIcon,
+} from "@/components";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
 
@@ -158,12 +163,7 @@ export const MainHeader: React.FC = () => {
               <ContainerDynamicList
                 height={showMyCompanies ? mockArray.length * 20 : 0}
               >
-                <>
-                  {isMounted &&
-                    mockArray.map((item, index: number) => (
-                      <strong key={index}>{item.title}</strong>
-                    ))}
-                </>
+                {isMounted ? <ListMyCompanies /> : null}
               </ContainerDynamicList>
             )}
           </div>

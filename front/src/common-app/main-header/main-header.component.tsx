@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
@@ -8,6 +8,19 @@ import { ImageComponent } from "../image";
 import { ContainerDynamicList, SettingIcon, TriangleIcon } from "@/components";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
+
+const mockArray = [
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+  { title: "ContainerDynamicList" },
+];
 
 interface LinkApp {
   pathName: string;
@@ -43,6 +56,25 @@ export const MainHeader: React.FC = () => {
 
   const [showSettings, setShowSettings] = useState<boolean | null>(null);
   const [showMyCompanies, setShowMyCompanies] = useState<boolean | null>(null);
+
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+
+  //
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (showMyCompanies) {
+      // Mount content immediately when opening
+      setIsMounted(true);
+    } else {
+      // Wait for the 1s CSS transition before unmounting
+      timer = setTimeout(() => {
+        setIsMounted(false);
+      }, 1000);
+    }
+
+    return () => clearTimeout(timer);
+  }, [showMyCompanies]);
 
   return (
     <div className="rootMainHeader">
@@ -98,11 +130,19 @@ export const MainHeader: React.FC = () => {
                 My Companies &nbsp; <TriangleIcon />
               </button>
             )}
-            {showMyCompanies && (
-              <ContainerDynamicList height={100}>
-                <strong>ContainerDynamicList</strong>
+            {
+              <ContainerDynamicList
+                // title="TITLEEE"
+                height={showMyCompanies ? mockArray.length * 20 : 0}
+              >
+                <>
+                  {isMounted &&
+                    mockArray.map((item, index: number) => (
+                      <strong key={index}>{item.title}</strong>
+                    ))}
+                </>
               </ContainerDynamicList>
-            )}
+            }
           </div>
 
           <div

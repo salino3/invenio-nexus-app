@@ -42,7 +42,7 @@ export const ContainerDynamicList: React.FC<Props> = (props) => {
       <div
         style={
           {
-            "--height": `${height}px`,
+            "--pxHeight": `${height}px`,
           } as React.CSSProperties
         }
         className={`containerChildren ${customStyles ?? ""}`}

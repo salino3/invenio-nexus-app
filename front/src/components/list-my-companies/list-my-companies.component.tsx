@@ -18,7 +18,7 @@ interface Props {
   isMounted?: boolean;
   setPxHeight?: React.Dispatch<React.SetStateAction<number>>;
   pxHeight?: number;
-  arrayData?: any[]; // TODO: Fix types arrayData
+  arrayData?: any[]; // TODO: Fix types 'arrayData'
 }
 
 export const ListMyCompanies: React.FC<Props> = (props) => {

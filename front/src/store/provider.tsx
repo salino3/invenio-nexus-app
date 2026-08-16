@@ -12,6 +12,7 @@ export const useProvider = create<PropsProvider>()(
   persist(
     immer((set, get) => ({
       currentUser: null,
+      // myCompanies:null,  // TODO: Fix types 'myCompanies'
       setDataUser(data: PropsCurrentAccount | null) {
         set((state) => {
           state.currentUser = data;

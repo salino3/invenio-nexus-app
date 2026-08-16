@@ -88,7 +88,7 @@ export const MainHeader: React.FC = () => {
         </div>
         {/*  */}
         <div className="boxDown">
-          <button>Companies</button>
+          <div>{currentUser?.email && <button>Companies</button>}</div>
 
           <div
             role="button"

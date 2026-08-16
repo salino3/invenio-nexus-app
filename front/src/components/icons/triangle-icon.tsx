@@ -5,6 +5,7 @@ interface Props {
   height?: number;
   fill?: string;
   customStyles?: string | undefined;
+  transform?: string;
 }
 
 export const TriangleIcon: React.FC<Props> = ({
@@ -12,6 +13,7 @@ export const TriangleIcon: React.FC<Props> = ({
   height = 15,
   fill = "#d4af37",
   customStyles,
+  transform = "0",
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -19,6 +21,9 @@ export const TriangleIcon: React.FC<Props> = ({
     width={width}
     height={height}
     className={customStyles}
+    style={{
+      transform: `rotate(${transform}deg)`,
+    }}
   >
     <polygon points="1,0 19,9 1,19" fill={fill} />
   </svg>

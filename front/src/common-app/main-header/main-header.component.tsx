@@ -151,7 +151,7 @@ export const MainHeader: React.FC = () => {
                 onClick={() => setShowMyCompanies(!showMyCompanies)}
               >
                 My Companies &nbsp;
-                <TriangleIcon transform={isMounted ? "90" : "0"} />
+                <TriangleIcon transform={showMyCompanies ? "90" : "0"} />
               </button>
             )}
             {currentUser?.email && (

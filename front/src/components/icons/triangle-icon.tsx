@@ -23,6 +23,7 @@ export const TriangleIcon: React.FC<Props> = ({
     className={customStyles}
     style={{
       transform: `rotate(${transform}deg)`,
+      transition: transform ? "transform 0.3s ease-in-out" : "none",
     }}
   >
     <polygon points="1,0 19,9 1,19" fill={fill} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
@@ -49,6 +49,8 @@ export const MainHeader: React.FC = () => {
 
   const location = useLocation();
 
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   const { currentUser, setDataUser } = useProviderSelector(
     "currentUser",
     "setDataUser",
@@ -61,7 +63,7 @@ export const MainHeader: React.FC = () => {
 
   //
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setTimeout>;
 
     if (showMyCompanies) {
       // Mount content immediately when opening
@@ -70,10 +72,31 @@ export const MainHeader: React.FC = () => {
       // Wait for the 1s CSS transition before unmounting
       timer = setTimeout(() => {
         setIsMounted(false);
-      }, 1000);
+      }, 850);
     }
 
     return () => clearTimeout(timer);
+  }, [showMyCompanies]);
+
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // If the click occurs outside the wrapper div, close the menu
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowMyCompanies(false);
+      }
+    };
+
+    if (showMyCompanies) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [showMyCompanies]);
 
   return (
@@ -121,7 +144,7 @@ export const MainHeader: React.FC = () => {
         </div>
         {/*  */}
         <div className="boxDown">
-          <div className="boxLeft">
+          <div className="boxLeft" ref={dropdownRef}>
             {currentUser?.email && (
               <button
                 className="btnMyCompanies"
@@ -130,9 +153,8 @@ export const MainHeader: React.FC = () => {
                 My Companies &nbsp; <TriangleIcon />
               </button>
             )}
-            {
+            {currentUser?.email && (
               <ContainerDynamicList
-                // title="TITLEEE"
                 height={showMyCompanies ? mockArray.length * 20 : 0}
               >
                 <>
@@ -142,7 +164,7 @@ export const MainHeader: React.FC = () => {
                     ))}
                 </>
               </ContainerDynamicList>
-            }
+            )}
           </div>
 
           <div

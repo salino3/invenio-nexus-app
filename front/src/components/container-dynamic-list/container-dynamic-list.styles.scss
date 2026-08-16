@@ -1,0 +1,12 @@
+.ContainerDynamicList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  .containerChildren {
+    height: var(--height);
+    max-height: calc(var(--height) + 20px);
+  }
+}

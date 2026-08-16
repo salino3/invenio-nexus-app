@@ -98,7 +98,11 @@ export const MainHeader: React.FC = () => {
                 My Companies &nbsp; <TriangleIcon />
               </button>
             )}
-            {showMyCompanies && <ContainerDynamicList />}
+            {showMyCompanies && (
+              <ContainerDynamicList>
+                <span>ContainerDynamicList</span>
+              </ContainerDynamicList>
+            )}
           </div>
 
           <div

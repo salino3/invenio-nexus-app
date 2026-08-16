@@ -99,8 +99,8 @@ export const MainHeader: React.FC = () => {
               </button>
             )}
             {showMyCompanies && (
-              <ContainerDynamicList>
-                <span>ContainerDynamicList</span>
+              <ContainerDynamicList height={100}>
+                <strong>ContainerDynamicList</strong>
               </ContainerDynamicList>
             )}
           </div>

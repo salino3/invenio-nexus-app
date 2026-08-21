@@ -10,6 +10,11 @@ $px-size: var(--px-size);
   padding: 0.2rem 0.4rem;
   background-color: var(--global-color-02);
   border-radius: 1.25rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-evidenced);
+  }
 
   strong {
     display: flex;

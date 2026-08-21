@@ -1,4 +1,4 @@
-import React, { useState, type ReactElement } from "react";
+import React, { type ReactElement } from "react";
 import type { MyCompaniesProps } from "@/store/interface";
 import "./container-dynamic-list.styles.scss";
 

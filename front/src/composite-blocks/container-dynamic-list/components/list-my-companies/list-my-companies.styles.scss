@@ -3,5 +3,9 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  border: solid;
+
+  border: solid var(--global-lines);
+  color: var(--global-03);
+  background-color: var(--global-color-01);
+  width: 300px;
 }

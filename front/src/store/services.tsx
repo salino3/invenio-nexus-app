@@ -2,13 +2,14 @@ import type { FormLoginProps, FormRegisterProps } from "@/utils";
 import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
 import { routePaths } from "@/router/routes.interface";
 import type {
+  MyCompaniesProps,
   PropsCurrentAccount,
   ResponseSearchedCompanies,
   StateLoginDataAccount,
 } from "./interface";
 
 export class ServicesApp {
-  // Auth
+  //#region Auth
   public static async serviceLoginAccount(
     body: FormLoginProps,
   ): Promise<StateLoginDataAccount> {
@@ -155,8 +156,9 @@ export class ServicesApp {
       return false;
     }
   }
+  //#endregion
 
-  // Companies
+  //#region Companies
   public static async getSearchingCompanies(
     searching: string,
     offset: number = 0,
@@ -185,4 +187,35 @@ export class ServicesApp {
       console.error("Error while searching for companies:", error);
     }
   }
+
+  //
+  public static async getMycompanies(
+    signal?: AbortSignal,
+  ): Promise<MyCompaniesProps[]> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/get-my-companies`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal,
+      });
+
+      if (!res.ok) {
+        return [];
+      }
+
+      return await res.json();
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        console.log("Request successfully canceled");
+      }
+
+      console.error("Error while searching for companies:", error);
+      return [];
+    }
+  }
+
+  //#endregion
 }

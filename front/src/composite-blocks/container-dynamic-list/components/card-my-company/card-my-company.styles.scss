@@ -1,3 +1,4 @@
+// $px-size: calc(var(--px-size) * 1px); <- without 'px' in the value, use calc(..)
 $px-size: var(--px-size);
 
 .rootCardMyCompany {

@@ -1,6 +1,7 @@
 import type React from "react";
 import { CardMyCompany } from "../card-my-company";
 import type { MyCompaniesProps } from "@/store/interface";
+import { routePaths } from "@/router/routes.interface";
 import "./list-my-companies.styles.scss";
 
 interface Props {
@@ -8,6 +9,12 @@ interface Props {
   height?: number;
   arrayData?: MyCompaniesProps[];
 }
+
+const addNewCompany: MyCompaniesProps = {
+  name: "Add new company",
+  uuid: routePaths.new_company,
+  logo: "",
+};
 
 export const ListMyCompanies: React.FC<Props> = (props) => {
   const { isMounted = true, arrayData } = props;
@@ -20,6 +27,7 @@ export const ListMyCompanies: React.FC<Props> = (props) => {
         arrayData.map((item: MyCompaniesProps) => (
           <CardMyCompany item={item} key={item.uuid} />
         ))}
+      <CardMyCompany item={addNewCompany} />
     </div>
   );
 };

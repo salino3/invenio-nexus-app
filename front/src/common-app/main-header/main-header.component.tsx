@@ -149,7 +149,9 @@ export const MainHeader: React.FC = () => {
                   myCompanies && myCompanies.length > 0 ? myCompanies : []
                 }
                 height={
-                  showMyCompanies ? myCompanies && myCompanies.length * 20 : 0
+                  showMyCompanies
+                    ? myCompanies && (myCompanies.length + 1) * 20
+                    : 0
                 }
               >
                 {isMounted ? <ListMyCompanies /> : null}

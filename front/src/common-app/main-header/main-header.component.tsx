@@ -10,19 +10,6 @@ import { SettingIcon, TriangleIcon } from "@/components";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
 
-const mockArray = [
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-];
-
 interface LinkApp {
   pathName: string;
   title: string;
@@ -52,9 +39,10 @@ export const MainHeader: React.FC = () => {
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const { currentUser, setDataUser } = useProviderSelector(
+  const { currentUser, setDataUser, myCompanies } = useProviderSelector(
     "currentUser",
     "setDataUser",
+    "myCompanies",
   );
 
   const [showSettings, setShowSettings] = useState<boolean | null>(null);
@@ -157,7 +145,12 @@ export const MainHeader: React.FC = () => {
             )}
             {currentUser?.email && (
               <ContainerDynamicList
-                height={showMyCompanies ? mockArray.length * 20 : 0}
+                arrayData={
+                  myCompanies && myCompanies.length > 0 ? myCompanies : []
+                }
+                height={
+                  showMyCompanies ? myCompanies && myCompanies.length * 20 : 0
+                }
               >
                 {isMounted ? <ListMyCompanies /> : null}
               </ContainerDynamicList>

@@ -1,34 +1,24 @@
 import type React from "react";
+import type { MyCompaniesProps } from "@/store/interface";
 import "./list-my-companies.styles.scss";
-
-const mockArray = [
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-  { title: "ListMyCompanies" },
-];
 
 interface Props {
   isMounted?: boolean;
-  setPxHeight?: React.Dispatch<React.SetStateAction<number>>;
-  pxHeight?: number;
-  arrayData?: any[]; // TODO: Fix types 'arrayData'
+  // setPxHeight?: React.Dispatch<React.SetStateAction<number>>;
+  height?: number;
+  arrayData?: MyCompaniesProps[];
 }
 
 export const ListMyCompanies: React.FC<Props> = (props) => {
-  const { isMounted = true, setPxHeight, pxHeight, arrayData } = props;
-  console.log("clog1", pxHeight);
+  const { isMounted = true, height, arrayData } = props;
+  console.log("clog1", height);
   return (
     <div className="rootListMyCompanies">
       {isMounted &&
-        mockArray.map((item, index: number) => (
-          <strong key={index}>{item.title}</strong>
+        arrayData &&
+        arrayData?.length > 0 &&
+        arrayData.map((item: MyCompaniesProps) => (
+          <strong key={item.uuid}>{item.name}</strong>
         ))}
     </div>
   );

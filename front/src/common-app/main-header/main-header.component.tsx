@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
-import { ContainerDynamicList } from "@/composite-blocks";
+import { ContainerDynamicList, ListMyCompanies } from "@/composite-blocks";
 import { Settings } from "../settings";
 import { ImageComponent } from "../image";
-import { ListMyCompanies, SettingIcon, TriangleIcon } from "@/components";
+import { SettingIcon, TriangleIcon } from "@/components";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
 

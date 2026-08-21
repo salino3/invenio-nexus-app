@@ -48,7 +48,7 @@ export const CardCompanyList: React.FC<Props> = ({ company }) => {
         <hr className="divider divider_02" />
         <div className="boxRight">
           <ImageComponent
-            vertical={false}
+            isVertical={false}
             src={`${VITE_URL_BACK_FILE}${company.logo ?? ""}`}
             lazy={"lazy"}
             alt={company.name}

@@ -1,8 +1,8 @@
 import React, { lazy, Suspense, type JSX } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PublicRoutes, PrivateRoutes, AdminRoutes } from "./session-routes";
-import { routePaths, type AppRoute } from "./routes.interface";
 import { MainHeader } from "@/common-app";
+import { routePaths, type AppRoute } from "./routes.interface";
 
 // Lazy load the layout components
 const PublicDashboardLayout = lazy(

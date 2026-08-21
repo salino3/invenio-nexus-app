@@ -20,7 +20,7 @@ export const CardMyCompany: React.FC<{ item: MyCompaniesProps }> = ({
         <ImageComponent
           src={`${VITE_URL_BACK_FILE}${logo ?? ""}`}
           alt="Icon company"
-          vertical={false}
+          isVertical={false}
           lazy="lazy"
           customStyle="boxCardImage"
         />

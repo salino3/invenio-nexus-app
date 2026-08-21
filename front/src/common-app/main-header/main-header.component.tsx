@@ -97,7 +97,7 @@ export const MainHeader: React.FC = () => {
           <div className="leftBox">
             <div className="boxLogo">
               <ImageComponent
-                vertical={false}
+                isVertical={false}
                 src={`/web-icon.svg`}
                 lazy={"lazy"}
                 alt="Advertising 1"

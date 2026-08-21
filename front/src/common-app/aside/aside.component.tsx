@@ -23,14 +23,14 @@ export const Aside: React.FC = () => {
           <Advertisement height="140px" width="180px" />
           <Advertisement height="140px" width="180px" />
           {/* <ImageComponent
-            vertical={isMobile}
+            isVertical={isMobile}
             src={`/images/.png`}
             lazy={"lazy"}
             alt="Advertising 1"
             customStyle="boxImage"
           />
           <ImageComponent
-            vertical={isMobile}
+            isVertical={isMobile}
             src="/uy"
             lazy={"lazy"}
             alt="Advertising 2"

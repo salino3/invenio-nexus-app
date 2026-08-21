@@ -3,29 +3,12 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
+import { ContainerDynamicList, ListMyCompanies } from "@/composite-blocks";
 import { Settings } from "../settings";
 import { ImageComponent } from "../image";
-import {
-  ContainerDynamicList,
-  ListMyCompanies,
-  SettingIcon,
-  TriangleIcon,
-} from "@/components";
+import { SettingIcon, TriangleIcon } from "@/components";
 import { routePaths } from "@/router/routes.interface";
 import "./main-header.styles.scss";
-
-const mockArray = [
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-  { title: "ContainerDynamicList" },
-];
 
 interface LinkApp {
   pathName: string;
@@ -48,6 +31,8 @@ const linksApp: LinkApp[] = [
   },
 ];
 
+const PX_FOR_COMPANY: number = 50;
+
 export const MainHeader: React.FC = () => {
   const { t } = useTranslation("main");
   const { t: tw } = useTranslation("wcag");
@@ -56,9 +41,10 @@ export const MainHeader: React.FC = () => {
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const { currentUser, setDataUser } = useProviderSelector(
+  const { currentUser, setDataUser, myCompanies } = useProviderSelector(
     "currentUser",
     "setDataUser",
+    "myCompanies",
   );
 
   const [showSettings, setShowSettings] = useState<boolean | null>(null);
@@ -111,7 +97,7 @@ export const MainHeader: React.FC = () => {
           <div className="leftBox">
             <div className="boxLogo">
               <ImageComponent
-                vertical={false}
+                isVertical={false}
                 src={`/web-icon.svg`}
                 lazy={"lazy"}
                 alt="Advertising 1"
@@ -161,7 +147,14 @@ export const MainHeader: React.FC = () => {
             )}
             {currentUser?.email && (
               <ContainerDynamicList
-                height={showMyCompanies ? mockArray.length * 20 : 0}
+                arrayData={
+                  myCompanies && myCompanies.length > 0 ? myCompanies : []
+                }
+                height={
+                  showMyCompanies
+                    ? myCompanies && (myCompanies.length + 1) * PX_FOR_COMPANY
+                    : 0
+                }
               >
                 {isMounted ? <ListMyCompanies /> : null}
               </ContainerDynamicList>

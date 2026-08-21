@@ -1,14 +1,16 @@
-import React, { useState, type ReactElement } from "react";
+import React, { type ReactElement } from "react";
+import type { MyCompaniesProps } from "@/store/interface";
 import "./container-dynamic-list.styles.scss";
 
 interface ChildProps {
-  setPxHeight: React.Dispatch<React.SetStateAction<number>>;
-  pxHeight?: number;
+  height?: number;
+  arrayData: MyCompaniesProps[];
 }
 
 interface Props {
   title?: string;
   height?: number;
+  arrayData: MyCompaniesProps[];
   children: ReactElement<ChildProps> | null;
   customStyles?: string;
   alt?: string | undefined;
@@ -23,15 +25,15 @@ export const ContainerDynamicList: React.FC<Props> = (props) => {
     children,
     alt,
     tabIndex = 0,
+    arrayData,
   } = props;
-
-  const [pxHeight, setPxHeight] = useState<number>(7);
 
   // Inject props into the child
   const clonedChildren = React.isValidElement(children)
     ? React.cloneElement(children, {
-        setPxHeight,
-        pxHeight,
+        // setPxHeight,
+        height,
+        arrayData,
       })
     : children;
 

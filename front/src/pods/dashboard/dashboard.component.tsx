@@ -28,7 +28,7 @@ export const Dashboard: React.FC = () => {
     ).then((res) => setCompanyResponse(res ?? null));
 
     return () => {
-      // If endpoint is done there is not execution for 'controller.abort'
+      // If endpoint is done, automatically there is not execution for 'controller.abort'
       controller.abort();
     };
   }, [searchValuesCompanies]);

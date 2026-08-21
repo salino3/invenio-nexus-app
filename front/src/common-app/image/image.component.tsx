@@ -8,7 +8,7 @@ interface Props {
   src: string | undefined;
   alt: string | undefined;
   lazy?: LazyProps;
-  vertical: boolean;
+  isVertical: boolean;
   onLoad?: ReactEventHandler<HTMLImageElement> | undefined;
   style?: CSSProperties | undefined;
 }
@@ -19,7 +19,7 @@ export const ImageComponent: React.FC<Props> = (props) => {
     src,
     alt,
     lazy = "lazy",
-    vertical = true,
+    isVertical = true,
     onLoad,
     style,
   } = props;
@@ -32,7 +32,7 @@ export const ImageComponent: React.FC<Props> = (props) => {
         src={src}
         onLoad={onLoad}
         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) =>
-          handleImgError(e, vertical)
+          handleImgError(e, isVertical)
         }
         loading={lazy}
         alt={alt}

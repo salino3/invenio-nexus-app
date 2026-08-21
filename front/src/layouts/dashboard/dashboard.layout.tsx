@@ -6,9 +6,10 @@ import { VITE_TOKEN } from "@/constants";
 import "./dashboard.styles.scss";
 
 const DashboardLayout: React.FC = () => {
-  const { setDataUser, currentUser } = useProviderSelector(
+  const { setDataUser, currentUser, setDataMyCompanies } = useProviderSelector(
     "setDataUser",
     "currentUser",
+    "setDataMyCompanies",
   );
 
   const checkGoogleSession = async () => {
@@ -28,6 +29,17 @@ const DashboardLayout: React.FC = () => {
     if (!currentUser?.hasAdFreeAccess) {
       checkGoogleSession();
     }
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    ServicesApp.getMycompanies(controller.signal).then(
+      (res) => setDataMyCompanies && setDataMyCompanies(res),
+    );
+
+    // If endpoint is done, automatically there is not execution for 'controller.abort'
+    return () => controller.abort();
   }, []);
 
   return (

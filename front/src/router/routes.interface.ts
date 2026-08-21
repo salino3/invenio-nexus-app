@@ -8,6 +8,9 @@ export interface RoutePaths {
   reset_password: (token: string) => string;
   dashboard: string;
   error_page: string;
+  //
+  new_company: string;
+  company_by_uuid: (uudi: string) => string;
 }
 
 export const routePaths: RoutePaths = {
@@ -16,6 +19,9 @@ export const routePaths: RoutePaths = {
   reset_password: (token: string) => `/reset-password/${token}`,
   dashboard: "/dashboard",
   error_page: "*",
+  //
+  new_company: "/new-company",
+  company_by_uuid: (uudi: string) => `/company/${uudi}`,
 };
 
 export interface AppRoute {

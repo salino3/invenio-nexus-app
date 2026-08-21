@@ -18,6 +18,12 @@ export interface PropsCurrentAccount {
   iat: number | null;
 }
 
+export interface MyCompaniesProps {
+  uuid: string;
+  name: string;
+  logo: string;
+}
+
 export interface StateLoginDataAccount {
   user: PropsCurrentAccount;
   token?: string;
@@ -41,10 +47,12 @@ export interface AccountProps {
 
 export interface PropsProvider {
   currentUser: PropsCurrentAccount | null;
+  myCompanies: MyCompaniesProps[];
   theme: ThemeEnum;
   configuration: boolean;
   setConfiguration(): void;
   setDataUser(data: PropsCurrentAccount | null): void;
+  setDataMyCompanies(data: PropsProvider["myCompanies"]): void;
   changeGlobalColors(): void;
 }
 

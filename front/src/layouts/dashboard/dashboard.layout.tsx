@@ -6,13 +6,11 @@ import { VITE_TOKEN } from "@/constants";
 import "./dashboard.styles.scss";
 
 const DashboardLayout: React.FC = () => {
-  const { setDataUser, currentUser, myCompanies, setDataMyCompanies } =
-    useProviderSelector(
-      "setDataUser",
-      "currentUser",
-      "myCompanies",
-      "setDataMyCompanies",
-    );
+  const { setDataUser, currentUser, setDataMyCompanies } = useProviderSelector(
+    "setDataUser",
+    "currentUser",
+    "setDataMyCompanies",
+  );
 
   const checkGoogleSession = async () => {
     ServicesApp.checkGoogleSession().then((data) => {
@@ -43,7 +41,7 @@ const DashboardLayout: React.FC = () => {
     // If endpoint is done, automatically there is not execution for 'controller.abort'
     return () => controller.abort();
   }, []);
-  console.log("clog4", myCompanies);
+
   return (
     <div className="rootDashboardLayout">
       <Dashboard />

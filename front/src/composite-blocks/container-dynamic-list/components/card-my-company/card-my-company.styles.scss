@@ -7,4 +7,13 @@
   padding: 0.2rem 0.4rem;
   background-color: var(--global-color-02);
   border-radius: 1.25rem;
+
+  .boxCardImage {
+    max-height: 25px;
+
+    img {
+      max-height: 25px;
+      object-fit: cover;
+    }
+  }
 }

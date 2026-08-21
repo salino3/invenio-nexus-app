@@ -21,13 +21,13 @@ export const ListMyCompanies: React.FC<Props> = (props) => {
 
   return (
     <div className="rootListMyCompanies">
+      <CardMyCompany item={addNewCompany} />
       {isMounted &&
         arrayData &&
         arrayData?.length > 0 &&
         arrayData.map((item: MyCompaniesProps) => (
           <CardMyCompany item={item} key={item.uuid} />
         ))}
-      <CardMyCompany item={addNewCompany} />
     </div>
   );
 };

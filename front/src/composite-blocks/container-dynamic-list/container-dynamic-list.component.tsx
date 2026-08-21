@@ -3,7 +3,6 @@ import type { MyCompaniesProps } from "@/store/interface";
 import "./container-dynamic-list.styles.scss";
 
 interface ChildProps {
-  // setPxHeight: React.Dispatch<React.SetStateAction<number>>;
   height?: number;
   arrayData: MyCompaniesProps[];
 }

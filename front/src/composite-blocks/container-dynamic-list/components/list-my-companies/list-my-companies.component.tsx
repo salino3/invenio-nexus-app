@@ -13,7 +13,7 @@ interface Props {
 const addNewCompany: MyCompaniesProps = {
   name: "Add new company",
   uuid: routePaths.new_company,
-  logo: "",
+  logo: "more-icon",
 };
 
 export const ListMyCompanies: React.FC<Props> = (props) => {

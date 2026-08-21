@@ -46,12 +46,12 @@ export const utilitiesApp = () => {
   //
   const handleImgError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>,
-    vertical: boolean = true,
+    isVertical: boolean = true,
   ) => {
     const target = e.currentTarget;
 
     // Construct the explicit path matching your public folder file names exactly
-    const fileName = vertical
+    const fileName = isVertical
       ? "error-img-default-vertical.png"
       : "error-img-default-horizontal.png";
 

@@ -1,0 +1,49 @@
+// $px-size: calc(var(--px-size) * 1px); <- without 'px' in the value, use calc(..)
+$px-size: var(--px-size);
+
+.rootCardMyCompany {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.2rem 0.4rem;
+  background-color: var(--global-color-02);
+  border-radius: 1.25rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-evidenced);
+  }
+
+  strong {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .boxCardImage {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    max-height: $px-size;
+    max-width: $px-size;
+    min-height: $px-size;
+    min-width: $px-size;
+    height: 100%;
+    object-fit: contain;
+    overflow: hidden;
+    border-radius: 50%;
+
+    img {
+      height: 100%;
+      width: 100%;
+      max-height: $px-size;
+      max-width: $px-size;
+      min-height: $px-size;
+      min-width: $px-size;
+    }
+  }
+}

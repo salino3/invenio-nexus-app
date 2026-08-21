@@ -8,13 +8,12 @@
   top: 100%;
   left: 0;
   z-index: 10;
-  color: rgb(70, 43, 226);
+
   .containerChildren {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background-color: aquamarine;
     //
     overflow: hidden;
     transition: height 0.8s ease-in-out;

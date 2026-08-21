@@ -12,10 +12,15 @@ export const useProvider = create<PropsProvider>()(
   persist(
     immer((set, get) => ({
       currentUser: null,
-      // myCompanies:null,  // TODO: Fix types 'myCompanies'
+      myCompanies: [],
       setDataUser(data: PropsCurrentAccount | null) {
         set((state) => {
           state.currentUser = data;
+        });
+      },
+      setDataMyCompanies(data: PropsProvider["myCompanies"]) {
+        set((state) => {
+          state.myCompanies = data ?? [];
         });
       },
       theme: Theme.dark,
@@ -41,6 +46,7 @@ export const useProvider = create<PropsProvider>()(
       partialize: (state) => ({
         theme: state.theme,
         currentUser: state.currentUser,
+        myCompanies: state.myCompanies,
       }),
     },
   ),

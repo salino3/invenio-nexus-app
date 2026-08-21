@@ -10,6 +10,7 @@ export interface RoutePaths {
   error_page: string;
   //
   new_company: string;
+  company_by_uuid: (uudi: string) => string;
 }
 
 export const routePaths: RoutePaths = {
@@ -20,6 +21,7 @@ export const routePaths: RoutePaths = {
   error_page: "*",
   //
   new_company: "/new-company",
+  company_by_uuid: (uudi: string) => `/company/${uudi}`,
 };
 
 export interface AppRoute {

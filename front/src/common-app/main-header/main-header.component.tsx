@@ -31,7 +31,7 @@ const linksApp: LinkApp[] = [
   },
 ];
 
-const PX_FOR_COMPANY: number = 40;
+const PX_FOR_COMPANY: number = 45;
 
 export const MainHeader: React.FC = () => {
   const { t } = useTranslation("main");

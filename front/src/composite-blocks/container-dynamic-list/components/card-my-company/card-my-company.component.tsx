@@ -15,8 +15,6 @@ export const CardMyCompany: React.FC<{ item: MyCompaniesProps }> = ({
       {logo === "more-icon" ? (
         <MoreIcon />
       ) : (
-        //   <img src={logo} alt="" />
-
         <ImageComponent
           src={`${VITE_URL_BACK_FILE}${logo ?? ""}`}
           alt="Icon company"

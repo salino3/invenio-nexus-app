@@ -18,6 +18,11 @@ export const useProvider = create<PropsProvider>()(
           state.currentUser = data;
         });
       },
+      setDataMyCompanies(data: PropsProvider["myCompanies"]) {
+        set((state) => {
+          state.myCompanies = data ?? [];
+        });
+      },
       theme: Theme.dark,
       configuration: false,
       setConfiguration() {
@@ -41,6 +46,7 @@ export const useProvider = create<PropsProvider>()(
       partialize: (state) => ({
         theme: state.theme,
         currentUser: state.currentUser,
+        myCompanies: state.myCompanies,
       }),
     },
   ),

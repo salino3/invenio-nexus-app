@@ -6,11 +6,13 @@ import { VITE_TOKEN } from "@/constants";
 import "./dashboard.styles.scss";
 
 const DashboardLayout: React.FC = () => {
-  const { setDataUser, currentUser, myCompanies } = useProviderSelector(
-    "setDataUser",
-    "currentUser",
-    "myCompanies",
-  );
+  const { setDataUser, currentUser, myCompanies, setDataMyCompanies } =
+    useProviderSelector(
+      "setDataUser",
+      "currentUser",
+      "myCompanies",
+      "setDataMyCompanies",
+    );
 
   const checkGoogleSession = async () => {
     ServicesApp.checkGoogleSession().then((data) => {
@@ -34,14 +36,14 @@ const DashboardLayout: React.FC = () => {
   useEffect(() => {
     const controller = new AbortController();
 
-    ServicesApp.getMycompanies(controller.signal).then((res) =>
-      console.log("clog3", res),
+    ServicesApp.getMycompanies(controller.signal).then(
+      (res) => setDataMyCompanies && setDataMyCompanies(res),
     );
 
     // If endpoint is done, automatically there is not execution for 'controller.abort'
     return () => controller.abort();
   }, []);
-
+  console.log("clog4", myCompanies);
   return (
     <div className="rootDashboardLayout">
       <Dashboard />

@@ -52,6 +52,7 @@ export interface PropsProvider {
   configuration: boolean;
   setConfiguration(): void;
   setDataUser(data: PropsCurrentAccount | null): void;
+  setDataMyCompanies(data: PropsProvider["myCompanies"]): void;
   changeGlobalColors(): void;
 }
 

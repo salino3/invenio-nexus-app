@@ -7,7 +7,7 @@ import { VITE_URL_BACK_FILE } from "@/constants";
 import "./card-my-company.styles.scss";
 import { routePaths } from "@/router/routes.interface";
 
-export const pxSizeImages: number = 35;
+const pxSizeImages: number = 35;
 
 export const CardMyCompany: React.FC<{ item: MyCompaniesProps }> = ({
   item,

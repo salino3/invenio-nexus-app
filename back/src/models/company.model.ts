@@ -166,7 +166,7 @@ export class Company {
     id: number,
   ): Promise<ListMyCompanies[]> {
     const sql = `
-    SELECT c.name, c.UUID, c.logo
+    SELECT c.name, c.UUID, c.logo, ac.role
     FROM companies c
     JOIN account_companies ac ON c.id = ac.company_id
     WHERE ac.account_id = $1;  

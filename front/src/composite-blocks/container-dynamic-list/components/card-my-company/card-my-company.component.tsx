@@ -4,8 +4,8 @@ import { ImageComponent } from "@/common-app";
 import type { MyCompaniesProps } from "@/store/interface";
 import { MoreIcon } from "@/components";
 import { VITE_URL_BACK_FILE } from "@/constants";
-import "./card-my-company.styles.scss";
 import { routePaths } from "@/router/routes.interface";
+import "./card-my-company.styles.scss";
 
 const pxSizeImages: number = 35;
 

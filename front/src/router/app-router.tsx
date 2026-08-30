@@ -17,6 +17,9 @@ const ResetPasswordLayout = lazy(
 const DashboardLayout = lazy(
   () => import("../layouts/dashboard/dashboard.layout"),
 );
+const CompanyPageLayout = lazy(
+  () => import("../layouts/company-page/company-page.layout"),
+);
 const ErrorPageLayout = lazy(
   () => import("../layouts/error-page/error-page.layout"),
 );
@@ -41,6 +44,16 @@ const routes: AppRoute[] = [
   {
     path: routePaths.dashboard,
     element: <DashboardLayout />,
+    visibility: "private",
+  },
+  {
+    path: routePaths.new_company,
+    element: <CompanyPageLayout />,
+    visibility: "private",
+  },
+  {
+    path: routePaths.company_by_uuid(":name", ":id"),
+    element: <CompanyPageLayout />,
     visibility: "private",
   },
 ];

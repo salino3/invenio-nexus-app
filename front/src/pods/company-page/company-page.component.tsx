@@ -5,6 +5,7 @@ import "./company-page.styles.scss";
 import { ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
 import type { MyCompaniesProps } from "@/store/interface";
+import { NavigationCompany } from "@/components";
 
 // TODO: Moving it to interface file
 const initialState: any = {
@@ -15,7 +16,7 @@ const initialState: any = {
 };
 
 export const CompanyPage: React.FC = () => {
-  const params = useParams();
+  const params = useParams() as { name: string; uuid: string };
   console.log("params", params);
 
   const { currentUser, myCompanies } = useProviderSelector(
@@ -73,13 +74,15 @@ export const CompanyPage: React.FC = () => {
       setRoleAccount("");
       setOldRoleAccount("");
     }
-  }, [currentUser?.id, params?.id, flag]);
+  }, [currentUser?.id, params?.uuid, flag]);
 
   return (
     <div className="rootCompanyPage">
+      <NavigationCompany navigation={tab} setNavigation={setTabs} tabs={tabs} />
       <form action={formAction} id="formCompanyPage">
         <fieldset disabled={isPending}>
           <legend>Form Company Page</legend>
+          {tabs[tab]?.component}
           {(!params?.uuid || roleAccount) && (
             <div className="boxButtonsForm">
               <ButtonForm

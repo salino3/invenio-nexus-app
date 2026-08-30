@@ -52,7 +52,7 @@ const routes: AppRoute[] = [
     visibility: "private",
   },
   {
-    path: routePaths.company_by_uuid(":name", ":id"),
+    path: routePaths.company_by_uuid(":name", ":uuid"),
     element: <CompanyPageLayout />,
     visibility: "private",
   },

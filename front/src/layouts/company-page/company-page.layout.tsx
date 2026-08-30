@@ -5,7 +5,6 @@ import "./company-page.styles.scss";
 const CompanyPageLayout: React.FC = () => {
   return (
     <div className="rootCompanyPageLayout">
-      {" "}
       <CompanyPage />
     </div>
   );

@@ -44,7 +44,9 @@ export interface RegistretionCompanyInput extends Pick<
 export interface ListMyCompanies extends Pick<
   CompanyProps,
   "uuid" | "name" | "logo"
-> {}
+> {
+  role: string;
+}
 
 // Interface update
 export interface UpdateCompanyProps extends Omit<CompanyProps, "id" | "uuid"> {}

@@ -18,7 +18,7 @@ export const CardMyCompany: React.FC<{ item: MyCompaniesProps }> = ({
 
   return (
     <div
-      onClick={() => navigate(routePaths.company_by_uuid(uuid))}
+      onClick={() => navigate(routePaths.company_by_uuid(name, uuid))}
       className="rootCardMyCompany"
       style={
         {

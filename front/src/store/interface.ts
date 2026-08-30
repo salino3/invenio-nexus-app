@@ -22,6 +22,7 @@ export interface MyCompaniesProps {
   uuid: string;
   name: string;
   logo: string;
+  role?: string;
 }
 
 export interface StateLoginDataAccount {

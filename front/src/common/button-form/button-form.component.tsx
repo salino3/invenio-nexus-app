@@ -8,7 +8,11 @@ interface Props {
   disabled?: boolean | undefined;
   pendingForm?: boolean;
   textLoading?: string | JSX.Element | undefined;
+  click?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+
   icon?: JSX.Element;
+  al?: string | undefined;
+  tabIndex?: number | undefined;
 }
 
 export const ButtonForm: React.FC<Props> = (props) => {
@@ -20,6 +24,9 @@ export const ButtonForm: React.FC<Props> = (props) => {
     pendingForm,
     textLoading = "Loading...",
     icon,
+    click,
+    al,
+    tabIndex = 0,
   } = props;
 
   //   const { pending } = useFormStatus();
@@ -27,6 +34,9 @@ export const ButtonForm: React.FC<Props> = (props) => {
   return (
     <div className={`rootButtonForm ${customStyles}`}>
       <button
+        aria-label={al}
+        tabIndex={tabIndex}
+        onClick={click}
         type={type}
         disabled={pendingForm || disabled}
         className="btnSubmitButton"

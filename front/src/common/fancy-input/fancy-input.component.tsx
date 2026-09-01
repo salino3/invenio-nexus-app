@@ -1,15 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useProviderSelector } from "../../store";
-import { useAppFunctions } from "../../hooks";
-import { LockIcon, OpenedLockIcon, PenUpdateIcon } from "../icons";
+import { useProviderSelector } from "@/store/provider";
+import { utilitiesApp } from "@/utils";
+import { LockIcon, OpenedLockIcon, PenUpdateIcon } from "@/components";
 import "./fancy-input.styles.scss";
 
-export enum TypeKeyDown {
-  Number = "number",
-  String = "string",
-  Null = "null",
-}
+const TypeKeyDown = {
+  Number: "number",
+  String: "string",
+  Null: "null",
+} as const;
+
+export type TypeKeyDown = (typeof TypeKeyDown)[keyof typeof TypeKeyDown];
 
 interface PropsFancyInput {
   type: string;
@@ -60,7 +62,7 @@ export const FancyInput: React.FC<PropsFancyInput> = (props) => {
   const { t: tw } = useTranslation("wcag");
 
   const { theme } = useProviderSelector("theme");
-  const { handleNumericPaste } = useAppFunctions();
+  const { handleNumericPaste } = utilitiesApp();
 
   return (
     <div

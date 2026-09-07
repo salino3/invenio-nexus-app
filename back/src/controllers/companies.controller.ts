@@ -35,7 +35,7 @@ const parseNumber = (
   return isNaN(parsed) ? null : parsed;
 };
 
-export class CompaniesController {
+class CompaniesController {
   //
   public async registerCompany(req: Request, res: Response): Promise<Response> {
     const files = req.files as

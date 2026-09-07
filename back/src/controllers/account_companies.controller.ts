@@ -6,7 +6,7 @@ import { AccountCompanyAddRole } from "../interfaces/account_companies.interface
 class AccountCompaniesController {
   //
   async addRoleCompany(req: Request, res: Response): Promise<Response> {
-    const requesterId = (req.user || {}) as AccountCookie; // ID utente loggato
+    const requesterId = (req.user || {}) as AccountCookie; // ID utente logged
     const { target_account_id, uuid, role, permission = "member" } = req.body;
 
     if (!requesterId?.id || !target_account_id || !uuid || !role) {

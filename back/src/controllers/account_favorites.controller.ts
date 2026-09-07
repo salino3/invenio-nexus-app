@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { query } from "../db";
 import { AccountCookie } from "../interfaces/account.interface";
 import { AccountFavoritesResponse } from "../interfaces/account_favorites.interface";
+import { AccountFavorites } from "../models/account_favorites.model";
 
 class AccountFavoritesController {
   public async addFavoriteCompany(
@@ -31,20 +32,11 @@ class AccountFavoritesController {
         });
       }
 
-      // 1 single SQL query without 'ON CONFLICT DO NOTHING'
-      // so Postgres triggers the unique primary key constraint if it exists
-      const insertQuery = `
-        INSERT INTO account_favorites (account_id, company_uuid)
-        SELECT $1, c.uuid
-        FROM companies c
-        WHERE c.uuid = $2
-        RETURNING account_id, company_uuid, created_at;
-      `;
-
-      const { rows } = await query(insertQuery, [account_id, company_uuid]);
+      const rows: AccountFavoritesResponse[] =
+        await AccountFavorites.insertFavoriteCompany(account_id, company_uuid);
 
       // If rows is empty, the SELECT subquery returned no matches (Company doesn't exist)
-      if ((rows as AccountFavoritesResponse[]).length === 0) {
+      if (rows.length === 0) {
         return res.status(404).json({
           success: false,
           error: "Target company does not exist",
@@ -54,7 +46,7 @@ class AccountFavoritesController {
       return res.status(201).json({
         success: true,
         message: "Company added to favorites successfully",
-        data: rows as AccountFavoritesResponse[],
+        rows,
       });
     } catch (error: unknown) {
       // Postgres error code 23505: unique_violation (Unique Primary Key constraint hit)

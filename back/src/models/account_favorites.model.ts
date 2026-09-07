@@ -2,7 +2,7 @@
 
 import { query } from "../db";
 import { QueryResult } from "pg";
-import { AccountFavoritesProps } from "../interfaces/account_favorite.interface";
+import { AccountFavoritesProps } from "../interfaces/account_favorites.interface";
 
 export class AccountFavorites {
   public account_id: number;

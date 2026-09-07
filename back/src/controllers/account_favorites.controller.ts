@@ -1,12 +1,18 @@
 import { Request, Response } from "express";
 import { query } from "../db";
 import { AccountCookie } from "../interfaces/account.interface";
+import { AccountFavoritesResponse } from "../interfaces/account_favorites.interface";
 
 class AccountFavoritesController {
   public async addFavoriteCompany(
     req: Request,
     res: Response,
-  ): Promise<Response> {
+  ): Promise<
+    Response<
+      string,
+      Record<string, string | boolean | AccountFavoritesResponse[]>
+    >
+  > {
     try {
       const { company_uuid } = req.body;
       const account_id = ((req.user || "") as AccountCookie).id; // Extracted from authMiddleware
@@ -38,7 +44,7 @@ class AccountFavoritesController {
       const { rows } = await query(insertQuery, [account_id, company_uuid]);
 
       // If rows is empty, the SELECT subquery returned no matches (Company doesn't exist)
-      if (rows.length === 0) {
+      if ((rows as AccountFavoritesResponse[]).length === 0) {
         return res.status(404).json({
           success: false,
           error: "Target company does not exist",
@@ -48,7 +54,7 @@ class AccountFavoritesController {
       return res.status(201).json({
         success: true,
         message: "Company added to favorites successfully",
-        data: rows[0],
+        data: rows as AccountFavoritesResponse[],
       });
     } catch (error: unknown) {
       // Postgres error code 23505: unique_violation (Unique Primary Key constraint hit)

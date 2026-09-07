@@ -10,7 +10,7 @@ import { AccountCookie } from "../../interfaces/account.interface";
 
 const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-export class AuthController {
+class AuthController {
   public async loginAccount(req: Request, res: Response): Promise<Response> {
     try {
       const { email, password } = req.body;

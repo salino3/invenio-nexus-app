@@ -9,7 +9,7 @@ import {
 } from "../../constants";
 import { AuthRequest } from "../../middlewares/auth-middleware";
 
-export class OAuthController {
+class OAuthController {
   public async googleCallback(req: Request, res: Response): Promise<void> {
     try {
       const user = (req as AuthRequest).user;

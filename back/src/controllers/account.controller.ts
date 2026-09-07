@@ -10,7 +10,7 @@ import {
 
 const { checkRequiredFields } = utilitiesApp();
 
-export class AccountController {
+class AccountController {
   //
   public async registerAccount(req: Request, res: Response): Promise<Response> {
     try {

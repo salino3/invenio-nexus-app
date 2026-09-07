@@ -250,8 +250,8 @@ export class Account {
       UPDATE accounts
       SET 
         reset_password_token = $1,
-        reset_password_expires = NOW() + INTERVAL '15 minutes',
-        updated_at = NOW()
+        reset_password_expires = timezone('utc', now()) + INTERVAL '15 minutes',
+        updated_at = timezone('utc', now())
       WHERE email = $2 AND is_active = true AND deleted_at IS NULL
       RETURNING id;
     `;
@@ -270,11 +270,11 @@ export class Account {
         password = $1,
         reset_password_token = NULL,
         reset_password_expires = NULL,
-        updated_at = NOW()
+        updated_at = timezone('utc', now())
       WHERE reset_password_token = $2 
-        AND reset_password_expires > NOW()
-        AND is_active = true 
-        AND deleted_at IS NULL
+      AND reset_password_expires > timezone('utc', now())
+      AND is_active = true 
+      AND deleted_at IS NULL
       RETURNING id, email;
     `;
 

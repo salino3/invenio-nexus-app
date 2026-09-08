@@ -10,4 +10,10 @@ routerAccountFavorites.post(
   accountFavoritesController.addFavoriteCompany,
 );
 
+routerAccountFavorites.get(
+  "/favotites",
+  authMiddleware,
+  accountFavoritesController.getFavorites,
+);
+
 export default routerAccountFavorites;

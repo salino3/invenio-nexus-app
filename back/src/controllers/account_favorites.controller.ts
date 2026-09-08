@@ -75,7 +75,7 @@ class AccountFavoritesController {
   public async getFavorites(
     req: Request,
     res: Response,
-  ): Promise<Response<string[] | string>> {
+  ): Promise<Response<string[] | { error: string }>> {
     try {
       const account_id = ((req.user || "") as AccountCookie).id;
 

@@ -11,7 +11,7 @@ routerAccountFavorites.post(
 );
 
 routerAccountFavorites.get(
-  "/favotites",
+  "/favorites",
   authMiddleware,
   accountFavoritesController.getFavorites,
 );

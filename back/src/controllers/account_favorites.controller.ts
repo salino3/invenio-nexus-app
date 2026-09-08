@@ -15,7 +15,6 @@ class AccountFavoritesController {
     >
   > {
     try {
-      const { company_uuid } = req.body;
       const account_id = ((req.user || "") as AccountCookie).id; // Extracted from authMiddleware
 
       if (!account_id) {
@@ -24,6 +23,8 @@ class AccountFavoritesController {
           error: "Unauthorized: Missing user authentication context",
         });
       }
+
+      const { company_uuid } = req.body;
 
       if (!company_uuid || typeof company_uuid !== "string") {
         return res.status(400).json({
@@ -66,6 +67,33 @@ class AccountFavoritesController {
       return res.status(500).json({
         success: false,
         error: "Internal server error while adding favorite company",
+      });
+    }
+  }
+
+  //
+  public async getFavorites(
+    req: Request,
+    res: Response,
+  ): Promise<Response<string[] | string>> {
+    try {
+      const account_id = ((req.user || "") as AccountCookie).id;
+
+      if (!account_id) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized: Missing user authentication context",
+        });
+      }
+
+      const favoritesList: string[] =
+        await AccountFavorites.getFavorites(account_id);
+
+      return res.status(200).json(favoritesList);
+    } catch (error: unknown) {
+      console.error("Error in getFavorites:", error);
+      return res.status(500).json({
+        error: "Internal server error while fetching favorite companies",
       });
     }
   }

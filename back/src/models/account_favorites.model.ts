@@ -34,4 +34,18 @@ export class AccountFavorites {
 
     return rows;
   }
+
+  //
+  static async getFavorites(accountId: number): Promise<string[]> {
+    const sql = `
+      SELECT array_agg(company_uuid) AS favorites
+      FROM account_favorites
+      WHERE account_id = $1;
+    `;
+
+    const { rows } = await query(sql, [accountId]);
+
+    // If the account has no favorites, array_agg returns null. Fallback to an empty array [].
+    return rows[0]?.favorites || [];
+  }
 }

@@ -119,7 +119,9 @@ class AccountFavoritesController {
         });
       }
 
-      return res;
+      await AccountFavorites.removeFavoriteCompany(account_id, uuidCompany);
+
+      return res.sendStatus(204);
     } catch (error: unknown) {
       console.error("Error in removeFavorite:", error);
       return res.status(500).json({

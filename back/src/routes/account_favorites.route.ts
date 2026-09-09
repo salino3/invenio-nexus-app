@@ -17,7 +17,7 @@ routerAccountFavorites.get(
 );
 
 routerAccountFavorites.delete(
-  "/favorites/:idCompany",
+  "/favorites/:uuidCompany",
   authMiddleware,
   accountFavoritesController.removeFavorite,
 );

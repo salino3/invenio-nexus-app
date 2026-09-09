@@ -48,4 +48,17 @@ export class AccountFavorites {
     // If the account has no favorites, array_agg returns null. Fallback to an empty array [].
     return rows[0]?.favorites || [];
   }
+
+  static async removeFavoriteCompany(
+    accountId: number,
+    UUIDCompany: string,
+  ): Promise<void> {
+    const sql = `
+        DELETE from account_favorites WHERE account_id = $1 AND company_uuid = $2
+       `;
+
+    await query(sql, [accountId, UUIDCompany]);
+
+    return;
+  }
 }

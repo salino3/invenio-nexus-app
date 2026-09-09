@@ -3,6 +3,7 @@ import { QueryResult } from "pg";
 import {
   AccountFavoritesProps,
   AccountFavoritesResponse,
+  FavoritesPayload,
 } from "../interfaces/account_favorites.interface";
 
 export class AccountFavorites {
@@ -36,7 +37,9 @@ export class AccountFavorites {
   }
 
   //
-  static async getFavorites(accountId: number): Promise<string[]> {
+  static async getFavorites(
+    accountId: FavoritesPayload["account_id"],
+  ): Promise<FavoritesPayload["company_uuid"][]> {
     const sql = `
       SELECT array_agg(company_uuid) AS favorites
       FROM account_favorites
@@ -47,5 +50,17 @@ export class AccountFavorites {
 
     // If the account has no favorites, array_agg returns null. Fallback to an empty array [].
     return rows[0]?.favorites || [];
+  }
+
+  //
+  static async removeFavoriteCompany(
+    accountId: number,
+    companyUUID: string,
+  ): Promise<void> {
+    const sql = `
+        DELETE from account_favorites WHERE account_id = $1 AND company_uuid = $2
+       `;
+
+    await query(sql, [accountId, companyUUID]);
   }
 }

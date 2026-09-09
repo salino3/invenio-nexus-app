@@ -4,13 +4,9 @@ export interface AccountFavoritesProps {
   created_at: Date;
 }
 
-export interface FavoritesOperationPayload {
-  account_id: number;
-  company_uuid: string;
-}
+export interface FavoritesPayload extends Pick<
+  AccountFavoritesProps,
+  "account_id" | "company_uuid"
+> {}
 
-export interface AccountFavoritesResponse {
-  account_id: number;
-  company_uuid: string;
-  created_at: Date;
-}
+export interface AccountFavoritesResponse extends AccountFavoritesProps {}

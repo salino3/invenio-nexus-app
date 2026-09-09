@@ -16,4 +16,10 @@ routerAccountFavorites.get(
   accountFavoritesController.getFavorites,
 );
 
+routerAccountFavorites.delete(
+  "/favorites/:uuidCompany",
+  authMiddleware,
+  accountFavoritesController.removeFavorite,
+);
+
 export default routerAccountFavorites;

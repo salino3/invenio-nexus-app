@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { query } from "../db";
 import { AccountCookie } from "../interfaces/account.interface";
-import { AccountFavoritesResponse } from "../interfaces/account_favorites.interface";
+import {
+  AccountFavoritesResponse,
+  FavoritesPayload,
+} from "../interfaces/account_favorites.interface";
 import { AccountFavorites } from "../models/account_favorites.model";
 
 class AccountFavoritesController {
@@ -11,7 +14,7 @@ class AccountFavoritesController {
   ): Promise<
     Response<
       string,
-      Record<string, string | boolean | AccountFavoritesResponse[]>
+      Record<string, string | boolean | AccountFavoritesResponse>
     >
   > {
     try {
@@ -47,7 +50,7 @@ class AccountFavoritesController {
       return res.status(201).json({
         success: true,
         message: "Company added to favorites successfully",
-        rows,
+        item: rows[0],
       });
     } catch (error: unknown) {
       // Postgres error code 23505: unique_violation (Unique Primary Key constraint hit)
@@ -75,7 +78,9 @@ class AccountFavoritesController {
   public async getFavorites(
     req: Request,
     res: Response,
-  ): Promise<Response<string[] | { error: string }>> {
+  ): Promise<
+    Response<AccountFavoritesResponse["company_uuid"][] | { error: string }>
+  > {
     try {
       const account_id = ((req.user || "") as AccountCookie).id;
 
@@ -86,7 +91,7 @@ class AccountFavoritesController {
         });
       }
 
-      const favoritesList: string[] =
+      const favoritesList: FavoritesPayload["company_uuid"][] =
         await AccountFavorites.getFavorites(account_id);
 
       return res.status(200).json(favoritesList);
@@ -94,6 +99,41 @@ class AccountFavoritesController {
       console.error("Error in getFavorites:", error);
       return res.status(500).json({
         error: "Internal server error while fetching favorite companies",
+      });
+    }
+  }
+
+  //
+  async removeFavorite(
+    req: Request,
+    res: Response,
+  ): Promise<Response<Response<any, Record<string, any>> | { error: string }>> {
+    try {
+      const { uuidCompany } = req.params as { uuidCompany: string };
+
+      if (!uuidCompany) {
+        return res.status(404).json({
+          success: false,
+          error: "Missing UUID company",
+        });
+      }
+
+      const account_id = ((req.user || "") as AccountCookie).id;
+
+      if (!account_id) {
+        return res.status(401).json({
+          success: false,
+          error: "Unauthorized: Missing user authentication context",
+        });
+      }
+
+      await AccountFavorites.removeFavoriteCompany(account_id, uuidCompany);
+
+      return res.sendStatus(204);
+    } catch (error: unknown) {
+      console.error("Error in removeFavorite:", error);
+      return res.status(500).json({
+        error: "Internal server error while deleting favorite company",
       });
     }
   }

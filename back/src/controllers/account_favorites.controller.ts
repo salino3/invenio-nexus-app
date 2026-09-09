@@ -100,6 +100,24 @@ class AccountFavoritesController {
 
   //
   async removeFavorite(req: Request, res: Response): Promise<Response> {
+    const { uuidCompany } = req.params as { uuidCompany: string };
+
+    if (!uuidCompany) {
+      return res.status(404).json({
+        success: false,
+        error: "Missing UUID company",
+      });
+    }
+
+    const account_id = ((req.user || "") as AccountCookie).id;
+
+    if (!account_id) {
+      return res.status(401).json({
+        success: false,
+        error: "Unauthorized: Missing user authentication context",
+      });
+    }
+
     return res;
   }
 }

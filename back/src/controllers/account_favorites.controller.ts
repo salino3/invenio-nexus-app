@@ -97,6 +97,11 @@ class AccountFavoritesController {
       });
     }
   }
+
+  //
+  async removeFavorite(req: Request, res: Response): Promise<Response> {
+    return res;
+  }
 }
 
 export const accountFavoritesController = new AccountFavoritesController();

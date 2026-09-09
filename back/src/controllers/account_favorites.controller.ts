@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { query } from "../db";
 import { AccountCookie } from "../interfaces/account.interface";
-import { AccountFavoritesResponse } from "../interfaces/account_favorites.interface";
+import {
+  AccountFavoritesResponse,
+  FavoritesPayload,
+} from "../interfaces/account_favorites.interface";
 import { AccountFavorites } from "../models/account_favorites.model";
 
 class AccountFavoritesController {
@@ -11,7 +14,7 @@ class AccountFavoritesController {
   ): Promise<
     Response<
       string,
-      Record<string, string | boolean | AccountFavoritesResponse[]>
+      Record<string, string | boolean | AccountFavoritesResponse>
     >
   > {
     try {
@@ -47,7 +50,7 @@ class AccountFavoritesController {
       return res.status(201).json({
         success: true,
         message: "Company added to favorites successfully",
-        rows,
+        item: rows[0],
       });
     } catch (error: unknown) {
       // Postgres error code 23505: unique_violation (Unique Primary Key constraint hit)
@@ -75,7 +78,9 @@ class AccountFavoritesController {
   public async getFavorites(
     req: Request,
     res: Response,
-  ): Promise<Response<string[] | { error: string }>> {
+  ): Promise<
+    Response<AccountFavoritesResponse["company_uuid"][] | { error: string }>
+  > {
     try {
       const account_id = ((req.user || "") as AccountCookie).id;
 
@@ -86,7 +91,7 @@ class AccountFavoritesController {
         });
       }
 
-      const favoritesList: string[] =
+      const favoritesList: FavoritesPayload["company_uuid"][] =
         await AccountFavorites.getFavorites(account_id);
 
       return res.status(200).json(favoritesList);

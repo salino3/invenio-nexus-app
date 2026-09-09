@@ -49,6 +49,7 @@ export class AccountFavorites {
     return rows[0]?.favorites || [];
   }
 
+  //
   static async removeFavoriteCompany(
     accountId: number,
     UUIDCompany: string,
@@ -58,7 +59,5 @@ export class AccountFavorites {
        `;
 
     await query(sql, [accountId, UUIDCompany]);
-
-    return;
   }
 }

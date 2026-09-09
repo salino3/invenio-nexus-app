@@ -99,7 +99,10 @@ class AccountFavoritesController {
   }
 
   //
-  async removeFavorite(req: Request, res: Response): Promise<Response> {
+  async removeFavorite(
+    req: Request,
+    res: Response,
+  ): Promise<Response<Response<any, Record<string, any>> | { error: string }>> {
     try {
       const { uuidCompany } = req.params as { uuidCompany: string };
 

@@ -360,6 +360,53 @@ class AuthController {
       return res.status(500).json({ error: "Internal server error" });
     }
   }
+
+  //
+  public async resetPasswordRedis(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res
+        .status(400)
+        .json({ error: "Token and new password are required." });
+    }
+
+    try {
+      // Hash the token received from frontend to match the database entry
+      const hashedToken = crypto
+        .createHash("sha256")
+        .update(token)
+        .digest("hex");
+
+      const redisKey = `pwd_reset:${hashedToken}`;
+
+      // Retrieve accountId from Redis
+      const accountId = await redisClient.get(redisKey);
+
+      if (!accountId) {
+        return res
+          .status(400)
+          .json({ error: "Password reset token is invalid or has expired." });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      await Account.updatePasswordById(Number(accountId), hashedPassword);
+
+      // Delete token from Redis to ensure single-use
+      await redisClient.del(redisKey);
+
+      return res.status(200).json({
+        message: "Password updated successfully. You can now log in.",
+      });
+    } catch (error) {
+      console.error("Reset password error:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
 }
 
 export const authController = new AuthController();

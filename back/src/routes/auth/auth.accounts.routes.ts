@@ -42,4 +42,6 @@ routerAuth.post(
 
 routerAuth.post("/auth/reset-password", authController.resetPassword);
 
+routerAuth.post("/auth/reset-password/v-2", authController.resetPasswordRedis);
+
 export default routerAuth;

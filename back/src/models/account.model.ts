@@ -65,13 +65,13 @@ export class Account {
   //
   static async findActiveByEmail(email: string): Promise<Account | null> {
     const sql = `
-      SELECT * FROM accounts 
+      SELECT id, name, email, role_user FROM accounts 
       WHERE email = $1 AND is_active = true 
       LIMIT 1;
     `;
     const { rows } = await query(sql, [email]);
     if (rows.length === 0) return null;
-    return new Account(rows[0]);
+    return new Account(rows[0]); // Clean object from innecessary sql parameters
   }
 
   //
@@ -279,5 +279,18 @@ export class Account {
     `;
 
     return await query(sql, [hashedPassword, hashedToken]);
+  }
+
+  //
+  static async updatePasswordById(
+    id: number,
+    hashedPassword: string,
+  ): Promise<void> {
+    const sql = `
+    UPDATE accounts 
+    SET password = $1, updated_at = NOW() 
+    WHERE id = $2 AND is_active = true;
+  `;
+    await query(sql, [hashedPassword, id]);
   }
 }

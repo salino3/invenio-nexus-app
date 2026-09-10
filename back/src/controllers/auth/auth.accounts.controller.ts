@@ -187,7 +187,7 @@ class AuthController {
   }
 
   //
-  public async forgotPassword(req: Request, res: Response): Promise<Response> {
+  async forgotPassword(req: Request, res: Response): Promise<Response> {
     const { email } = req.body;
 
     try {
@@ -248,10 +248,7 @@ class AuthController {
   }
 
   //
-  public async forgotPasswordRedis(
-    req: Request,
-    res: Response,
-  ): Promise<Response> {
+  async forgotPasswordRedis(req: Request, res: Response): Promise<Response> {
     const { email } = req.body;
 
     if (!email || typeof email !== "string") {

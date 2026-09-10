@@ -65,7 +65,7 @@ export class Account {
   //
   static async findActiveByEmail(email: string): Promise<Account | null> {
     const sql = `
-      SELECT * FROM accounts 
+      SELECT id, name, email, role_user FROM accounts 
       WHERE email = $1 AND is_active = true 
       LIMIT 1;
     `;

@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
 import { Account } from "../../models/account.model";
 import { sendEmail } from "../../services/send-email";
+import { redisClient } from "../../services/redis";
 import { COOKIES_NAME, FRONTEND_DEV_PORT, SECRET_KEY } from "../../constants";
 import { AccountCookie } from "../../interfaces/account.interface";
 
@@ -220,6 +221,80 @@ class AuthController {
     <p style="color: #666; font-size: 12px;">If you did not request this email, you can safely ignore it.</p>
   </div>
 `;
+
+        await sendEmail({
+          to: email,
+          subject: "Password Reset Request",
+          html: emailHtml,
+          attachments: [
+            {
+              filename: "logo.png",
+              path: path.join(__dirname, "../../assets/web-icon.svg"),
+              cid: "companyLogo",
+            },
+          ],
+        });
+      }
+
+      // Always return success to prevent email enumeration attacks
+      return res.status(200).json({
+        message:
+          "If an account exists with that email, a password reset link has been sent.",
+      });
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  //
+  public async forgotPasswordRedis(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const { email } = req.body;
+
+    if (!email || typeof email !== "string") {
+      return res.status(400).json({ error: "Valid email is required." });
+    }
+
+    try {
+      // Check if the account exists and is active in PostgreSQL
+      const account = await Account.findActiveByEmail(email);
+
+      if (account) {
+        // Generate secure random token
+        const rawToken = crypto.randomBytes(32).toString("hex");
+
+        // Hash token for use as the Redis key
+        const hashedToken = crypto
+          .createHash("sha256")
+          .update(rawToken)
+          .digest("hex");
+
+        // Key Pattern: pwd_reset:<hashedToken> -> account.id
+        await redisClient.set(`pwd_reset:${hashedToken}`, String(account.id), {
+          EX: 900,
+        });
+
+        const resetUrl = `${FRONTEND_DEV_PORT}/reset-password/${rawToken}`;
+
+        const emailHtml = `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <div style="margin-bottom: 20px;">
+              <img src="cid:companyLogo" alt="Company Logo" style="max-width: 150px; height: auto;" />
+            </div>
+            <h2>Password Reset Request</h2>
+            <p>You requested a password reset for your account.</p>
+            <p>Click the button below to choose a new password. This link is valid for <strong>15 minutes</strong>:</p>
+            <p style="margin: 25px 0;">
+              <a href="${resetUrl}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                Reset Password
+              </a>
+            </p>
+            <p style="color: #666; font-size: 12px;">If you did not request this email, you can safely ignore it.</p>
+          </div>
+        `;
 
         await sendEmail({
           to: email,

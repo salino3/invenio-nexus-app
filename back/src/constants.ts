@@ -27,4 +27,6 @@ export const {
   // Stripe
   STRIPE_SECRET_KEY = "",
   STRIPE_WEBHOOK_SECRET = "",
+  // REDIS
+  REDIS_URL,
 } = process.env;

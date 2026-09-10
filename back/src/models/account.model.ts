@@ -71,7 +71,7 @@ export class Account {
     `;
     const { rows } = await query(sql, [email]);
     if (rows.length === 0) return null;
-    return new Account(rows[0]);
+    return new Account(rows[0]); // Clean object from innecessary sql parameters
   }
 
   //
@@ -279,5 +279,18 @@ export class Account {
     `;
 
     return await query(sql, [hashedPassword, hashedToken]);
+  }
+
+  //
+  static async updatePasswordById(
+    id: number,
+    hashedPassword: string,
+  ): Promise<void> {
+    const sql = `
+    UPDATE accounts 
+    SET password = $1, updated_at = NOW() 
+    WHERE id = $2 AND is_active = true;
+  `;
+    await query(sql, [hashedPassword, id]);
   }
 }

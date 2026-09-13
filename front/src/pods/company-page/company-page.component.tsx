@@ -1,11 +1,13 @@
 import React, { useActionState, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { PropsTabs } from "@/store/interface-app";
-import "./company-page.styles.scss";
 import { ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
-import type { MyCompaniesProps } from "@/store/interface";
+import type { CompanyProps, MyCompaniesProps } from "@/store/interface";
 import { NavigationCompany } from "@/components";
+import { FirstInfoCompany } from "@/common-app";
+import "./company-page.styles.scss";
+import { ServicesApp } from "@/store/services";
 
 // TODO: Moving it to interface file
 const initialState: any = {
@@ -26,8 +28,55 @@ export const CompanyPage: React.FC = () => {
 
   const [tab, setTabs] = useState<number>(0);
   const [flag, setFlag] = useState<boolean>(false);
+  const [myFavorites, setMyFavorites] = useState<number[]>([]);
   const [roleAccount, setRoleAccount] = useState<string>("");
   const [roleOldAccount, setOldRoleAccount] = useState<string>("");
+  const [companyData, setCompanyData] = useState<CompanyProps>({
+    name: "",
+    logo: "",
+    description: "",
+    hashtags: [],
+    sector: "",
+    location: "",
+    contacts: [
+      {
+        type: "",
+        value: "",
+      },
+    ],
+    multimedia: [],
+    ticket_investor_min: null,
+    ticket_investor_max: null,
+    connection_objectives: [],
+    country_code: "",
+    funding_required_max: 0,
+    funding_required_min: 0,
+    tax_id: "",
+    uuid: "",
+  });
+  const [companyOldData, setCompanyOldData] = useState<CompanyProps>({
+    name: "",
+    logo: "",
+    description: "",
+    hashtags: [],
+    sector: "",
+    location: "",
+    contacts: [
+      {
+        type: "",
+        value: "",
+      },
+    ],
+    multimedia: [],
+    ticket_investor_min: null,
+    ticket_investor_max: null,
+    connection_objectives: [],
+    country_code: "",
+    funding_required_max: 0,
+    funding_required_min: 0,
+    tax_id: "",
+    uuid: "",
+  });
 
   const [state, formAction, isPending] = useActionState(async function () {
     return initialState;
@@ -55,10 +104,26 @@ export const CompanyPage: React.FC = () => {
   );
 
   function clearAllFormSetters() {
+    console.log("clog2", companyData.logo);
+
     // TODO: Complete this function
   }
 
   useEffect(() => {
+    const controller = new AbortController();
+    if (params?.uuid) {
+      ServicesApp?.getCompanyByUUID(params?.uuid || "", controller.signal).then(
+        (res) => {
+          if (res?.company) {
+            setCompanyData(res.company);
+            setCompanyOldData(structuredClone(res.company)); // Native JS deep copy
+          }
+        },
+      );
+    } else {
+      clearAllFormSetters();
+    }
+
     const foundRole: string =
       (myCompanies &&
         myCompanies.length > 0 &&
@@ -74,11 +139,25 @@ export const CompanyPage: React.FC = () => {
       setRoleAccount("");
       setOldRoleAccount("");
     }
+
+    // If endpoint is done, automatically there is not execution for 'controller.abort'
+    return () => controller.abort();
   }, [currentUser?.id, params?.uuid, flag]);
 
   return (
     <div className="rootCompanyPage">
       <NavigationCompany navigation={tab} setNavigation={setTabs} tabs={tabs} />
+      {params?.uuid && (
+        <FirstInfoCompany
+          params={params}
+          roleAccount={roleAccount}
+          myFavorites={myFavorites}
+          cId={currentUser?.id || ""}
+          setFlag={setFlag}
+          logo={companyData?.logo || ""}
+          setCompanyData={setCompanyData}
+        />
+      )}
       <form action={formAction} id="formCompanyPage">
         <fieldset disabled={isPending}>
           <legend>Form Company Page</legend>

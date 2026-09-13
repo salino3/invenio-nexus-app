@@ -67,7 +67,7 @@ export type MultimediaCompany = Array<{
 }>;
 
 export interface CompanyProps {
-  id: number;
+  id?: number;
   uuid: string;
   name: string;
   tax_id: string | null;
@@ -84,8 +84,8 @@ export interface CompanyProps {
   contacts?: ContactsCompany;
   logo: string | null;
   multimedia: MultimediaCompany;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface DataSearchedCompanies extends Omit<

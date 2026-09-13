@@ -217,5 +217,31 @@ export class ServicesApp {
     }
   }
 
+  static async getCompanyByUUID(uuid: string, signal?: AbortSignal) {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/get-company/${uuid}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        signal,
+      });
+
+      if (!res.ok) {
+        return null;
+      }
+
+      return await res.json();
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        console.log("Request successfully canceled");
+      }
+
+      console.error("Error while searching for company by UUID:", error);
+      return null;
+    }
+  }
+
   //#endregion
 }

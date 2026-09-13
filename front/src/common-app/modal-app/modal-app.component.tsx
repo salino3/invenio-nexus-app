@@ -12,7 +12,7 @@ import "./modal-app.styles.scss";
 
 interface Props {
   showModal: boolean;
-  setShowModal: Dispatch<SetStateAction<boolean>>;
+  setShowModal: Dispatch<SetStateAction<boolean | any>>;
   title: string;
   children: React.ReactNode;
 }

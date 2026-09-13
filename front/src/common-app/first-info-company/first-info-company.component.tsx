@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import type { Params } from "react-router-dom";
 import type { CompanyProps } from "@/store/interface";
 import { ServicesApp } from "@/store/services";
 import { ModalApp } from "../modal-app";
@@ -8,7 +7,7 @@ import { BinIcon, StarIcon } from "@/components";
 import "./first-info-company.styles.scss";
 
 interface Props {
-  params: Readonly<Params<string>>;
+  params: { uuid: string; name: string };
   roleAccount: string;
   myFavorites: number[];
   cId: string | number;
@@ -36,7 +35,7 @@ export const FirstInfoCompany: React.FC<Props> = (props) => {
   const isFavorited =
     myFavorites &&
     myFavorites?.length > 0 &&
-    myFavorites.some((f) => f === Number(params?.id));
+    myFavorites.some((f) => f === Number(params?.uuid));
 
   useEffect(() => {
     setCompanyData((prev: CompanyProps) => ({

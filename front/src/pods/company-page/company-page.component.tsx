@@ -1,12 +1,12 @@
 import React, { useActionState, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { PropsTabs } from "@/store/interface-app";
-import "./company-page.styles.scss";
 import { ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
 import type { CompanyProps, MyCompaniesProps } from "@/store/interface";
 import { NavigationCompany } from "@/components";
 import { FirstInfoCompany } from "@/common-app";
+import "./company-page.styles.scss";
 
 // TODO: Moving it to interface file
 const initialState: any = {

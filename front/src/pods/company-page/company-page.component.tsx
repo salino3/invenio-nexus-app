@@ -4,8 +4,9 @@ import type { PropsTabs } from "@/store/interface-app";
 import "./company-page.styles.scss";
 import { ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
-import type { MyCompaniesProps } from "@/store/interface";
+import type { CompanyProps, MyCompaniesProps } from "@/store/interface";
 import { NavigationCompany } from "@/components";
+import { FirstInfoCompany } from "@/common-app";
 
 // TODO: Moving it to interface file
 const initialState: any = {
@@ -26,8 +27,32 @@ export const CompanyPage: React.FC = () => {
 
   const [tab, setTabs] = useState<number>(0);
   const [flag, setFlag] = useState<boolean>(false);
+  const [myFavorites, setMyFavorites] = useState<number[]>([]);
   const [roleAccount, setRoleAccount] = useState<string>("");
   const [roleOldAccount, setOldRoleAccount] = useState<string>("");
+  const [companyData, setCompanyData] = useState<CompanyProps>({
+    name: "",
+    logo: "",
+    description: "",
+    hashtags: [],
+    sector: "",
+    location: "",
+    contacts: [
+      {
+        type: "",
+        value: "",
+      },
+    ],
+    multimedia: [],
+    ticket_investor_min: null,
+    ticket_investor_max: null,
+    connection_objectives: [],
+    country_code: "",
+    funding_required_max: 0,
+    funding_required_min: 0,
+    tax_id: "",
+    uuid: "",
+  });
 
   const [state, formAction, isPending] = useActionState(async function () {
     return initialState;
@@ -79,6 +104,17 @@ export const CompanyPage: React.FC = () => {
   return (
     <div className="rootCompanyPage">
       <NavigationCompany navigation={tab} setNavigation={setTabs} tabs={tabs} />
+      {params?.uuid && (
+        <FirstInfoCompany
+          params={params}
+          roleAccount={roleAccount}
+          myFavorites={myFavorites}
+          cId={currentUser?.id || ""}
+          setFlag={setFlag}
+          logo={companyData?.logo || ""}
+          setCompanyData={setCompanyData}
+        />
+      )}
       <form action={formAction} id="formCompanyPage">
         <fieldset disabled={isPending}>
           <legend>Form Company Page</legend>

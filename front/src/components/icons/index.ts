@@ -6,3 +6,4 @@ export * from "./pen-update-icon";
 export * from "./lock-icon";
 export * from "./bin-icon";
 export * from "./star-icon";
+export * from "./cross-icon";

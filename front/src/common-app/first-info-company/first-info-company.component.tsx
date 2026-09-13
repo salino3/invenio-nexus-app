@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import type { Params } from "react-router-dom";
 import type { CompanyProps } from "@/store/interface";
-import "./first-info-company.styles.scss";
 import { ServicesApp } from "@/store/services";
 import { ModalApp } from "../modal-app";
+import { ZoomImg } from "@/common/zoom-img";
 import { BinIcon, StarIcon } from "@/components";
+import "./first-info-company.styles.scss";
 
 interface Props {
   params: Readonly<Params<string>>;
@@ -127,7 +128,7 @@ export const FirstInfoCompany: React.FC<Props> = (props) => {
             />
           </div>
         )}
-        {/* <ZoomImg
+        <ZoomImg
           img={logo}
           alt="Logo"
           download
@@ -136,7 +137,7 @@ export const FirstInfoCompany: React.FC<Props> = (props) => {
           updatePhoto
           newImage={newImage}
           setNewImage={setNewImage}
-        /> */}
+        />
       </div>
       <hr
         style={{

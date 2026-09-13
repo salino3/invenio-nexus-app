@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { utilitiesApp } from "@/utils";
 import { ImageUpload } from "../image-upload";
+import { VITE_URL_BACK_FILE } from "@/constants";
 import "./zoom-img.styles.scss";
 
 interface Props {
@@ -75,6 +76,8 @@ export const ZoomImg: React.FC<Props> = (props) => {
     }
   };
 
+  console.log("clog8", newImage, img);
+
   return (
     <div className="containerZoomImg" role="dialog" aria-modal={true}>
       <div onClick={() => setShow(!show)} className="contentZoomImg">
@@ -95,7 +98,7 @@ export const ZoomImg: React.FC<Props> = (props) => {
             onClick={() => setShow(!show)}
             aria-label={"close"}
           >
-            {"close"}
+            close
           </button>
           {download && (
             <button
@@ -103,7 +106,7 @@ export const ZoomImg: React.FC<Props> = (props) => {
               onClick={() => downLoadImage(img || "")}
               aria-label={"download"}
             >
-              {"download"}
+              download
             </button>
           )}
           {updatePhoto && (
@@ -112,9 +115,11 @@ export const ZoomImg: React.FC<Props> = (props) => {
               accept="image/png,image/jpeg"
               onFileSelected={(file: any) => {
                 const url = URL.createObjectURL(file);
+                console.log("clog9", url);
                 setNewImage(url);
               }}
-              onClear={() => setNewImage(img)}
+              onClear={() => setNewImage("")}
+              newImage={newImage}
             />
           )}
           <div ref={lastActionRef} tabIndex={-1} />
@@ -128,7 +133,11 @@ export const ZoomImg: React.FC<Props> = (props) => {
           onClick={(e) => e.stopPropagation()}
           className="boxZoomImg"
         >
-          <img src={newImage || img || "/icons/group_3.svg"} alt={alt} />
+          <img
+            src={newImage || `${VITE_URL_BACK_FILE}${img}`}
+            alt={alt}
+            onError={(e) => (e.currentTarget.src = "/icons/group_3.svg")}
+          />
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { ServicesApp } from "@/store/services";
 import { ModalApp } from "../modal-app";
 import { ZoomImg } from "@/common/zoom-img";
 import { BinIcon, StarIcon } from "@/components";
+import { VITE_URL_BACK_FILE } from "@/constants";
 import "./first-info-company.styles.scss";
 
 interface Props {
@@ -40,9 +41,9 @@ export const FirstInfoCompany: React.FC<Props> = (props) => {
   useEffect(() => {
     setCompanyData((prev: CompanyProps) => ({
       ...prev,
-      logo: newImage || logo,
+      logo: logo,
     }));
-  }, [zoomPhoto]);
+  }, [zoomPhoto, newImage]);
 
   return (
     <div className="containerInfoAboutCompany">
@@ -99,7 +100,7 @@ export const FirstInfoCompany: React.FC<Props> = (props) => {
           }}
         >
           <img
-            src={logo || "/icons/group_3.svg"}
+            src={newImage || `${VITE_URL_BACK_FILE}${logo}`}
             alt="Logo"
             onError={(e) => (e.currentTarget.src = "/icons/group_3.svg")}
           />

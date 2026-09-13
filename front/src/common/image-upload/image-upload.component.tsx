@@ -10,6 +10,7 @@ interface PropsImageUpload {
   disabled?: boolean;
   onFileSelected?: (file: File) => void;
   onClear?: () => void;
+  newImage: string;
 }
 
 export const ImageUpload: React.FC<PropsImageUpload> = (props) => {
@@ -20,9 +21,10 @@ export const ImageUpload: React.FC<PropsImageUpload> = (props) => {
     disabled = false,
     onFileSelected,
     onClear,
+    newImage,
   } = props;
 
-  const [hasSelection, setHasSelection] = useState<boolean>(false);
+  const [hasSelection, setHasSelection] = useState<boolean>(!!newImage);
   const [fileName, setFileName] = useState<string>("");
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { t: tw } = useTranslation("wcag");

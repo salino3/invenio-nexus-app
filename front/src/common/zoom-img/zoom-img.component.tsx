@@ -113,7 +113,7 @@ export const ZoomImg: React.FC<Props> = (props) => {
             <ImageUpload
               text={"updatePhoto"}
               accept="image/png,image/jpeg"
-              onFileSelected={(file: any) => {
+              onFileSelected={(file: File) => {
                 const url = URL.createObjectURL(file);
                 console.log("clog9", url);
                 setNewImage(url);

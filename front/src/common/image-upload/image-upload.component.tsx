@@ -42,6 +42,7 @@ export const ImageUpload: React.FC<PropsImageUpload> = (props) => {
       <input
         id={id}
         type="file"
+        name="logo"
         accept={accept}
         onChange={handleChange}
         disabled={disabled}
@@ -84,6 +85,9 @@ export const ImageUpload: React.FC<PropsImageUpload> = (props) => {
           onClick={() => {
             setHasSelection(false);
             setFileName("");
+            if (inputRef.current) {
+              inputRef.current.value = ""; // Clears the native file selection safely
+            }
             onClear && onClear();
           }}
         >

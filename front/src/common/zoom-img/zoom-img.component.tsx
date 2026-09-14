@@ -20,6 +20,7 @@ interface Props {
   newImage: string;
   setNewImage: Dispatch<SetStateAction<string>>;
   // setCompanyData: React.Dispatch<React.SetStateAction<PropsCompany>>;
+  setBlobImage: React.Dispatch<React.SetStateAction<File | null>>;
 }
 
 export const ZoomImg: React.FC<Props> = (props) => {
@@ -32,6 +33,7 @@ export const ZoomImg: React.FC<Props> = (props) => {
     setShow,
     newImage,
     setNewImage,
+    setBlobImage,
   } = props;
 
   if (!show) {
@@ -114,11 +116,14 @@ export const ZoomImg: React.FC<Props> = (props) => {
               text={"updatePhoto"}
               accept="image/png,image/jpeg"
               onFileSelected={(file: File) => {
+                setBlobImage(file);
                 const url = URL.createObjectURL(file);
-                console.log("clog9", url);
                 setNewImage(url);
               }}
-              onClear={() => setNewImage("")}
+              onClear={() => {
+                setNewImage("");
+                setBlobImage(null);
+              }}
               newImage={newImage}
             />
           )}

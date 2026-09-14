@@ -15,6 +15,7 @@ interface Props {
   setFlag: React.Dispatch<React.SetStateAction<boolean>>;
   logo: string;
   setCompanyData: React.Dispatch<React.SetStateAction<CompanyProps>>;
+  setBlobImage: React.Dispatch<React.SetStateAction<File | null>>;
 }
 
 export const FirstInfoCompany: React.FC<Props> = (props) => {
@@ -26,6 +27,7 @@ export const FirstInfoCompany: React.FC<Props> = (props) => {
     setFlag,
     logo,
     setCompanyData,
+    setBlobImage,
   } = props;
 
   const [zoomPhoto, setZoomPhoto] = useState<boolean>(false);
@@ -137,6 +139,7 @@ export const FirstInfoCompany: React.FC<Props> = (props) => {
           updatePhoto
           newImage={newImage}
           setNewImage={setNewImage}
+          setBlobImage={setBlobImage}
         />
       </div>
       <hr

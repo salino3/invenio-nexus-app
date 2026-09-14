@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import type { CompanyErrorProps, PropsTabs } from "@/store/interface-app";
 import { BasicInput, ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
+import { ServicesApp } from "@/store/services";
 import type { CompanyProps, MyCompaniesProps } from "@/store/interface";
 import { NavigationCompany } from "@/components";
 import { FirstInfoCompany } from "@/common-app";
 import "./company-page.styles.scss";
-import { ServicesApp } from "@/store/services";
 
 // TODO: Moving it to interface file
 const initialState: any = {
@@ -19,7 +19,6 @@ const initialState: any = {
 
 export const CompanyPage: React.FC = () => {
   const params = useParams() as { name: string; uuid: string };
-  console.log("params", params);
 
   const { currentUser, myCompanies } = useProviderSelector(
     "currentUser",
@@ -31,6 +30,7 @@ export const CompanyPage: React.FC = () => {
   const [myFavorites, setMyFavorites] = useState<number[]>([]);
   const [roleAccount, setRoleAccount] = useState<string>("");
   const [roleOldAccount, setOldRoleAccount] = useState<string>("");
+  const [blobImage, setBlobImage] = useState<File | null>(null);
   const [companyData, setCompanyData] = useState<CompanyProps>({
     name: "",
     logo: "",
@@ -101,7 +101,8 @@ export const CompanyPage: React.FC = () => {
     formData: FormData,
   ) {
     const name = formData.get("name");
-    console.log("clog1", name);
+    const logo = formData.get("logo");
+    console.log("clog1", name, logo, blobImage);
     return initialState;
   }, initialState);
 
@@ -197,6 +198,7 @@ export const CompanyPage: React.FC = () => {
           setFlag={setFlag}
           logo={companyData?.logo || ""}
           setCompanyData={setCompanyData}
+          setBlobImage={setBlobImage}
         />
       )}
       <form action={formAction} id="formCompanyPage">

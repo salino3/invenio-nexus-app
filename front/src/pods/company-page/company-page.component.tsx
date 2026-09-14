@@ -1,7 +1,7 @@
 import React, { useActionState, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { PropsTabs } from "@/store/interface-app";
-import { ButtonForm } from "@/common";
+import type { CompanyErrorProps, PropsTabs } from "@/store/interface-app";
+import { BasicInput, ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
 import type { CompanyProps, MyCompaniesProps } from "@/store/interface";
 import { NavigationCompany } from "@/components";
@@ -77,8 +77,31 @@ export const CompanyPage: React.FC = () => {
     tax_id: "",
     uuid: "",
   });
+  const [companyErrorData, setCompanyErrorData] = useState<CompanyErrorProps>({
+    name: "",
+    logo: "",
+    description: "",
+    hashtags: "",
+    sector: "",
+    location: "",
+    contacts: "",
+    multimedia: "",
+    ticket_investor_min: "",
+    ticket_investor_max: "",
+    connection_objectives: "",
+    country_code: "",
+    funding_required_max: "",
+    funding_required_min: "",
+    tax_id: "",
+    uuid: "",
+  });
 
-  const [state, formAction, isPending] = useActionState(async function () {
+  const [state, formAction, isPending] = useActionState(async function (
+    prevState: any,
+    formData: FormData,
+  ) {
+    const name = formData.get("name");
+    console.log("clog1", name);
     return initialState;
   }, initialState);
 
@@ -109,6 +132,24 @@ export const CompanyPage: React.FC = () => {
     // TODO: Complete this function
   }
 
+  //
+  const handleChangeForm =
+    (key: keyof CompanyProps) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { value } = event.target;
+
+      setCompanyData((prev: CompanyProps) => ({
+        ...prev,
+        [key]: value,
+      }));
+
+      setCompanyErrorData((prev: CompanyErrorProps) => ({
+        ...prev,
+        [key]: "",
+      }));
+    };
+
+  //
   useEffect(() => {
     const controller = new AbortController();
     if (params?.uuid) {
@@ -164,6 +205,16 @@ export const CompanyPage: React.FC = () => {
           {tabs[tab]?.component}
           {(!params?.uuid || roleAccount) && (
             <div className="boxButtonsForm">
+              <BasicInput
+                name="name"
+                type="text"
+                change={handleChangeForm("name")}
+                // stateValue={state?.formData?.name}
+                errorMsg={companyErrorData.name}
+                value={companyData.name}
+                lbl="Name"
+                pl={"Name Company"}
+              />
               <ButtonForm
                 customStyles="buttonStyle_02"
                 al={"aria.resetForm"}

@@ -8,6 +8,7 @@ import type {
   ResponseSearchedCompanies,
   StateLoginDataAccount,
 } from "./interface";
+import type { RegisterCompanyResponse } from "./interface-app";
 
 export class ServicesApp {
   //#region Auth
@@ -250,11 +251,9 @@ export class ServicesApp {
     }
   }
 
-  static async registerCompanyForm(data: CompanyProps): Promise<{
-    message: string;
-    companyUuid: string;
-    logo: string;
-  } | null> {
+  static async registerCompanyForm(
+    data: CompanyProps,
+  ): Promise<RegisterCompanyResponse | null> {
     try {
       const res = await fetch(`${VITE_URL_BACK}/register-company`, {
         method: "POST",

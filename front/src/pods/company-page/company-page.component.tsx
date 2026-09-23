@@ -4,7 +4,11 @@ import type { CompanyErrorProps, PropsTabs } from "@/store/interface-app";
 import { BasicInput, ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
-import type { CompanyProps, MyCompaniesProps } from "@/store/interface";
+import {
+  initialCompanyData,
+  type CompanyProps,
+  type MyCompaniesProps,
+} from "@/store/interface";
 import { NavigationCompany } from "@/components";
 import { FirstInfoCompany } from "@/common-app";
 import "./company-page.styles.scss";
@@ -54,29 +58,8 @@ export const CompanyPage: React.FC = () => {
     tax_id: "",
     uuid: "",
   });
-  const [companyOldData, setCompanyOldData] = useState<CompanyProps>({
-    name: "",
-    logo: "",
-    description: "",
-    hashtags: [],
-    sector: "",
-    location: "",
-    contacts: [
-      {
-        type: "",
-        value: "",
-      },
-    ],
-    multimedia: [],
-    ticket_investor_min: null,
-    ticket_investor_max: null,
-    connection_objectives: [],
-    country_code: "",
-    funding_required_max: 0,
-    funding_required_min: 0,
-    tax_id: "",
-    uuid: "",
-  });
+  const [companyOldData, setCompanyOldData] =
+    useState<CompanyProps>(initialCompanyData);
   const [companyErrorData, setCompanyErrorData] = useState<CompanyErrorProps>({
     name: "",
     logo: "",

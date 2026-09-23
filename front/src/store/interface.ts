@@ -88,6 +88,30 @@ export interface CompanyProps {
   updated_at?: Date;
 }
 
+export const initialCompanyData = {
+  name: "",
+  logo: "",
+  description: "",
+  hashtags: [],
+  sector: "",
+  location: "",
+  contacts: [
+    {
+      type: "",
+      value: "",
+    },
+  ],
+  multimedia: [],
+  ticket_investor_min: null,
+  ticket_investor_max: null,
+  connection_objectives: [],
+  country_code: "",
+  funding_required_max: 0,
+  funding_required_min: 0,
+  tax_id: "",
+  uuid: "",
+};
+
 export interface DataSearchedCompanies extends Omit<
   CompanyProps,
   "created_at" | "updated_at" | "id" | "tax_id"

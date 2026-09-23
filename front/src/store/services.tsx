@@ -2,11 +2,13 @@ import type { FormLoginProps, FormRegisterProps } from "@/utils";
 import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
 import { routePaths } from "@/router/routes.interface";
 import type {
+  CompanyProps,
   MyCompaniesProps,
   PropsCurrentAccount,
   ResponseSearchedCompanies,
   StateLoginDataAccount,
 } from "./interface";
+import type { RegisterCompanyResponse } from "./interface-app";
 
 export class ServicesApp {
   //#region Auth
@@ -175,8 +177,6 @@ export class ServicesApp {
         signal,
       });
 
-      if (!res.ok) return;
-
       return await res.json();
     } catch (error: any) {
       if (error.name === "AbortError") {
@@ -202,10 +202,6 @@ export class ServicesApp {
         signal,
       });
 
-      if (!res.ok) {
-        return [];
-      }
-
       return await res.json();
     } catch (error: any) {
       if (error.name === "AbortError") {
@@ -217,7 +213,13 @@ export class ServicesApp {
     }
   }
 
-  static async getCompanyByUUID(uuid: string, signal?: AbortSignal) {
+  static async getCompanyByUUID(
+    uuid: string,
+    signal?: AbortSignal,
+  ): Promise<{
+    company: CompanyProps;
+    roles?: { role: string; name: string }[];
+  } | null> {
     try {
       const res = await fetch(`${VITE_URL_BACK}/get-company/${uuid}`, {
         method: "GET",
@@ -228,18 +230,68 @@ export class ServicesApp {
         signal,
       });
 
-      if (!res.ok) {
-        return null;
-      }
-
       return await res.json();
-    } catch (error: any) {
-      if (error.name === "AbortError") {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === "AbortError") {
         console.log("Request successfully canceled");
       }
 
       console.error("Error while searching for company by UUID:", error);
       return null;
+    }
+  }
+
+  //
+  static async registerCompanyForm(
+    data: CompanyProps,
+  ): Promise<RegisterCompanyResponse | null> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/register-company`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(
+          errorData?.message || `Error saving company: ${res.status}`,
+        );
+      }
+
+      return await res.json();
+    } catch (error: unknown) {
+      console.error("Error while registering a company:", error);
+      return null;
+    }
+  }
+
+  //
+  static async updateCompanyForm(data: CompanyProps): Promise<string> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/update-company/${data.uuid}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(
+          errorData?.message || `Error updating company: ${res.status}`,
+        );
+      }
+
+      return await res.json();
+    } catch (error: unknown) {
+      console.error("Error while registering a company:", error);
+      return String(error);
     }
   }
 

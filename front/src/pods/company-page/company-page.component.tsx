@@ -4,15 +4,21 @@ import type { CompanyErrorProps, PropsTabs } from "@/store/interface-app";
 import { BasicInput, ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
-import type { CompanyProps, MyCompaniesProps } from "@/store/interface";
+import { formCompanyPageEvent, type StateCompanyPage } from "@/utils";
+import {
+  initialCompanyData,
+  type CompanyProps,
+  type MyCompaniesProps,
+} from "@/store/interface";
 import { NavigationCompany } from "@/components";
 import { FirstInfoCompany } from "@/common-app";
 import "./company-page.styles.scss";
 
 // TODO: Moving it to interface file
-const initialState: any = {
+const initialState: StateCompanyPage = {
   success: false,
   error: "",
+  data: null,
   fieldErrors: null,
   formData: null,
 };
@@ -54,29 +60,8 @@ export const CompanyPage: React.FC = () => {
     tax_id: "",
     uuid: "",
   });
-  const [companyOldData, setCompanyOldData] = useState<CompanyProps>({
-    name: "",
-    logo: "",
-    description: "",
-    hashtags: [],
-    sector: "",
-    location: "",
-    contacts: [
-      {
-        type: "",
-        value: "",
-      },
-    ],
-    multimedia: [],
-    ticket_investor_min: null,
-    ticket_investor_max: null,
-    connection_objectives: [],
-    country_code: "",
-    funding_required_max: 0,
-    funding_required_min: 0,
-    tax_id: "",
-    uuid: "",
-  });
+  const [companyOldData, setCompanyOldData] =
+    useState<CompanyProps>(initialCompanyData);
   const [companyErrorData, setCompanyErrorData] = useState<CompanyErrorProps>({
     name: "",
     logo: "",
@@ -96,15 +81,11 @@ export const CompanyPage: React.FC = () => {
     uuid: "",
   });
 
-  const [state, formAction, isPending] = useActionState(async function (
-    prevState: any,
-    formData: FormData,
-  ) {
-    const name = formData.get("name");
-    const logo = formData.get("logo");
-    console.log("clog1", name, logo, blobImage);
-    return initialState;
-  }, initialState);
+  const [state, formAction, isPending] = useActionState(
+    (prevState: StateCompanyPage, formData: FormData) =>
+      formCompanyPageEvent(prevState, formData, { ...params, blobImage }),
+    initialState,
+  );
 
   const tabs: PropsTabs[] = useMemo(
     () => [

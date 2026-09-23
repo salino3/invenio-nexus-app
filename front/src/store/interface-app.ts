@@ -22,3 +22,9 @@ export interface CompanyErrorProps {
   logo: string;
   multimedia: string;
 }
+
+export interface RegisterCompanyResponse {
+  message: string;
+  companyUuid: string;
+  logo: string;
+}

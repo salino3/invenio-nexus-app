@@ -24,6 +24,8 @@ export async function formCompanyPageEvent(
   formData: FormData,
   extraData: { name: string; uuid: string; blobImage: File | null },
 ): Promise<StateCompanyPage> {
+  console.log("extraData:", extraData);
+
   try {
     const rawData = Object.fromEntries(formData.entries());
 

@@ -4,7 +4,7 @@ import type { CompanyErrorProps, PropsTabs } from "@/store/interface-app";
 import { BasicInput, ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
-import { formCompanyPageEvent } from "@/utils";
+import { formCompanyPageEvent, type StateCompanyPage } from "@/utils";
 import {
   initialCompanyData,
   type CompanyProps,
@@ -15,9 +15,10 @@ import { FirstInfoCompany } from "@/common-app";
 import "./company-page.styles.scss";
 
 // TODO: Moving it to interface file
-const initialState: any = {
+const initialState: StateCompanyPage = {
   success: false,
   error: "",
+  data: null,
   fieldErrors: null,
   formData: null,
 };

@@ -177,8 +177,6 @@ export class ServicesApp {
         signal,
       });
 
-      if (!res.ok) return;
-
       return await res.json();
     } catch (error: any) {
       if (error.name === "AbortError") {
@@ -203,10 +201,6 @@ export class ServicesApp {
         credentials: "include",
         signal,
       });
-
-      if (!res.ok) {
-        return [];
-      }
 
       return await res.json();
     } catch (error: any) {
@@ -236,10 +230,6 @@ export class ServicesApp {
         signal,
       });
 
-      if (!res.ok) {
-        return null;
-      }
-
       return await res.json();
     } catch (error: unknown) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -251,6 +241,7 @@ export class ServicesApp {
     }
   }
 
+  //
   static async registerCompanyForm(
     data: CompanyProps,
   ): Promise<RegisterCompanyResponse | null> {
@@ -265,13 +256,42 @@ export class ServicesApp {
       });
 
       if (!res.ok) {
-        return null;
+        const errorData = await res.json().catch(() => null);
+        throw new Error(
+          errorData?.message || `Error saving company: ${res.status}`,
+        );
       }
 
       return await res.json();
     } catch (error: unknown) {
       console.error("Error while registering a company:", error);
       return null;
+    }
+  }
+
+  //
+  static async updateCompanyForm(data: CompanyProps): Promise<string> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/update-company/${data.uuid}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(
+          errorData?.message || `Error updating company: ${res.status}`,
+        );
+      }
+
+      return await res.json();
+    } catch (error: unknown) {
+      console.error("Error while registering a company:", error);
+      return String(error);
     }
   }
 

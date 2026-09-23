@@ -4,6 +4,7 @@ import type { CompanyErrorProps, PropsTabs } from "@/store/interface-app";
 import { BasicInput, ButtonForm } from "@/common";
 import { useProviderSelector } from "@/store/provider";
 import { ServicesApp } from "@/store/services";
+import { formCompanyPageEvent } from "@/utils";
 import {
   initialCompanyData,
   type CompanyProps,
@@ -79,15 +80,19 @@ export const CompanyPage: React.FC = () => {
     uuid: "",
   });
 
-  const [state, formAction, isPending] = useActionState(async function (
-    prevState: any,
-    formData: FormData,
-  ) {
-    const name = formData.get("name");
-    const logo = formData.get("logo");
-    console.log("clog1", name, logo, blobImage);
-    return initialState;
-  }, initialState);
+  const [state, formAction, isPending] = useActionState(
+    formCompanyPageEvent,
+    //   async function (
+    //   prevState: any,
+    //   formData: FormData,
+    // ) {
+    //   const name = formData.get("name");
+    //   const logo = formData.get("logo");
+    //   console.log("clog1", name, logo, blobImage);
+    //   return initialState;
+    // }
+    initialState,
+  );
 
   const tabs: PropsTabs[] = useMemo(
     () => [

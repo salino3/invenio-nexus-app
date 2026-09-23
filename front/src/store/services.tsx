@@ -2,6 +2,7 @@ import type { FormLoginProps, FormRegisterProps } from "@/utils";
 import { VITE_TOKEN, VITE_URL_BACK } from "@/constants";
 import { routePaths } from "@/router/routes.interface";
 import type {
+  CompanyProps,
   MyCompaniesProps,
   PropsCurrentAccount,
   ResponseSearchedCompanies,
@@ -217,7 +218,13 @@ export class ServicesApp {
     }
   }
 
-  static async getCompanyByUUID(uuid: string, signal?: AbortSignal) {
+  static async getCompanyByUUID(
+    uuid: string,
+    signal?: AbortSignal,
+  ): Promise<{
+    company: CompanyProps;
+    roles?: { role: string; name: string }[];
+  } | null> {
     try {
       const res = await fetch(`${VITE_URL_BACK}/get-company/${uuid}`, {
         method: "GET",
@@ -233,8 +240,8 @@ export class ServicesApp {
       }
 
       return await res.json();
-    } catch (error: any) {
-      if (error.name === "AbortError") {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === "AbortError") {
         console.log("Request successfully canceled");
       }
 
@@ -242,6 +249,8 @@ export class ServicesApp {
       return null;
     }
   }
+
+  static async companyForm(data: CompanyProps) {}
 
   //#endregion
 }

@@ -82,16 +82,8 @@ export const CompanyPage: React.FC = () => {
   });
 
   const [state, formAction, isPending] = useActionState(
-    formCompanyPageEvent,
-    //   async function (
-    //   prevState: any,
-    //   formData: FormData,
-    // ) {
-    //   const name = formData.get("name");
-    //   const logo = formData.get("logo");
-    //   console.log("clog1", name, logo, blobImage);
-    //   return initialState;
-    // }
+    (prevState: StateCompanyPage, formData: FormData) =>
+      formCompanyPageEvent(prevState, formData, { ...params, blobImage }),
     initialState,
   );
 

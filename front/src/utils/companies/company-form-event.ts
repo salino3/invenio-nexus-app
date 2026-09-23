@@ -22,6 +22,7 @@ const parseJson = <T>(val: unknown, fallback: T): T => {
 export async function formCompanyPageEvent(
   prevState: StateCompanyPage,
   formData: FormData,
+  extraData: { name: string; uuid: string; blobImage: File | null },
 ): Promise<StateCompanyPage> {
   try {
     const rawData = Object.fromEntries(formData.entries());

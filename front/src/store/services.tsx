@@ -250,7 +250,31 @@ export class ServicesApp {
     }
   }
 
-  static async companyForm(data: CompanyProps) {}
+  static async registerCompanyForm(data: CompanyProps): Promise<{
+    message: string;
+    companyUuid: string;
+    logo: string;
+  } | null> {
+    try {
+      const res = await fetch(`${VITE_URL_BACK}/register-company`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        return null;
+      }
+
+      return await res.json();
+    } catch (error: unknown) {
+      console.error("Error while registering a company:", error);
+      return null;
+    }
+  }
 
   //#endregion
 }

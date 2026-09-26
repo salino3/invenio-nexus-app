@@ -8,9 +8,8 @@ export const redisClient = createClient({
 
 redisClient.on("error", (err) => console.error("Redis Client Error", err));
 
-async () => {
+(async () => {
   if (!redisClient.isOpen) {
     await redisClient.connect();
   }
-};
-// ();
+})();

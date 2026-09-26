@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Stripe from "stripe";
-import { query } from "../db";
 import { Subscriptions } from "../models/subscriptions.model";
 import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from "../constants";
 

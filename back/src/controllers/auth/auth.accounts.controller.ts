@@ -6,7 +6,12 @@ import crypto from "node:crypto";
 import { Account } from "../../models/account.model";
 import { sendEmail } from "../../services/send-email";
 import { redisClient } from "../../services/redis";
-import { COOKIES_NAME, FRONTEND_DEV_PORT, SECRET_KEY } from "../../constants";
+import {
+  COOKIES_NAME,
+  FRONTEND_DEV_PORT,
+  SECRET_KEY,
+  SECRET_KEY_FRONT,
+} from "../../constants";
 import { AccountCookie } from "../../interfaces/account.interface";
 
 const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -33,7 +38,7 @@ class AuthController {
 
       const frontendToken = jwt.sign(
         { id: user.id, email: user.email, role: user.role_user },
-        process.env.SECRET_KEY_FRONT as string,
+        SECRET_KEY_FRONT as string,
         { expiresIn: "1h" },
       );
 
@@ -70,10 +75,7 @@ class AuthController {
   }
 
   //
-  public async refreshToken(
-    req: Request,
-    res: Response,
-  ): Promise<Response<{ message: "Token refreshed"; user: AccountCookie }>> {
+  public async refreshToken(req: Request, res: Response): Promise<Response> {
     const token = req.cookies[COOKIES_NAME as string];
 
     if (!token) {
@@ -81,7 +83,7 @@ class AuthController {
     }
 
     try {
-      // 1. Verify token
+      // 1. Verify backend token from cookie
       const decodedToken = jwt.verify(token, SECRET_KEY as string) as any;
 
       const freshUser = await Account.getAccountWithSubscription(
@@ -95,7 +97,6 @@ class AuthController {
         });
       }
 
-      // Ensure plain object payload
       const userPayload = {
         id: freshUser.id,
         name: freshUser.name,
@@ -104,22 +105,30 @@ class AuthController {
         hasAdFreeAccess: freshUser.hasAdFreeAccess,
       };
 
-      // 2. Create new token
-      const newToken = jwt.sign(userPayload, SECRET_KEY as string, {
+      const newBackendToken = jwt.sign(userPayload, SECRET_KEY as string, {
         expiresIn: "1h",
       });
 
-      // 3. Overwrite the old cookie with the new token
-      res.cookie(COOKIES_NAME as string, newToken, {
-        httpOnly: true, // cookie cannot be accessed via document.cookie
-        secure: process.env.NODE_ENV === "production", // Only over HTTPS in prod
-        sameSite: "lax" as const, // Protects against CSRF
+      const newFrontendToken = jwt.sign(
+        userPayload,
+        SECRET_KEY_FRONT as string,
+        {
+          expiresIn: "1h",
+        },
+      );
+
+      res.cookie(COOKIES_NAME as string, newBackendToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax" as const,
         expires: new Date(Date.now() + 3600 * 1000),
       });
 
-      return res
-        .status(200)
-        .json({ message: "Token refreshed", user: userPayload });
+      return res.status(200).json({
+        message: "Token refreshed",
+        user: userPayload,
+        token: newFrontendToken,
+      });
     } catch (err) {
       console.error("Refresh token error:", err);
       return res
@@ -144,13 +153,13 @@ class AuthController {
         });
       }
 
-      // 1. Verify the token to extract the account ID securely
+      // 1. Verify the backend token to extract the account ID securely
       const decodedUser = jwt.verify(
         token,
         SECRET_KEY as string,
       ) as AccountCookie;
 
-      // 2. Fetch fresh user data & active subscription directly from PostgreSQL
+      // 2. Fetch fresh user data from PostgreSQL
       const freshUser = await Account.getAccountWithSubscription(
         decodedUser.id,
       );
@@ -162,10 +171,18 @@ class AuthController {
         });
       }
 
-      // 3. 🔑 RE-SIGN THE JWT WITH UPDATED USER DATA
-      const newToken = jwt.sign({ ...freshUser }, SECRET_KEY as string, {
+      // 3. Re-sign BOTH tokens
+      const newBackendToken = jwt.sign({ ...freshUser }, SECRET_KEY as string, {
         expiresIn: "1h",
       });
+
+      const newFrontendToken = jwt.sign(
+        { ...freshUser },
+        SECRET_KEY_FRONT as string,
+        {
+          expiresIn: "1h",
+        },
+      );
 
       // 4. 🔑 RE-SET THE COOKIE WITH THE NEW TOKEN
       const cookieOptions = {
@@ -175,14 +192,14 @@ class AuthController {
         expires: new Date(Date.now() + 3600 * 1000),
       };
 
-      res.cookie(COOKIES_NAME as string, newToken, cookieOptions);
+      res.cookie(COOKIES_NAME as string, newBackendToken, cookieOptions);
 
-      // 3. Return the updated user status
+      // 5. Return the updated user status and new frontend token
       return res.status(200).json({
         success: true,
         message: "Session fetched successfully",
         user: freshUser,
-        token: newToken,
+        token: newFrontendToken,
       });
     } catch (error) {
       return res.status(401).json({

@@ -31,6 +31,12 @@ class AuthController {
         expiresIn: "1h",
       });
 
+      const frontendToken = jwt.sign(
+        { id: user.id, email: user.email, role: user.role_user },
+        process.env.SECRET_KEY_FRONT as string,
+        { expiresIn: "1h" },
+      );
+
       // 1. Define Cookie Options
       const cookieOptions = {
         httpOnly: true, // cookie cannot be accessed via document.cookie
@@ -45,7 +51,7 @@ class AuthController {
         success: true,
         message: "Login successful",
         user,
-        token,
+        token: frontendToken,
       });
     } catch (error: any) {
       return res.status(401).json({ error: error.message });
